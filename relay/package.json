@@ -1,0 +1,23 @@
+{
+	"name": "relay",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "pnpm run build:css && wrangler dev",
+		"build:css": "tailwindcss -i ./src/styles.css -o ./public/styles.css --minify",
+		"test": "pnpm run build:css && vitest run",
+		"typecheck": "tsc --noEmit && tsc --noEmit -p test"
+	},
+	"dependencies": {
+		"hono": "4.13.9"
+	},
+	"devDependencies": {
+		"@cloudflare/vitest-pool-workers": "0.22.0",
+		"@cloudflare/workers-types": "5.20260927.1",
+		"@tailwindcss/cli": "4.3.3",
+		"tailwindcss": "4.3.3",
+		"typescript": "5.9.3",
+		"vitest": "4.1.11",
+		"wrangler": "4.142.0"
+	}
+}

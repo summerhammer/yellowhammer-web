@@ -1,0 +1,22 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "yellowhammer-relay",
+	"main": "src/index.tsx",
+	// Pinned to the newest date @cloudflare/vitest-pool-workers@0.22.0's bundled workerd (via
+	// miniflare@5.20260815.0-alpha) supports. Bumping this ahead of that pin breaks `pnpm test`
+	// with "newest date supported by this server binary is ...". Bump only after the pool
+	// package's bundled miniflare/workerd catches up.
+	"compatibility_date": "2026-08-22",
+	"assets": {
+		"directory": "./public"
+	},
+	"kv_namespaces": [
+		{
+			"binding": "SESSIONS",
+			// TODO: replace with the real namespace id once created in the Cloudflare dashboard.
+			"id": "TODO"
+		}
+	]
+	// TODO: once the domain is set up, bind the custom domain instead of the workers.dev subdomain:
+	// "routes": [{ "pattern": "app.yellowhammer.dev", "custom_domain": true }]
+}

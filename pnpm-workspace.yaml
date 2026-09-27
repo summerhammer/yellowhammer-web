@@ -1,0 +1,10 @@
+packages:
+  - relay
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  workerd: true
+minimumReleaseAgeExclude:
+  - '@cloudflare/workers-types@5.20260927.1'
+  - miniflare@5.20260926.0-alpha
+  - wrangler@4.142.0
