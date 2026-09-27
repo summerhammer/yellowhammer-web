@@ -50,7 +50,8 @@ Stay on the Cloudflare **Free Tier**. KV allows 1,000 writes/day, so be careful 
 - KV binding `SESSIONS`, one environment, custom domain `app.yellowhammer.dev`.
 - `client_id` allowlisted per provider (Linear: Yellowhammer's public app id); `code_challenge` must be 43 base64url chars.
 
+- Distributed abuse exhausting the 1,000 KV writes/day across many IPs is an **accepted risk**. Per-IP limits only, and no storage change.
+
 ## Still open — raise them, do not invent them
 
-- Distributed abuse can still exhaust the 1,000 KV writes/day. Only a storage change would fix that, which is a question for ADR-006.
 - Environments beyond production, landing domain, licence.
