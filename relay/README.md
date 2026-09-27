@@ -64,9 +64,14 @@ other `yellowhammer.dev` subdomains aren't committed to HTTPS). `/install/:id`, 
 would show "expired" once the Mac has already consumed the code via polling, and KV's eventual
 consistency could show a stale "pending" state right after approval or rejection.
 
+## CORS
+
+Deliberately none. The only API client is the Mac (not a browser), so the relay sends no
+`Access-Control-*` headers; browsers therefore refuse cross-origin reads of the API, which is the
+intended behaviour.
+
 ## Open items (not implemented here)
 
 - Distributed abuse of `POST /api/session` across many IPs/locations can still exhaust the daily
   KV write quota; per-IP rate limiting (above) doesn't cover that case.
-- CORS.
 - `client_id` allowlisting and `code_challenge` shape validation.

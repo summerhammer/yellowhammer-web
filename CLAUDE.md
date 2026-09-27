@@ -41,9 +41,16 @@ Stay on the Cloudflare **Free Tier**. KV allows 1,000 writes/day, so be careful 
 - PRs titled `feat`/`fix`/`perf`/`revert` carry `Spec: <epic>/<story> @ <spec sha>` or `Spec-Exempt: <reason>`. The Relay's story is `board-projection/authorize-linear-via-remote-approval`.
 - `main` is trunk. Multi-step work ships as stacked PRs via `gh stack`.
 
+## Decided — do not reopen without the user
+
+- Rate limiting: `SESSION_LIMITER` binding (5/60s per IP) plus one zone WAF rule (3/10s per IP on `/api/session`). KV write failure returns 503.
+- No CORS: the only API client is the Mac.
+- Security headers: strict CSP, `no-referrer`, `nosniff`, HSTS without `includeSubDomains`, `no-store` on HTML routes.
+- `/callback` 303s to `/done?result=…`; a replayed callback writes nothing and shows "already handled"; an expired or unknown session gets a 404 page.
+- KV binding `SESSIONS`, one environment, custom domain `app.yellowhammer.dev`.
+
 ## Still open — raise them, do not invent them
 
-- Rate limiting and abuse protection on `POST /api/session`, CORS, CSP and security headers.
 - Whether to allowlist `client_id` and validate `code_challenge`.
-- Replay behaviour when `/callback` is hit twice, and what to show for an expired session.
-- KV binding name and namespace IDs, environments, landing domain, licence.
+- Distributed abuse can still exhaust the 1,000 KV writes/day. Only a storage change would fix that, which is a question for ADR-006.
+- Environments beyond production, landing domain, licence.
