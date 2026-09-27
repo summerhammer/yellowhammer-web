@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_response.filePath // .tool_input.file_path'); b=\"$CLAUDE_PROJECT_DIR/node_modules/.bin/biome\"; [ -x \"$b\" ] && \"$b\" check --write --no-errors-on-unmatched --files-ignore-unknown=true \"$f\" 2>/dev/null || true",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
