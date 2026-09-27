@@ -37,6 +37,21 @@ function isNonEmptyString(value: unknown): value is string {
 export function createApp(registry: ProviderRegistry) {
 	const app = new Hono<{ Bindings: Bindings }>();
 
+	app.use("*", async (c, next) => {
+		await next();
+		c.header(
+			"Content-Security-Policy",
+			"default-src 'none'; style-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+		);
+		// The admin's browser is the only client that ever sees these URLs, and /callback carries
+		// the auth code while /install carries the session id — never let either leak via the
+		// Referer header to a third party a linked page might load.
+		c.header("Referrer-Policy", "no-referrer");
+		c.header("X-Content-Type-Options", "nosniff");
+		// No includeSubDomains: other yellowhammer.dev subdomains aren't committed to HTTPS.
+		c.header("Strict-Transport-Security", "max-age=31536000");
+	});
+
 	app.post("/api/session", async (c) => {
 		c.header("Cache-Control", "no-store");
 
@@ -102,6 +117,7 @@ export function createApp(registry: ProviderRegistry) {
 	});
 
 	app.get("/install/:id", async (c) => {
+		c.header("Cache-Control", "no-store");
 		const sessionId = c.req.param("id");
 		const session = await getSession(c.env.SESSIONS, sessionId);
 		if (!session) {
@@ -132,21 +148,26 @@ export function createApp(registry: ProviderRegistry) {
 	});
 
 	app.get("/callback", async (c) => {
+		c.header("Cache-Control", "no-store");
+
+		const redirectToDone = (result: string) =>
+			c.redirect(`/done?result=${result}`, 303);
+
 		const sessionId = c.req.query("state");
 		if (!isNonEmptyString(sessionId)) {
-			return c.html(<ExpiredPage />, 404);
+			return redirectToDone("expired");
 		}
 		const session = await getSession(c.env.SESSIONS, sessionId);
 		if (!session) {
-			return c.html(<ExpiredPage />, 404);
+			return redirectToDone("expired");
 		}
 		if (session.status !== "pending") {
 			// Already approved/rejected: never re-process a replayed callback, and never write to KV.
-			return c.html(<HandledPage />);
+			return redirectToDone("handled");
 		}
 		const provider = getProvider(registry, session.provider);
 		if (!provider) {
-			return c.html(<ExpiredPage />, 404);
+			return redirectToDone("expired");
 		}
 
 		const query = new URL(c.req.url).searchParams;
@@ -154,11 +175,29 @@ export function createApp(registry: ProviderRegistry) {
 
 		if ("error" in parsed) {
 			await rejectSession(c.env.SESSIONS, sessionId, session, parsed.error);
-			return c.html(<RejectedPage />);
+			return redirectToDone("rejected");
 		}
 
 		await approveSession(c.env.SESSIONS, sessionId, session, parsed.code);
-		return c.html(<SuccessPage />);
+		return redirectToDone("approved");
+	});
+
+	app.get("/done", (c) => {
+		c.header("Cache-Control", "no-store");
+		// Renders from the `result` query param only, with no KV read: reading the session here
+		// would show "expired" once the Mac has consumed the code, and KV's eventual consistency
+		// could show a stale "pending" state right after approval/rejection.
+		const result = c.req.query("result");
+		switch (result) {
+			case "approved":
+				return c.html(<SuccessPage />);
+			case "rejected":
+				return c.html(<RejectedPage />);
+			case "handled":
+				return c.html(<HandledPage />);
+			default:
+				return c.html(<ExpiredPage />, 404);
+		}
 	});
 
 	app.get("/api/session/:id", async (c) => {

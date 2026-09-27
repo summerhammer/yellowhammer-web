@@ -155,6 +155,12 @@ describe("GET /install/:id", () => {
 		const html = await res.text();
 		expect(html).toContain("already been used");
 	});
+
+	it("sets Cache-Control: no-store", async () => {
+		const { json } = await createSession(app);
+		const res = await request(app, `/install/${json.session_id}`);
+		expect(res.headers.get("cache-control")).toBe("no-store");
+	});
 });
 
 describe("GET /api/session/:id", () => {
@@ -188,9 +194,14 @@ describe("GET /callback", () => {
 		const callbackRes = await request(
 			app,
 			`/callback?code=auth-code-1&state=${json.session_id}`,
+			{ redirect: "manual" },
 		);
-		expect(callbackRes.status).toBe(200);
-		expect(await callbackRes.text()).toContain("authorized");
+		expect(callbackRes.status).toBe(303);
+		expect(callbackRes.headers.get("location")).toBe("/done?result=approved");
+
+		const doneRes = await request(app, "/done?result=approved");
+		expect(doneRes.status).toBe(200);
+		expect(await doneRes.text()).toContain("authorized");
 
 		const poll1 = await request(app, `/api/session/${json.session_id}`);
 		expect(poll1.status).toBe(200);
@@ -209,9 +220,13 @@ describe("GET /callback", () => {
 		const res = await request(
 			app,
 			`/callback?error=access_denied&state=${json.session_id}`,
+			{ redirect: "manual" },
 		);
-		expect(res.status).toBe(200);
-		expect(await res.text()).toContain("cancelled");
+		expect(res.status).toBe(303);
+		expect(res.headers.get("location")).toBe("/done?result=rejected");
+
+		const doneRes = await request(app, "/done?result=rejected");
+		expect(await doneRes.text()).toContain("cancelled");
 
 		const poll = await request(app, `/api/session/${json.session_id}`);
 		expect(await poll.json()).toEqual({
@@ -220,31 +235,158 @@ describe("GET /callback", () => {
 		});
 	});
 
-	it("returns 404 for an unknown state", async () => {
-		const res = await request(app, "/callback?code=abc&state=does-not-exist");
-		expect(res.status).toBe(404);
+	it("redirects to expired for an unknown state", async () => {
+		const res = await request(app, "/callback?code=abc&state=does-not-exist", {
+			redirect: "manual",
+		});
+		expect(res.status).toBe(303);
+		expect(res.headers.get("location")).toBe("/done?result=expired");
 	});
 
-	it("returns 404 when state is missing", async () => {
-		const res = await request(app, "/callback?code=abc");
-		expect(res.status).toBe(404);
+	it("redirects to expired when state is missing", async () => {
+		const res = await request(app, "/callback?code=abc", {
+			redirect: "manual",
+		});
+		expect(res.status).toBe(303);
+		expect(res.headers.get("location")).toBe("/done?result=expired");
 	});
 
 	it("does not overwrite an already-approved session on replay", async () => {
 		const { json } = await createSession(app);
-		await request(app, `/callback?code=first-code&state=${json.session_id}`);
+		await request(app, `/callback?code=first-code&state=${json.session_id}`, {
+			redirect: "manual",
+		});
 		const replay = await request(
 			app,
 			`/callback?code=second-code&state=${json.session_id}`,
+			{ redirect: "manual" },
 		);
-		expect(replay.status).toBe(200);
-		expect(await replay.text()).toContain("already been used");
+		expect(replay.status).toBe(303);
+		expect(replay.headers.get("location")).toBe("/done?result=handled");
+
+		const doneRes = await request(app, "/done?result=handled");
+		expect(await doneRes.text()).toContain("already been used");
 
 		const poll = await request(app, `/api/session/${json.session_id}`);
 		expect(await poll.json()).toEqual({
 			status: "approved",
 			code: "first-code",
 		});
+	});
+
+	it("never includes the code in the redirect Location", async () => {
+		const { json } = await createSession(app);
+		const res = await request(
+			app,
+			`/callback?code=super-secret-code&state=${json.session_id}`,
+			{ redirect: "manual" },
+		);
+		const location = res.headers.get("location");
+		expect(location).not.toContain("super-secret-code");
+	});
+
+	it("sets Cache-Control: no-store", async () => {
+		const { json } = await createSession(app);
+		const res = await request(
+			app,
+			`/callback?code=abc&state=${json.session_id}`,
+			{ redirect: "manual" },
+		);
+		expect(res.headers.get("cache-control")).toBe("no-store");
+	});
+});
+
+describe("GET /done", () => {
+	const app = createApp(providers);
+
+	it("renders SuccessPage 200 for result=approved", async () => {
+		const res = await request(app, "/done?result=approved");
+		expect(res.status).toBe(200);
+		expect(await res.text()).toContain("authorized");
+	});
+
+	it("renders RejectedPage 200 for result=rejected", async () => {
+		const res = await request(app, "/done?result=rejected");
+		expect(res.status).toBe(200);
+		expect(await res.text()).toContain("cancelled");
+	});
+
+	it("renders HandledPage 200 for result=handled", async () => {
+		const res = await request(app, "/done?result=handled");
+		expect(res.status).toBe(200);
+		expect(await res.text()).toContain("already been used");
+	});
+
+	it("renders ExpiredPage 404 for result=expired", async () => {
+		const res = await request(app, "/done?result=expired");
+		expect(res.status).toBe(404);
+		expect(await res.text()).toContain("expired or is invalid");
+	});
+
+	it("renders ExpiredPage 404 for a missing result", async () => {
+		const res = await request(app, "/done");
+		expect(res.status).toBe(404);
+		expect(await res.text()).toContain("expired or is invalid");
+	});
+
+	it("renders ExpiredPage 404 for an unknown result value", async () => {
+		const res = await request(app, "/done?result=bogus");
+		expect(res.status).toBe(404);
+		expect(await res.text()).toContain("expired or is invalid");
+	});
+
+	it("sets Cache-Control: no-store", async () => {
+		const res = await request(app, "/done?result=approved");
+		expect(res.headers.get("cache-control")).toBe("no-store");
+	});
+});
+
+describe("security headers", () => {
+	const app = createApp(providers);
+
+	const expectedHeaders = {
+		"content-security-policy":
+			"default-src 'none'; style-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+		"referrer-policy": "no-referrer",
+		"x-content-type-options": "nosniff",
+		"strict-transport-security": "max-age=31536000",
+	};
+
+	it("sets security headers on an HTML route", async () => {
+		const { json } = await createSession(app);
+		const res = await request(app, `/install/${json.session_id}`);
+		for (const [name, value] of Object.entries(expectedHeaders)) {
+			expect(res.headers.get(name)).toBe(value);
+		}
+	});
+
+	it("sets security headers on /done", async () => {
+		const res = await request(app, "/done?result=approved");
+		for (const [name, value] of Object.entries(expectedHeaders)) {
+			expect(res.headers.get(name)).toBe(value);
+		}
+	});
+
+	it("sets security headers on a JSON route", async () => {
+		const { res } = await createSession(app);
+		for (const [name, value] of Object.entries(expectedHeaders)) {
+			expect(res.headers.get(name)).toBe(value);
+		}
+	});
+
+	it("sets security headers on the 404 expired page", async () => {
+		const res = await request(app, "/install/does-not-exist");
+		expect(res.status).toBe(404);
+		for (const [name, value] of Object.entries(expectedHeaders)) {
+			expect(res.headers.get(name)).toBe(value);
+		}
+	});
+
+	it("does not set includeSubDomains on Strict-Transport-Security", async () => {
+		const res = await request(app, "/done?result=approved");
+		expect(res.headers.get("strict-transport-security")).not.toContain(
+			"includeSubDomains",
+		);
 	});
 });
 

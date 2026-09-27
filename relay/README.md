@@ -10,7 +10,8 @@ the spec's "Code Relay" investigation for the full protocol; this is the impleme
 |---|---|
 | `POST /api/session` | Mac → relay. Body `{client_id, code_challenge, code_challenge_method, provider?}` (`provider` defaults to `"linear"`). Creates a pending session, returns `{session_id, install_url, expires_in}`. Rate limited (see below); returns `429 {error: "rate_limited"}` with `Retry-After: 60` when the limiter denies, or `503 {error: "relay_unavailable"}` if the KV write throws (e.g. the daily write quota is exhausted). Both responses are `Cache-Control: no-store`. |
 | `GET /install/:id` | Admin's browser. Read-only. Renders the provider's guidance and an "Approve in <Provider>" link. 404 if the session is missing/expired; an "already handled" page if it's no longer pending. |
-| `GET /callback` | Issue tracker → relay redirect target for all providers. Validates `state` against the session, records `approved` (with the code) or `rejected` (with the error), and renders a confirmation page. A replayed callback on a non-pending session renders "already handled" and writes nothing. |
+| `GET /callback` | Issue tracker → relay redirect target for all providers. Validates `state` against the session, records `approved` (with the code) or `rejected` (with the error), then responds `303 See Other` to `/done?result=<outcome>` — the auth code never appears in a URL the admin's browser keeps in history. A replayed callback on a non-pending session redirects to `result=handled` and writes nothing; a missing/unknown `state` or provider redirects to `result=expired`. |
+| `GET /done` | Renders the outcome page for `/callback`, from the `result` query param only (no KV read — see below). `approved` → confirmation (200), `rejected` → cancelled (200), `handled` → already-used (200), `expired`/missing/unknown → expired (404). |
 | `GET /api/session/:id` | Mac polls this. `pending` / `rejected` / `approved` (code is deleted from KV on this read, so it's single-use) / 404 `expired`. All responses are `Cache-Control: no-store`. |
 
 ## Provider seam
@@ -48,9 +49,24 @@ racing from a different PoP within that window could theoretically see the code 
 propagates. This is why the relay isn't the security boundary: the PKCE `code_verifier` (never
 sent to the relay) is what actually makes an intercepted or double-read code useless.
 
+## Security headers
+
+Every response carries a fixed set of headers via app-wide middleware: a `Content-Security-Policy`
+that allows only a same-origin stylesheet and blocks everything else (scripts, frames, forms,
+inline styles), `Referrer-Policy: no-referrer` (both `/callback` and `/install` URLs carry
+sensitive query params — the auth code and the session id, respectively — that must never leak via
+a `Referer` header), `X-Content-Type-Options: nosniff`, and
+`Strict-Transport-Security: max-age=31536000` (deliberately without `includeSubDomains`, since
+other `yellowhammer.dev` subdomains aren't committed to HTTPS). `/install/:id`, `/callback`, and
+`/done` are also `Cache-Control: no-store`, matching the API routes.
+
+`/done` renders purely from its `result` query param, with no KV read: reading the session there
+would show "expired" once the Mac has already consumed the code via polling, and KV's eventual
+consistency could show a stale "pending" state right after approval or rejection.
+
 ## Open items (not implemented here)
 
 - Distributed abuse of `POST /api/session` across many IPs/locations can still exhaust the daily
   KV write quota; per-IP rate limiting (above) doesn't cover that case.
-- CORS, CSP, and other security headers.
+- CORS.
 - `client_id` allowlisting and `code_challenge` shape validation.
