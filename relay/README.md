@@ -34,8 +34,9 @@ per 60 seconds, keyed on the `cf-connecting-ip` header (falling back to `"unknow
 The check runs before any body parsing/validation. Rate limit counters are per Cloudflare
 location, so this is an approximate, per-IP-per-PoP cap, not a global one — it stops a single
 noisy client but not a distributed flood spread across many IPs/locations, which could still
-exhaust the daily KV write quota. Fixing that would need a different storage strategy for session
-creation; see ADR-006 (proposed).
+exhaust the daily KV write quota. That is an accepted risk: the worst case is that remote approval is
+unavailable until the quota resets at 00:00 UTC, the Mac gets a 503, and local admin sign-in still works.
+A zone WAF rate-limiting rule (dashboard-only, not in this repo) adds a 3-per-10s burst cap per IP.
 
 ## KV budget & consistency
 
@@ -69,8 +70,3 @@ consistency could show a stale "pending" state right after approval or rejection
 Deliberately none. The only API client is the Mac (not a browser), so the relay sends no
 `Access-Control-*` headers; browsers therefore refuse cross-origin reads of the API, which is the
 intended behaviour.
-
-## Open items (not implemented here)
-
-- Distributed abuse of `POST /api/session` across many IPs/locations can still exhaust the daily
-  KV write quota; per-IP rate limiting (above) doesn't cover that case.
