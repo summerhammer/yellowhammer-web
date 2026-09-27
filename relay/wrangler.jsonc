@@ -13,10 +13,13 @@
 	"kv_namespaces": [
 		{
 			"binding": "SESSIONS",
-			// TODO: replace with the real namespace id once created in the Cloudflare dashboard.
-			"id": "TODO"
+			"id": "df0447e28aea4bf1a77f22561821097e"
+		}
+	],
+	"routes": [
+		{
+			"pattern": "app.yellowhammer.dev",
+			"custom_domain": true
 		}
 	]
-	// TODO: once the domain is set up, bind the custom domain instead of the workers.dev subdomain:
-	// "routes": [{ "pattern": "app.yellowhammer.dev", "custom_domain": true }]
 }
