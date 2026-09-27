@@ -48,9 +48,9 @@ Stay on the Cloudflare **Free Tier**. KV allows 1,000 writes/day, so be careful 
 - Security headers: strict CSP, `no-referrer`, `nosniff`, HSTS without `includeSubDomains`, `no-store` on HTML routes.
 - `/callback` 303s to `/done?result=…`; a replayed callback writes nothing and shows "already handled"; an expired or unknown session gets a 404 page.
 - KV binding `SESSIONS`, one environment, custom domain `app.yellowhammer.dev`.
+- `client_id` allowlisted per provider (Linear: Yellowhammer's public app id); `code_challenge` must be 43 base64url chars.
 
 ## Still open — raise them, do not invent them
 
-- Whether to allowlist `client_id` and validate `code_challenge`.
 - Distributed abuse can still exhaust the 1,000 KV writes/day. Only a storage change would fix that, which is a question for ADR-006.
 - Environments beyond production, landing domain, licence.

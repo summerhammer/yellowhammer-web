@@ -6,6 +6,7 @@ export const fakeProvider: Provider = {
 	id: "fake",
 	displayName: "Fake Tracker",
 	pkce: "S256",
+	clientIds: ["fake-client-id"],
 	authorizeUrl(session: Session, redirectUri: string): string {
 		const url = new URL("https://fake-tracker.example/oauth/authorize");
 		url.searchParams.set("client_id", session.client_id);

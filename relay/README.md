@@ -8,7 +8,7 @@ the spec's "Code Relay" investigation for the full protocol; this is the impleme
 
 | Route | Purpose |
 |---|---|
-| `POST /api/session` | Mac → relay. Body `{client_id, code_challenge, code_challenge_method, provider?}` (`provider` defaults to `"linear"`). Creates a pending session, returns `{session_id, install_url, expires_in}`. Rate limited (see below); returns `429 {error: "rate_limited"}` with `Retry-After: 60` when the limiter denies, or `503 {error: "relay_unavailable"}` if the KV write throws (e.g. the daily write quota is exhausted). Both responses are `Cache-Control: no-store`. |
+| `POST /api/session` | Mac → relay. Body `{client_id, code_challenge, code_challenge_method, provider?}` (`provider` defaults to `"linear"`). Creates a pending session, returns `{session_id, install_url, expires_in}`. Validates `client_id` against the provider's allowlist (400 `{error: "unknown_client_id"}` if not found) and `code_challenge` format: must be exactly 43 base64url characters (400 `{error: "invalid_code_challenge"}` otherwise). Rate limited (see below); returns `429 {error: "rate_limited"}` with `Retry-After: 60` when the limiter denies, or `503 {error: "relay_unavailable"}` if the KV write throws (e.g. the daily write quota is exhausted). Both responses are `Cache-Control: no-store`. |
 | `GET /install/:id` | Admin's browser. Read-only. Renders the provider's guidance and an "Approve in <Provider>" link. 404 if the session is missing/expired; an "already handled" page if it's no longer pending. |
 | `GET /callback` | Issue tracker → relay redirect target for all providers. Validates `state` against the session, records `approved` (with the code) or `rejected` (with the error), then responds `303 See Other` to `/done?result=<outcome>` — the auth code never appears in a URL the admin's browser keeps in history. A replayed callback on a non-pending session redirects to `result=handled` and writes nothing; a missing/unknown `state` or provider redirects to `result=expired`. |
 | `GET /done` | Renders the outcome page for `/callback`, from the `result` query param only (no KV read — see below). `approved` → confirmation (200), `rejected` → cancelled (200), `handled` → already-used (200), `expired`/missing/unknown → expired (404). |
@@ -74,4 +74,3 @@ intended behaviour.
 
 - Distributed abuse of `POST /api/session` across many IPs/locations can still exhaust the daily
   KV write quota; per-IP rate limiting (above) doesn't cover that case.
-- `client_id` allowlisting and `code_challenge` shape validation.

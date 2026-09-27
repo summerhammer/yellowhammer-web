@@ -79,6 +79,7 @@ export const linear: Provider = {
 	id: "linear",
 	displayName: "Linear",
 	pkce: "S256",
+	clientIds: ["e240956753e1d09cfe73dfd03e45bbc2"],
 	authorizeUrl,
 	parseCallback,
 	Guidance,

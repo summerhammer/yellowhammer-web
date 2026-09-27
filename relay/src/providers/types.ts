@@ -26,6 +26,8 @@ export interface Provider {
 	displayName: string;
 	/** Literal marker: this adapter authenticates using PKCE with S256. */
 	pkce: "S256";
+	/** Public OAuth client IDs this provider's install page may be rendered for; stops the relay's trusted page being used to front someone else's OAuth app. */
+	clientIds: readonly string[];
 	/** Build the provider's OAuth authorize URL for this session. */
 	authorizeUrl(session: Session, redirectUri: string): string;
 	/** Parse the provider's redirect back to `/callback` into a code or an error. */

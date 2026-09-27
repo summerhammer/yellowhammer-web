@@ -6,8 +6,8 @@ import { providers } from "../src/providers";
 import { fakeProvider } from "./fake-provider";
 
 const validBody = {
-	client_id: "client-123",
-	code_challenge: "challenge-abc",
+	client_id: "e240956753e1d09cfe73dfd03e45bbc2",
+	code_challenge: "1BZiH_7qpaDm4hHg5NUWXoXIAAtf7O4d51OzqxPZEnA",
 	code_challenge_method: "S256",
 };
 
@@ -58,8 +58,8 @@ describe("POST /api/session", () => {
 
 	it("defaults provider to linear when omitted", async () => {
 		const { res } = await createSession(app, {
-			client_id: "c",
-			code_challenge: "x",
+			client_id: "e240956753e1d09cfe73dfd03e45bbc2",
+			code_challenge: "1BZiH_7qpaDm4hHg5NUWXoXIAAtf7O4d51OzqxPZEnA",
 			code_challenge_method: "S256",
 		});
 		expect(res.status).toBe(201);
@@ -122,6 +122,103 @@ describe("POST /api/session", () => {
 	it("sets Cache-Control: no-store", async () => {
 		const { res } = await createSession(app);
 		expect(res.headers.get("cache-control")).toBe("no-store");
+	});
+
+	it("rejects an unknown client_id with 400 unknown_client_id", async () => {
+		const res = await request(app, "/api/session", {
+			method: "POST",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify({
+				...validBody,
+				client_id: "unknown-client-id",
+			}),
+		});
+		expect(res.status).toBe(400);
+		expect(await res.json()).toEqual({ error: "unknown_client_id" });
+	});
+
+	it("rejects fake provider's client id when provider is linear with 400", async () => {
+		const res = await request(app, "/api/session", {
+			method: "POST",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify({
+				...validBody,
+				client_id: "fake-client-id",
+				provider: "linear",
+			}),
+		});
+		expect(res.status).toBe(400);
+		expect(await res.json()).toEqual({ error: "unknown_client_id" });
+	});
+
+	it("rejects code_challenge with 42 chars with 400 invalid_code_challenge", async () => {
+		const res = await request(app, "/api/session", {
+			method: "POST",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify({
+				...validBody,
+				code_challenge: "1BZiH_7qpaDm4hHg5NUWXoXIAAtf7O4d51OzqxPZEn",
+			}),
+		});
+		expect(res.status).toBe(400);
+		expect(await res.json()).toEqual({ error: "invalid_code_challenge" });
+	});
+
+	it("rejects code_challenge with 44 chars with 400 invalid_code_challenge", async () => {
+		const res = await request(app, "/api/session", {
+			method: "POST",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify({
+				...validBody,
+				code_challenge: "1BZiH_7qpaDm4hHg5NUWXoXIAAtf7O4d51OzqxPZEnAA",
+			}),
+		});
+		expect(res.status).toBe(400);
+		expect(await res.json()).toEqual({ error: "invalid_code_challenge" });
+	});
+
+	it("rejects code_challenge with padding character = with 400 invalid_code_challenge", async () => {
+		const res = await request(app, "/api/session", {
+			method: "POST",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify({
+				...validBody,
+				code_challenge: "1BZiH_7qpaDm4hHg5NUWXoXIAAtf7O4d51OzqxPZEn=",
+			}),
+		});
+		expect(res.status).toBe(400);
+		expect(await res.json()).toEqual({ error: "invalid_code_challenge" });
+	});
+
+	it("rejects code_challenge with base64 character + with 400 invalid_code_challenge", async () => {
+		const res = await request(app, "/api/session", {
+			method: "POST",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify({
+				...validBody,
+				code_challenge: "1BZiH+7qpaDm4hHg5NUWXoXIAAtf7O4d51OzqxPZEn",
+			}),
+		});
+		expect(res.status).toBe(400);
+		expect(await res.json()).toEqual({ error: "invalid_code_challenge" });
+	});
+
+	it("rejects code_challenge with base64 character / with 400 invalid_code_challenge", async () => {
+		const res = await request(app, "/api/session", {
+			method: "POST",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify({
+				...validBody,
+				code_challenge: "1BZiH/7qpaDm4hHg5NUWXoXIAAtf7O4d51OzqxPZEn",
+			}),
+		});
+		expect(res.status).toBe(400);
+		expect(await res.json()).toEqual({ error: "invalid_code_challenge" });
+	});
+
+	it("accepts exactly 43 valid base64url chars with 201", async () => {
+		const { res } = await createSession(app);
+		expect(res.status).toBe(201);
 	});
 });
 
@@ -516,8 +613,8 @@ describe("fake provider round trip", () => {
 	it("goes through the same routes as production providers", async () => {
 		const app = createApp({ fake: fakeProvider });
 		const { json } = await createSession(app, {
-			client_id: "c",
-			code_challenge: "x",
+			client_id: "fake-client-id",
+			code_challenge: "1BZiH_7qpaDm4hHg5NUWXoXIAAtf7O4d51OzqxPZEnA",
 			code_challenge_method: "S256",
 			provider: "fake",
 		});

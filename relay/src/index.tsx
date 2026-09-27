@@ -92,6 +92,15 @@ export function createApp(registry: ProviderRegistry) {
 			return c.json({ error: "missing_fields" }, 400);
 		}
 
+		if (!provider.clientIds.includes(body.client_id)) {
+			return c.json({ error: "unknown_client_id" }, 400);
+		}
+
+		// S256 = unpadded base64url of a 32-byte SHA-256 → always 43 chars.
+		if (!/^[A-Za-z0-9_-]{43}$/.test(body.code_challenge)) {
+			return c.json({ error: "invalid_code_challenge" }, 400);
+		}
+
 		const sessionId = crypto.randomUUID();
 		try {
 			await createSession(c.env.SESSIONS, sessionId, {
