@@ -16,6 +16,15 @@
 			"id": "df0447e28aea4bf1a77f22561821097e"
 		}
 	],
+	// Per-IP cap on session creation to protect the KV daily write quota. Counters are
+	// per Cloudflare location, so this is approximate, not a global cap.
+	"ratelimits": [
+		{
+			"name": "SESSION_LIMITER",
+			"namespace_id": "1001",
+			"simple": { "limit": 5, "period": 60 }
+		}
+	],
 	"routes": [
 		{
 			"pattern": "app.yellowhammer.dev",
