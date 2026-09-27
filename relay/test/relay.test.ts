@@ -1,5 +1,6 @@
 import { env } from "cloudflare:test";
 import { describe, expect, it } from "vitest";
+import type { Bindings } from "../src/index";
 import { createApp } from "../src/index";
 import { providers } from "../src/providers";
 import { fakeProvider } from "./fake-provider";
@@ -10,12 +11,21 @@ const validBody = {
 	code_challenge_method: "S256",
 };
 
+const allowLimiter: RateLimit = {
+	limit: async () => ({ success: true }),
+};
+
 function request(
 	app: ReturnType<typeof createApp>,
 	path: string,
 	init?: RequestInit,
+	extraEnv?: Partial<Bindings>,
 ) {
-	return app.request(path, init, { SESSIONS: env.SESSIONS });
+	return app.request(path, init, {
+		SESSIONS: env.SESSIONS,
+		SESSION_LIMITER: allowLimiter,
+		...extraEnv,
+	});
 }
 
 async function createSession(
@@ -235,6 +245,128 @@ describe("GET /callback", () => {
 			status: "approved",
 			code: "first-code",
 		});
+	});
+});
+
+describe("POST /api/session rate limiting", () => {
+	const app = createApp(providers);
+
+	it("returns 429 with Retry-After and no-store when the limiter denies, and writes no session", async () => {
+		const denyLimiter: RateLimit = { limit: async () => ({ success: false }) };
+		const before = await env.SESSIONS.list({ prefix: "session:" });
+
+		const res = await request(
+			app,
+			"/api/session",
+			{
+				method: "POST",
+				headers: { "content-type": "application/json" },
+				body: JSON.stringify(validBody),
+			},
+			{ SESSION_LIMITER: denyLimiter },
+		);
+
+		expect(res.status).toBe(429);
+		expect(await res.json()).toEqual({ error: "rate_limited" });
+		expect(res.headers.get("retry-after")).toBe("60");
+		expect(res.headers.get("cache-control")).toBe("no-store");
+
+		const after = await env.SESSIONS.list({ prefix: "session:" });
+		expect(after.keys.length).toBe(before.keys.length);
+	});
+
+	it("denies before body validation: an invalid JSON body still yields 429, not 400", async () => {
+		const denyLimiter: RateLimit = { limit: async () => ({ success: false }) };
+
+		const res = await request(
+			app,
+			"/api/session",
+			{
+				method: "POST",
+				headers: { "content-type": "application/json" },
+				body: "{not json",
+			},
+			{ SESSION_LIMITER: denyLimiter },
+		);
+
+		expect(res.status).toBe(429);
+	});
+
+	it("calls the limiter with the cf-connecting-ip header value as the key", async () => {
+		let capturedKey: string | undefined;
+		const recordingLimiter: RateLimit = {
+			limit: async (options) => {
+				capturedKey = options.key;
+				return { success: true };
+			},
+		};
+
+		await request(
+			app,
+			"/api/session",
+			{
+				method: "POST",
+				headers: {
+					"content-type": "application/json",
+					"cf-connecting-ip": "203.0.113.7",
+				},
+				body: JSON.stringify(validBody),
+			},
+			{ SESSION_LIMITER: recordingLimiter },
+		);
+
+		expect(capturedKey).toBe("203.0.113.7");
+	});
+
+	it("calls the limiter with key 'unknown' when cf-connecting-ip is absent", async () => {
+		let capturedKey: string | undefined;
+		const recordingLimiter: RateLimit = {
+			limit: async (options) => {
+				capturedKey = options.key;
+				return { success: true };
+			},
+		};
+
+		await request(
+			app,
+			"/api/session",
+			{
+				method: "POST",
+				headers: { "content-type": "application/json" },
+				body: JSON.stringify(validBody),
+			},
+			{ SESSION_LIMITER: recordingLimiter },
+		);
+
+		expect(capturedKey).toBe("unknown");
+	});
+});
+
+describe("POST /api/session KV failures", () => {
+	const app = createApp(providers);
+
+	it("returns 503 with no-store when the KV write throws", async () => {
+		const failingSessions: KVNamespace = {
+			...env.SESSIONS,
+			put: async () => {
+				throw new Error("KV daily write quota exceeded");
+			},
+		};
+
+		const res = await request(
+			app,
+			"/api/session",
+			{
+				method: "POST",
+				headers: { "content-type": "application/json" },
+				body: JSON.stringify(validBody),
+			},
+			{ SESSIONS: failingSessions },
+		);
+
+		expect(res.status).toBe(503);
+		expect(await res.json()).toEqual({ error: "relay_unavailable" });
+		expect(res.headers.get("cache-control")).toBe("no-store");
 	});
 });
 

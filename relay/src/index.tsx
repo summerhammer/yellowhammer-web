@@ -20,6 +20,7 @@ import { SuccessPage } from "./views/success";
 
 export interface Bindings {
 	SESSIONS: KVNamespace;
+	SESSION_LIMITER: RateLimit;
 }
 
 interface CreateSessionBody {
@@ -38,6 +39,17 @@ export function createApp(registry: ProviderRegistry) {
 
 	app.post("/api/session", async (c) => {
 		c.header("Cache-Control", "no-store");
+
+		// Per-IP cap, checked before any body parsing/validation, to protect the KV daily
+		// write quota from a flood of requests regardless of payload shape.
+		const rateLimitKey = c.req.header("cf-connecting-ip") ?? "unknown";
+		const { success } = await c.env.SESSION_LIMITER.limit({
+			key: rateLimitKey,
+		});
+		if (!success) {
+			c.header("Retry-After", "60");
+			return c.json({ error: "rate_limited" }, 429);
+		}
 
 		let body: CreateSessionBody;
 		try {
@@ -66,11 +78,17 @@ export function createApp(registry: ProviderRegistry) {
 		}
 
 		const sessionId = crypto.randomUUID();
-		await createSession(c.env.SESSIONS, sessionId, {
-			provider: provider.id,
-			client_id: body.client_id,
-			code_challenge: body.code_challenge,
-		});
+		try {
+			await createSession(c.env.SESSIONS, sessionId, {
+				provider: provider.id,
+				client_id: body.client_id,
+				code_challenge: body.code_challenge,
+			});
+		} catch {
+			// KV throws when the daily write quota is exhausted. 503 lets the Mac fall back
+			// to local admin sign-in instead of surfacing a bare 500.
+			return c.json({ error: "relay_unavailable" }, 503);
+		}
 
 		const installUrl = new URL(`/install/${sessionId}`, c.req.url).toString();
 		return c.json(

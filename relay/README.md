@@ -8,7 +8,7 @@ the spec's "Code Relay" investigation for the full protocol; this is the impleme
 
 | Route | Purpose |
 |---|---|
-| `POST /api/session` | Mac → relay. Body `{client_id, code_challenge, code_challenge_method, provider?}` (`provider` defaults to `"linear"`). Creates a pending session, returns `{session_id, install_url, expires_in}`. |
+| `POST /api/session` | Mac → relay. Body `{client_id, code_challenge, code_challenge_method, provider?}` (`provider` defaults to `"linear"`). Creates a pending session, returns `{session_id, install_url, expires_in}`. Rate limited (see below); returns `429 {error: "rate_limited"}` with `Retry-After: 60` when the limiter denies, or `503 {error: "relay_unavailable"}` if the KV write throws (e.g. the daily write quota is exhausted). Both responses are `Cache-Control: no-store`. |
 | `GET /install/:id` | Admin's browser. Read-only. Renders the provider's guidance and an "Approve in <Provider>" link. 404 if the session is missing/expired; an "already handled" page if it's no longer pending. |
 | `GET /callback` | Issue tracker → relay redirect target for all providers. Validates `state` against the session, records `approved` (with the code) or `rejected` (with the error), and renders a confirmation page. A replayed callback on a non-pending session renders "already handled" and writes nothing. |
 | `GET /api/session/:id` | Mac polls this. `pending` / `rejected` / `approved` (code is deleted from KV on this read, so it's single-use) / 404 `expired`. All responses are `Cache-Control: no-store`. |
@@ -26,6 +26,16 @@ To add a tracker: implement `Provider` in `src/providers/<name>.tsx`, and add it
 so tests can inject a fake provider (`test/fake-provider.tsx`) without touching the production
 registry, which currently contains only Linear.
 
+## Rate limiting
+
+`POST /api/session` is guarded by the `SESSION_LIMITER` Workers Rate Limiting binding: 5 requests
+per 60 seconds, keyed on the `cf-connecting-ip` header (falling back to `"unknown"` when absent).
+The check runs before any body parsing/validation. Rate limit counters are per Cloudflare
+location, so this is an approximate, per-IP-per-PoP cap, not a global one — it stops a single
+noisy client but not a distributed flood spread across many IPs/locations, which could still
+exhaust the daily KV write quota. Fixing that would need a different storage strategy for session
+creation; see ADR-006 (proposed).
+
 ## KV budget & consistency
 
 Per install: 2 writes (create session, then approve/reject on callback) and at most 1 delete (code
@@ -40,6 +50,7 @@ sent to the relay) is what actually makes an intercepted or double-read code use
 
 ## Open items (not implemented here)
 
-- Rate limiting / abuse protection on `POST /api/session`.
+- Distributed abuse of `POST /api/session` across many IPs/locations can still exhaust the daily
+  KV write quota; per-IP rate limiting (above) doesn't cover that case.
 - CORS, CSP, and other security headers.
 - `client_id` allowlisting and `code_challenge` shape validation.
