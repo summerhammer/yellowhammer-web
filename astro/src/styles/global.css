@@ -1,1 +1,202 @@
 @import "tailwindcss";
+
+/*
+ * Night sky palette. Dark only: the page is always Night, whatever the system appearance.
+ *
+ * The sky blues are not brand anchors. They are a deliberate departure from the draft brand's
+ * warm campfire night. The brand tokens used here are the dark anchors only: `brand` #FFD426
+ * (fills and the logo, never text), `info` #8285FF (the Night indigo) and system blue #0A84FF.
+ */
+/* Tokens live on :root (Tailwind's @theme directive is not parsed by this repo's Biome config). */
+:root {
+	color-scheme: dark;
+
+	--font-sans: -apple-system, system-ui, sans-serif;
+	--font-mono: ui-monospace, Menlo, monospace;
+
+	/* Sky: not brand anchors. */
+	--color-night-950: #0b1433;
+	--color-night-900: #111b45;
+	--color-night-800: #1a2456;
+	--color-night-line: #3a4691;
+
+	/* Text on the sky. 16.6:1, 10.1:1 and 7.5:1 on night-950. */
+	--color-ink: #f3f5ff;
+	--color-ink-muted: #b8c0e8;
+	--color-ink-faint: #9ba4d6;
+
+	/* Brand dark anchors. */
+	--color-brand: #ffd426;
+	--color-info: #8285ff;
+
+	/* Primary action: system blue fill with a night-950 label, 4.95:1. Hover lifts to 6.38:1. */
+	--color-action: #0a84ff;
+	--color-action-hover: #409cff;
+	--color-on-action: #0b1433;
+}
+
+html {
+	background-color: var(--color-night-950);
+	font-family: var(--font-sans);
+}
+
+body {
+	min-height: 100vh;
+	background-color: var(--color-night-950);
+	background-image:
+		radial-gradient(1px 1px at 12% 8%, rgb(243 245 255 / 0.55), transparent),
+		radial-gradient(1px 1px at 82% 5%, rgb(243 245 255 / 0.45), transparent),
+		radial-gradient(1.5px 1.5px at 64% 14%, rgb(243 245 255 / 0.5), transparent),
+		radial-gradient(1px 1px at 28% 19%, rgb(243 245 255 / 0.4), transparent),
+		radial-gradient(1px 1px at 92% 22%, rgb(243 245 255 / 0.35), transparent),
+		linear-gradient(
+			180deg,
+			var(--color-night-950) 0%,
+			var(--color-night-800) 100%
+		);
+	background-repeat: no-repeat;
+	background-size:
+		100% 36rem,
+		100% 36rem,
+		100% 36rem,
+		100% 36rem,
+		100% 36rem,
+		100% 100%;
+	color: var(--color-ink);
+	font-family: var(--font-sans);
+	-webkit-font-smoothing: antialiased;
+}
+
+a {
+	text-underline-offset: 0.2em;
+}
+
+:focus-visible {
+	outline: 3px solid var(--color-ink);
+	outline-offset: 3px;
+	border-radius: 4px;
+}
+
+.mark-glow {
+	filter: drop-shadow(0 0 28px rgb(255 212 38 / 0.35));
+}
+
+.btn {
+	display: inline-flex;
+	min-height: 2.75rem;
+	align-items: center;
+	justify-content: center;
+	border-radius: 0.625rem;
+	padding: 0.5rem 1.25rem;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.btn-primary {
+	background-color: var(--color-action);
+	color: var(--color-on-action);
+}
+
+.btn-primary:hover {
+	background-color: var(--color-action-hover);
+}
+
+.btn-secondary {
+	border: 1px solid var(--color-ink-faint);
+	color: var(--color-ink);
+}
+
+.btn-secondary:hover {
+	background-color: var(--color-night-800);
+	border-color: var(--color-ink);
+}
+
+/* The timeline: one rail, one dot per stage. The dot is a brand fill; the text names the stage. */
+.timeline {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.stage {
+	position: relative;
+	padding-left: 2.25rem;
+	padding-bottom: 3rem;
+}
+
+.stage:last-child {
+	padding-bottom: 0;
+}
+
+.stage::before {
+	content: "";
+	position: absolute;
+	left: 0.5rem;
+	top: 1.25rem;
+	bottom: -0.25rem;
+	width: 2px;
+	background-color: var(--color-night-line);
+}
+
+.stage:last-child::before {
+	display: none;
+}
+
+.stage::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0.3rem;
+	width: 1.125rem;
+	height: 1.125rem;
+	border-radius: 9999px;
+	background-color: var(--color-brand);
+	box-shadow:
+		0 0 0 4px var(--color-night-950),
+		0 0 18px rgb(255 212 38 / 0.45);
+}
+
+.act-label {
+	display: inline-block;
+	border: 1px solid var(--color-info);
+	border-radius: 9999px;
+	padding: 0.05rem 0.6rem;
+	color: var(--color-info);
+	font-family: var(--font-mono);
+	font-size: 0.8125rem;
+}
+
+.c-ink {
+	color: var(--color-ink);
+}
+
+.c-muted {
+	color: var(--color-ink-muted);
+}
+
+.c-faint {
+	color: var(--color-ink-faint);
+}
+
+.b-line {
+	border-color: var(--color-night-line);
+}
+
+.mono {
+	font-family: var(--font-mono);
+}
+
+.term {
+	color: var(--color-ink);
+	font-weight: 600;
+}
+
+@media (min-width: 768px) {
+	.stage {
+		padding-left: 3rem;
+	}
+
+	.stage::before {
+		left: 0.5rem;
+	}
+}

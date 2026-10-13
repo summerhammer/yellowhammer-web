@@ -1,10 +1,218 @@
 ---
+import { Image } from "astro:assets";
+import pulse from "../assets/pulse-001.png";
 import Layout from "../layouts/Layout.astro";
+
+const dmg =
+	"https://github.com/summerhammer/yellowhammer/releases/latest/download/Yellowhammer.dmg";
+const repo = "https://github.com/summerhammer/yellowhammer";
 ---
 
-<Layout title="Yellowhammer">
-	<main class="flex min-h-screen flex-col items-center justify-center text-center">
-		<h1 class="text-4xl font-semibold">Yellowhammer</h1>
-		<p class="mt-2">Coming soon.</p>
-	</main>
+<Layout
+	title="Yellowhammer"
+	description="Yellowhammer runs an unattended engineering Night for each of your Projects, on top of Orca ADE. It never writes a line of code and never merges to main."
+>
+	<div class="mx-auto max-w-3xl px-4 pb-16 sm:px-6">
+		<header class="py-6">
+			<span class="text-lg font-semibold tracking-tight">Yellowhammer</span>
+		</header>
+
+		<main>
+			<section class="pt-10 pb-16 sm:pt-16" aria-labelledby="hero-title">
+				<img
+					src="/yellowhammer-mark.svg"
+					alt="The Yellowhammer mark, a yellow bird in profile."
+					width="112"
+					height="112"
+					class="mark-glow mb-8 size-24 sm:size-28"
+				/>
+				<h1 id="hero-title" class="text-4xl leading-tight font-bold tracking-tight text-balance sm:text-5xl">
+					Go to bed with a specification. Wake up with pull requests.
+				</h1>
+				<p class="mt-6 max-w-[60ch] text-xl c-muted">
+					Yellowhammer runs an unattended engineering Night for each of your Projects, on top of Orca ADE.
+				</p>
+				<div class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-4">
+					<a href={dmg} class="btn btn-primary">Download for Mac</a>
+					<a href={repo} class="btn btn-secondary">Star on GitHub</a>
+				</div>
+				<p class="mt-4 text-sm c-muted">Requires macOS 26. Open source, MIT licence.</p>
+				<p class="mt-10 max-w-[70ch] c-muted">
+					It takes intent from a Linear board and authors the work itself when the board is empty. It routes each
+					Work Card to an agent CLI, runs it in a Worktree, and opens one pull request per repository. It verifies
+					the result against a Definition of Done written before any code existed, and reports back to the board.
+					You read the result in the morning.
+				</p>
+			</section>
+
+			<section aria-labelledby="night-title" class="pb-20">
+				<h2 id="night-title" class="text-3xl font-bold tracking-tight text-balance">One Night, in order</h2>
+				<p class="mt-3 max-w-[60ch] c-muted">
+					A Night runs without you. This is one Night for one Project, told from evening to morning. The times are
+					an example, and each Project sets its own schedule.
+				</p>
+
+				<ol class="timeline mt-12">
+					<li class="stage">
+						<p class="mono text-sm c-faint">Evening &middot; 22:00, for example</p>
+						<h3 class="mt-1 text-2xl font-semibold tracking-tight text-balance">The board gets a plan.</h3>
+						<p class="mt-2"><span class="act-label">author Act</span></p>
+						<div class="mt-4 max-w-[65ch] space-y-3 c-muted">
+							<p>
+								The author Act selects one <span class="term">Feature</span> from your specification. It works out
+								which repositories the Feature touches. It writes a flat set of <span class="term">Work Cards</span>,
+								each for one repository, with an Architectural Brief on each.
+							</p>
+							<p>
+								Every clause of the <span class="term">Definition of Done</span> cites a place in the specification.
+								The clauses are written before any code exists.
+							</p>
+							<p>
+								An empty board is a valid start. A specification too thin to cite stops here: the Feature goes
+								<span class="term">Waiting on You</span> before any dispatch, and names the clauses it cannot cite.
+							</p>
+							<p>
+								The first Act of the Night also opens the Night Card. A Night that stops at 02:00 still leaves it.
+							</p>
+						</div>
+					</li>
+
+					<li class="stage">
+						<p class="mono text-sm c-faint">Deep night &middot; 02:00, for example</p>
+						<h3 class="mt-1 text-2xl font-semibold tracking-tight text-balance">
+							Agent CLIs write the code. Yellowhammer judges.
+						</h3>
+						<p class="mt-2"><span class="act-label">build Act</span></p>
+						<div class="mt-4 max-w-[65ch] space-y-3 c-muted">
+							<p>
+								The build Act fires repeatedly through the Night. It routes each Work Card to an agent CLI,
+								chosen by its Work Kind and its repository's role.
+							</p>
+							<p>
+								Each repository gets one <span class="term">Repo Lane</span> in its own
+								<span class="term">Worktree</span>, created by Orca ADE. Lanes run in parallel. Within a lane,
+								Work Cards run one at a time, each through an architect, a worker and a reviewer.
+							</p>
+							<p>
+								Yellowhammer runs your repository's Check itself before a reviewer sees any diff. A reviewer asking
+								for changes is a Round. Each dispatch of a Work Card to a route is an Attempt.
+							</p>
+							<p>
+								Both are bounded. When a <span class="term">Bound</span> is reached, work stops and says why. The
+								Work Card becomes Blocked, with a Block Reason, or Waiting on You, with a question. The lane runs on
+								past it.
+							</p>
+						</div>
+					</li>
+
+					<li class="stage">
+						<p class="mono text-sm c-faint">Early morning &middot; 05:30, for example</p>
+						<h3 class="mt-1 text-2xl font-semibold tracking-tight text-balance">
+							One pull request per repository. No merge.
+						</h3>
+						<p class="mt-2"><span class="act-label">land Act</span></p>
+						<div class="mt-4 max-w-[65ch] space-y-3 c-muted">
+							<p>
+								The land Act fires when the Feature's Work Cards are all finished. It test-merges each Feature Branch
+								against its repository's mainline and pushes it.
+							</p>
+							<p>
+								Then a different agent verifies the Definition of Done, clause by clause, against the specification.
+								That agent's route differs from every route that wrote code. If no such route exists, nothing lands.
+							</p>
+							<p>
+								Then Yellowhammer opens <span class="term">one pull request per repository</span>, with the
+								per-clause report in the body. A repository with a Blocked Work Card still lands, announced as a
+								partial landing. The Act stops at the pull request.
+							</p>
+						</div>
+					</li>
+
+					<li class="stage">
+						<p class="mono text-sm c-faint">Morning &middot; 08:00, for example</p>
+						<h3 class="mt-1 text-2xl font-semibold tracking-tight text-balance">
+							The Night Summary is waiting. You triage.
+						</h3>
+						<p class="mt-2"><span class="act-label">Night Summary</span></p>
+						<div class="mt-4 max-w-[65ch] space-y-3 c-muted">
+							<p>
+								Every Night closes with a <span class="term">Night Summary</span> on its Night Card in Linear,
+								including a Night where nothing was ready. It reports the Night's rates and how close it came to each
+								Bound.
+							</p>
+							<p>
+								The board shows what needs you. Each Work Card carries the route that produced it, the checks that
+								ran and the number of Rounds. You answer Waiting on You items in Linear, read the Block Reason on
+								anything Blocked, and review the pull requests.
+							</p>
+							<p>
+								The verdict comes first, for example:
+								<span class="mt-2 block mono c-ink">Night done. 2 pull requests open.</span>
+							</p>
+						</div>
+						<figure class="mt-8 max-w-[65ch]">
+							<Image
+								src={pulse}
+								alt="The Yellowhammer app's Pulse view after a Night. It reads Night done, started 23:37. Nothing needs you. The Feature shows 3 of 3 Cards done with pull request #471 open."
+								widths={[640, 960, 1280]}
+								sizes="(min-width: 768px) 42rem, calc(100vw - 2rem)"
+								format="webp"
+								loading="lazy"
+								class="h-auto w-full rounded-xl border b-line"
+							/>
+							<figcaption class="mt-3 text-sm c-faint">
+								Pulse, the app's main window, after a Night. Nothing needs you.
+							</figcaption>
+						</figure>
+					</li>
+				</ol>
+			</section>
+
+			<section aria-labelledby="never-title" class="border-t b-line pt-12 pb-16">
+				<h2 id="never-title" class="text-3xl font-bold tracking-tight text-balance">What it never does</h2>
+				<p class="mt-6 text-2xl font-semibold text-balance sm:text-3xl">
+					It never writes a line of code itself.
+				</p>
+				<p class="mt-2 text-2xl font-semibold text-balance sm:text-3xl">It never merges to main.</p>
+				<p class="mt-6 max-w-[65ch] c-muted">
+					The agent CLIs write the code. Yellowhammer judges between them: what to do next, who does it, when to stop
+					and what to tell you in the morning. The pull request is where it stops. The merge is the Operator's.
+				</p>
+			</section>
+
+			<section aria-labelledby="need-title" class="border-t b-line pt-12 pb-16">
+				<h2 id="need-title" class="text-3xl font-bold tracking-tight text-balance">What you need</h2>
+				<ul class="mt-6 max-w-[65ch] space-y-3">
+					<li class="flex gap-3"><span class="c-faint" aria-hidden="true">&mdash;</span>A Mac on macOS 26</li>
+					<li class="flex gap-3"><span class="c-faint" aria-hidden="true">&mdash;</span>Orca ADE</li>
+					<li class="flex gap-3"><span class="c-faint" aria-hidden="true">&mdash;</span>A Linear workspace</li>
+					<li class="flex gap-3"><span class="c-faint" aria-hidden="true">&mdash;</span>GitHub</li>
+					<li class="flex gap-3">
+						<span class="c-faint" aria-hidden="true">&mdash;</span>At least one supported agent CLI
+					</li>
+				</ul>
+				<p class="mt-6 max-w-[65ch] c-muted">
+					Your code, credentials and models stay on your Mac. A Night runs on your existing subscriptions.
+				</p>
+			</section>
+
+			<section aria-labelledby="open-title" class="border-t b-line pt-12">
+				<h2 id="open-title" class="text-3xl font-bold tracking-tight text-balance">Open source</h2>
+				<p class="mt-4 max-w-[65ch] c-muted">
+					Yellowhammer is open source under the MIT licence. The source is on
+					<a href={repo} class="c-ink underline">GitHub</a>.
+				</p>
+				<div class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-4">
+					<a href={dmg} class="btn btn-primary">Download for Mac</a>
+					<a href={repo} class="btn btn-secondary">Star on GitHub</a>
+				</div>
+				<p class="mt-4 text-sm c-muted">Requires macOS 26.</p>
+			</section>
+		</main>
+
+		<footer class="mt-20 flex items-center gap-3 border-t b-line pt-8 text-sm c-muted">
+			<img src="/yellowhammer-mark-monochrome-white.svg" alt="" width="24" height="24" class="size-6" />
+			<p>&copy; Summer Hammer, LLC</p>
+		</footer>
+	</div>
 </Layout>
