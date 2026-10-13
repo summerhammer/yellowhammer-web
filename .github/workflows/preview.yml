@@ -1,0 +1,46 @@
+name: Preview
+
+# Every PR, not only PRs into main: stacked PRs (gh stack) target the branch below them.
+on:
+  pull_request:
+
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  preview-landing:
+    # Fork PRs get no secrets, so skip them rather than fail.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12.6.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build landing
+        run: pnpm --filter landing build
+
+      # Any --branch other than the production branch (main) is a Pages preview deployment. The
+      # PR number, not the head ref, names it: a stable alias that is safe to interpolate.
+      - name: Deploy landing preview
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          workingDirectory: astro
+          command: pages deploy dist --project-name=yellowhammer-landing --branch=pr-${{ github.event.pull_request.number }}
