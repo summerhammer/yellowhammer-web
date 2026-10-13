@@ -34,3 +34,9 @@ jobs:
 
       - name: Typecheck relay
         run: pnpm --filter relay typecheck
+
+      - name: Typecheck landing
+        run: pnpm --filter landing check
+
+      - name: Build landing
+        run: pnpm --filter landing build

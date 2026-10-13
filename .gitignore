@@ -1,6 +1,7 @@
 node_modules
 .wrangler
 dist
+.astro
 relay/public/styles.css
 .DS_Store
 *.log

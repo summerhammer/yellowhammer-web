@@ -12,6 +12,7 @@ Specification lives in [`yellowhammer-spec`](../yellowhammer-spec).
 ```sh
 pnpm install
 pnpm --filter relay dev   # wrangler dev
+pnpm --filter landing dev   # astro dev
 pnpm test
 ```
 
