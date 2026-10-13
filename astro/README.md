@@ -25,6 +25,12 @@ pnpm --filter landing exec wrangler pages project create yellowhammer-landing --
 
 The `CLOUDFLARE_API_TOKEN` repository secret needs the "Cloudflare Pages: Edit" permission.
 
-The custom domain is undecided, so the site is served at `*.pages.dev` until then. While it is a
-placeholder, `src/layouts/Layout.astro` sets `<meta name="robots" content="noindex">` on every page;
-remove it at launch.
+## Domain
+
+Served at `https://yellowhammer.dev`, a custom domain on the `yellowhammer-landing` Pages project
+(`site` in `astro.config.mjs` matches it). `www.yellowhammer.dev` 301s to the apex through a zone
+Redirect Rule. Both are configured in the Cloudflare dashboard, not in this repo. The
+`yellowhammer-landing.pages.dev` URL stays reachable.
+
+While the site is a placeholder, `src/layouts/Layout.astro` sets
+`<meta name="robots" content="noindex">` on every page; remove it at launch.
