@@ -59,6 +59,7 @@ Stay on the Cloudflare **Free Tier**. KV allows 1,000 writes/day, so be careful 
 - KV binding `SESSIONS`, one environment, custom domain `app.yellowhammer.dev`.
 - Landing domain: the apex `yellowhammer.dev`, a custom domain on the Pages project `yellowhammer-landing`. `www.yellowhammer.dev` 301s to the apex, keeping path and query, through one zone Redirect Rule (dashboard-only, not in this repo).
 - `client_id` allowlisted per provider (Linear: Yellowhammer's public app id); `code_challenge` must be 43 base64url chars.
+- Landing install link: `https://github.com/summerhammer/yellowhammer/releases/latest/download/Yellowhammer.dmg`, an unversioned asset name. The app's release pipeline is being changed to publish it. Until then it 404s, which is expected. Don't link a versioned DMG or the releases page instead. The secondary link is the app repo, `https://github.com/summerhammer/yellowhammer` (MIT, open source). The app requires macOS 26.
 - PR previews: Landing only. Every same-repo PR gets a Pages preview deployment at `pr-<number>.yellowhammer-landing.pages.dev` (`.github/workflows/preview.yml`). The relay has no preview: one would share the production `SESSIONS` KV and its daily write quota.
 
 - Distributed abuse exhausting the 1,000 KV writes/day across many IPs is an **accepted risk**. Per-IP limits only, and no storage change.
