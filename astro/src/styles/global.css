@@ -1,1 +1,50 @@
 @import "tailwindcss";
+
+/*
+ * Day sky palette (light only). The sky blues and the blue action colours are
+ * derived for this variant and are not brand anchors. Brand yellow is used for
+ * fills and the mark only, never for text.
+ */
+@theme {
+	--font-sans: -apple-system, system-ui, sans-serif;
+	--font-mono: ui-monospace, Menlo, monospace;
+
+	--color-day-top: #cfe8ff;
+	--color-day-bottom: #f2f9ff;
+	--color-day-card: #ffffff;
+	--color-day-line: #8fb9e0;
+	--color-ink: #0f1b2a;
+	--color-ink-soft: #3a4c60;
+	--color-action: #0066cc;
+	--color-action-hover: #0058b0;
+	--color-link: #0058b0;
+	--color-focus: #003a75;
+	--color-brand: #f4c900;
+}
+
+:root {
+	color-scheme: light;
+}
+
+body {
+	background:
+		linear-gradient(
+			to bottom,
+			var(--color-day-top),
+			var(--color-day-bottom) 960px
+		)
+		no-repeat,
+		var(--color-day-bottom);
+}
+
+:focus-visible {
+	outline: 3px solid var(--color-focus);
+	outline-offset: 3px;
+	border-radius: 0.25rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth;
+	}
+}

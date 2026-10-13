@@ -1,0 +1,45 @@
+---
+import { Image } from "astro:assets";
+import shot from "../assets/pulse-001.png";
+
+/*
+ * A crop of the real Pulse screenshot. The frame has a fixed aspect ratio and
+ * clips the image; the image is scaled and offset with static utility classes
+ * so the page needs no inline style. Offsets are measured on the 2000px-wide
+ * preview of the 2584x2004 screenshot: x 475..1465, with y per crop.
+ *   left  = -475 / 990 = -48% of the frame width
+ *   width = 2000 / 990 = 202% of the frame width
+ *   top   = -y0 / frameHeight of the frame height
+ */
+type CropName = "tiles" | "needs" | "now" | "feature" | "night" | "health";
+
+interface Props {
+	crop: CropName;
+	alt: string;
+	class?: string;
+}
+
+const frames: Record<CropName, { frame: string; image: string }> = {
+	tiles: { frame: "aspect-[990/140]", image: "top-[-178.5%]" },
+	needs: { frame: "aspect-[990/135]", image: "top-[-300%]" },
+	now: { frame: "aspect-[990/202]", image: "top-[-271.3%]" },
+	feature: { frame: "aspect-[990/222]", image: "top-[-342.3%]" },
+	night: { frame: "aspect-[990/240]", image: "top-[-412.5%]" },
+	health: { frame: "aspect-[990/175]", image: "top-[-708.6%]" },
+};
+
+const { crop, alt, class: extra } = Astro.props;
+const { frame, image } = frames[crop];
+---
+
+<div class:list={["relative overflow-hidden rounded-2xl bg-day-card shadow-md ring-1 ring-day-line", frame, extra]}>
+	<Image
+		src={shot}
+		alt={alt}
+		widths={[800, 1300, 1600, 2584]}
+		sizes="(min-width: 1024px) 1300px, 202vw"
+		format="webp"
+		loading="lazy"
+		class:list={["absolute left-[-48%] h-auto w-[202%] max-w-none", image]}
+	/>
+</div>

@@ -1,10 +1,372 @@
 ---
+import { Image } from "astro:assets";
+import shot from "../assets/pulse-001.png";
+import Crop from "../components/Crop.astro";
 import Layout from "../layouts/Layout.astro";
+
+const DOWNLOAD_URL =
+	"https://github.com/summerhammer/yellowhammer/releases/latest/download/Yellowhammer.dmg";
+const REPO_URL = "https://github.com/summerhammer/yellowhammer";
+
+const primaryButton =
+	"inline-flex min-h-12 items-center justify-center rounded-xl bg-action px-6 py-3 text-base font-semibold text-white hover:bg-action-hover motion-safe:transition-colors";
+const secondaryButton =
+	"inline-flex min-h-12 items-center justify-center rounded-xl bg-day-card px-6 py-3 text-base font-semibold text-link ring-1 ring-action hover:bg-day-bottom motion-safe:transition-colors";
+
+const steps = [
+	{
+		name: "Read intent",
+		text: "Takes intent from a Linear board. When the board is empty, it authors the Feature and its Work Cards itself.",
+	},
+	{
+		name: "Route",
+		text: "Routes each Work Card to an agent CLI chosen by its Work Kind. A retry never repeats a route that already failed.",
+	},
+	{
+		name: "Run",
+		text: "Runs each Work Card in a Worktree owned by Orca ADE, one Repo Lane per repository.",
+	},
+	{
+		name: "Open",
+		text: "Opens one pull request per repository.",
+	},
+	{
+		name: "Verify",
+		text: "Verifies the result against a Definition of Done written before any code existed.",
+	},
+	{
+		name: "Report",
+		text: "Reports back to the board, on the Night Card. You read the result in the morning.",
+	},
+];
+
+type CropName = "needs" | "now" | "feature" | "night" | "health";
+
+const tiles: {
+	id: string;
+	name: string;
+	group?: string;
+	crop: CropName;
+	cropAlt: string;
+	lead: string;
+	body: string[];
+	goals: { id: string; title: string }[];
+	why: string;
+}[] = [
+	{
+		id: "needs",
+		name: "Needs you",
+		crop: "needs",
+		cropAlt: "The Needs you group of the Pulse. It reads: Nothing needs you.",
+		lead: "The Work Cards that need a decision from you.",
+		body: [
+			"It shows the Waiting on You count and the top Block Reasons as counts. When nothing needs you, it says so.",
+			"Select a decision Work Card, Blocked or Waiting on You, and its detail opens in the Inspector in one hop. Answer it in Linear, not here.",
+		],
+		goals: [
+			{ id: "G2", title: "The morning is triage, not archaeology" },
+			{
+				id: "G3",
+				title: "Autonomy you can leave running, because it has a stop",
+			},
+		],
+		why: "The board says what needs you. When a Bound fires, work stops and carries its reason.",
+	},
+	{
+		id: "now",
+		name: "Now",
+		crop: "now",
+		cropAlt:
+			"The Now group of the Pulse. Status: idle. Next Act: unknown. No Attempt running.",
+		lead: "Whether the Project is working or idle.",
+		body: [
+			"It shows the Project's status, the next scheduled Act, and each running Attempt with one line of status. While an Act runs, it names the Act (author, build or land) and when it started.",
+			"It never shows a log tail or a transcript. The line is status, not output.",
+		],
+		goals: [{ id: "G2", title: "The morning is triage, not archaeology" }],
+		why: "The state of the Night is on screen, so you open no terminal to find out what happened.",
+	},
+	{
+		id: "feature",
+		name: "Feature",
+		crop: "feature",
+		cropAlt:
+			"The Feature group of the Pulse. One Feature, YLH-347, with one Repo Lane for the yellowhammer repository: 3 of 3 Work Cards, idle, pull request number 471.",
+		lead: "The one Feature in flight for this Project.",
+		body: [
+			"It shows the Feature, its state and rollup state, and its Repo Lanes. Each Repo Lane carries a pull request chip, so one Feature reads as one pull request per repository.",
+			"Select the Feature and its detail opens in the Inspector. Settle and merge stay in Linear and GitHub.",
+		],
+		goals: [
+			{ id: "G5", title: "Multi-repo is the normal case" },
+			{ id: "G1", title: "An idle Night becomes shipped work" },
+		],
+		why: "One Feature, one Cycle, one pull request per repository, and no disconnected tickets.",
+	},
+	{
+		id: "night",
+		name: "Night",
+		group: "Tonight / last Night",
+		crop: "night",
+		cropAlt:
+			"The Tonight / last Night group of the Pulse. The Night state is done, started 23:37, with 3 Work Cards Done, and a link to show the Night's account.",
+		lead: "The Night, in one line.",
+		body: [
+			"It shows the verdict line, the Work Cards counted by disposition, and the Night state: running, done or starved.",
+			"It opens the Night Card, the board's record of the Night. The Night Summary on that card is written every Night, including the ones where nothing was ready.",
+		],
+		goals: [
+			{ id: "G2", title: "The morning is triage, not archaeology" },
+			{ id: "G1", title: "An idle Night becomes shipped work" },
+		],
+		why: "An empty Night and a failed Night do not look alike, and the Summary reports how many Nights ended with a pull request.",
+	},
+	{
+		id: "health",
+		name: "Health",
+		crop: "health",
+		cropAlt:
+			"The Health group of the Pulse. It reads: No health flags, with a link to open Settings.",
+		lead: "What needs fixing on the Mac or in a connection.",
+		body: [
+			"It shows the flags that yh doctor raises: a stale Operator identity, a revoked Board Connection, a failed probe. The identity and connection flags are those of the Board Connection this Project selected.",
+			"It opens the Settings window, where the fix lives. When nothing is wrong, it says so.",
+		],
+		goals: [{ id: "G2", title: "The morning is triage, not archaeology" }],
+		why: "A broken connection is named on screen, so a failed Night does not pass for an empty one.",
+	},
+];
+
+const nevers = [
+	{
+		title: "Deploy and release",
+		text: "Never. Not deferred.",
+	},
+	{
+		title: "Cloud execution",
+		text: "Your code, credentials and models stay on your Mac.",
+	},
+	{
+		title: "A second board",
+		text: "Linear is the board. The app is not another one.",
+	},
+];
+
+const needs = [
+	{
+		name: "A Mac on macOS 26",
+		text: "Everything runs locally on one Mac that stays awake.",
+	},
+	{
+		name: "Orca ADE",
+		text: "It owns the Worktrees. Yellowhammer holds an id and a path, and never manages one itself.",
+	},
+	{
+		name: "A Linear workspace",
+		text: "Linear is the board. In v1, the person running setup must be a workspace admin.",
+	},
+	{
+		name: "GitHub",
+		text: "It receives each Feature Branch push and its pull request.",
+	},
+	{
+		name: "At least one supported agent CLI",
+		text: "The agent CLIs write the code. Yellowhammer dispatches to them.",
+	},
+];
 ---
 
-<Layout title="Yellowhammer">
-	<main class="flex min-h-screen flex-col items-center justify-center text-center">
-		<h1 class="text-4xl font-semibold">Yellowhammer</h1>
-		<p class="mt-2">Coming soon.</p>
+<Layout
+	title="Yellowhammer"
+	description="Go to bed with a specification and wake up with pull requests. Yellowhammer runs an unattended Night for each Project on top of Orca ADE."
+>
+	<a
+		href="#main"
+		class="absolute left-4 top-4 z-20 -translate-y-20 rounded-lg bg-day-card px-4 py-2 font-semibold text-link focus:translate-y-0"
+	>
+		Skip to content
+	</a>
+
+	<div class="relative overflow-x-clip">
+		<div aria-hidden="true" class="pointer-events-none absolute -right-24 -top-28 size-80 rounded-full bg-brand opacity-40 sm:-right-16 sm:size-[26rem]"></div>
+
+		<header class="relative mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-5 sm:px-6">
+			<a href="/" class="flex items-center gap-3 rounded-lg">
+				<img src="/yellowhammer-mark.svg" alt="" width="40" height="40" class="size-10" />
+				<span class="text-xl font-bold tracking-tight">Yellowhammer</span>
+			</a>
+			<nav aria-label="Page sections" class="flex flex-wrap items-center gap-x-5 gap-y-2 text-base font-medium">
+				<a href="#how" class="hidden text-link underline underline-offset-4 sm:inline">How it works</a>
+				<a href="#tour" class="hidden text-link underline underline-offset-4 sm:inline">The Pulse</a>
+				<a href="#limits" class="hidden text-link underline underline-offset-4 md:inline">What it never does</a>
+				<a href="#requirements" class="hidden text-link underline underline-offset-4 md:inline">What you need</a>
+				<a href={REPO_URL} class="text-link underline underline-offset-4">GitHub</a>
+			</nav>
+		</header>
+
+		<main id="main">
+		<section aria-labelledby="hero-title" class="relative mx-auto w-full max-w-6xl px-4 pb-10 pt-8 sm:px-6 sm:pt-12">
+			<h1 id="hero-title" class="max-w-3xl text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+				Go to bed with a specification. Wake up with pull requests.
+			</h1>
+			<p class="mt-5 max-w-2xl text-lg leading-relaxed text-ink-soft sm:text-xl">
+				Yellowhammer runs an unattended Night for each of your Projects, on top of Orca ADE. It takes intent from a Linear board and routes each Work Card to an agent CLI. You read the result in the morning.
+			</p>
+			<div class="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:items-center">
+				<a href={DOWNLOAD_URL} class={primaryButton}>Download for Mac</a>
+				<a href={REPO_URL} class={secondaryButton}>View on GitHub</a>
+				<p class="text-base text-ink-soft">Requires macOS 26</p>
+			</div>
+			<p class="mt-4 text-base text-ink-soft">Open source under the MIT licence.</p>
+
+			<figure class="mt-12">
+				<Image
+					src={shot}
+					alt="The Yellowhammer app window. A sidebar lists one Project. The Pulse in the centre shows five groups: Needs you, Now, Feature, Tonight / last Night and Health. An inspector on the right shows the repository's Repo Lane with 3 of 3 Cards done and pull request number 471."
+					widths={[640, 1024, 1600, 2584]}
+					sizes="(min-width: 1152px) 1120px, calc(100vw - 2rem)"
+					format="webp"
+					loading="eager"
+					class="h-auto w-full"
+				/>
+				<figcaption class="mt-3 text-center text-base text-ink-soft">
+					The Pulse for one Project, idle after a Night: 3 of 3 Work Cards done, one pull request open.
+				</figcaption>
+			</figure>
+		</section>
+		<section id="how" aria-labelledby="how-title" class="mx-auto w-full max-w-6xl scroll-mt-4 px-4 py-14 sm:px-6">
+			<h2 id="how-title" class="text-3xl font-bold tracking-tight">One Night, start to finish</h2>
+			<p class="mt-3 max-w-2xl text-lg leading-relaxed text-ink-soft">
+				Each configured Project runs its own Night. Every Project runs concurrently on the same Mac.
+			</p>
+			<ol class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				{steps.map((step, i) => (
+					<li class="rounded-2xl border-t-4 border-brand bg-day-card p-5 shadow-sm ring-1 ring-day-line">
+						<p class="text-base font-semibold text-ink-soft">Step {i + 1}</p>
+						<h3 class="mt-1 text-xl font-bold">{step.name}</h3>
+						<p class="mt-2 text-base leading-relaxed">{step.text}</p>
+					</li>
+				))}
+			</ol>
+		</section>
+
+		<section id="tour" aria-labelledby="tour-title" class="mx-auto w-full max-w-6xl scroll-mt-4 px-4 py-14 sm:px-6">
+			<h2 id="tour-title" class="text-3xl font-bold tracking-tight">A tour of the Pulse</h2>
+			<p class="mt-3 max-w-2xl text-lg leading-relaxed text-ink-soft">
+				The Pulse is the app's main view of one Project. It has five tiles, always in the same order. It is read-only, and it never mixes two Projects.
+			</p>
+			<Crop
+				crop="tiles"
+				class="mt-8"
+				alt="The row of five tiles at the top of the Pulse: Needs you 0, Now idle, Feature 3 of 3, Night done, Health OK."
+			/>
+			<p class="mt-3 text-base text-ink-soft">
+				The five tiles, one value each. Below them, each tile has its own group. This tour follows them in order.
+			</p>
+
+			<div class="mt-12 flex flex-col gap-16">
+				{tiles.map((tile, i) => (
+					<section aria-labelledby={`tile-${tile.id}`} class="grid items-center gap-6 lg:grid-cols-12 lg:gap-10">
+						<div class:list={["lg:col-span-5", i % 2 === 1 && "lg:order-2"]}>
+							<p class="text-base font-semibold text-ink-soft">Tile {i + 1} of 5</p>
+							<h3 id={`tile-${tile.id}`} class="mt-1 text-3xl font-bold tracking-tight">{tile.name}</h3>
+							{tile.group && <p class="mt-1 text-base text-ink-soft">Group: {tile.group}</p>}
+							<p class="mt-4 text-xl font-semibold leading-snug">{tile.lead}</p>
+							{tile.body.map((paragraph) => (
+								<p class="mt-3 text-base leading-relaxed">{paragraph}</p>
+							))}
+							<div class="mt-5 rounded-xl border-l-4 border-brand bg-day-card p-4 ring-1 ring-day-line">
+								<p class="text-base font-semibold text-ink-soft">Goals it serves</p>
+								<ul class="mt-2 space-y-1 text-base">
+									{tile.goals.map((goal) => (
+										<li>
+											<span class="font-mono font-semibold">{goal.id}</span>
+											<span> · {goal.title}</span>
+										</li>
+									))}
+								</ul>
+								<p class="mt-3 text-base leading-relaxed">{tile.why}</p>
+							</div>
+						</div>
+						<div class:list={["lg:col-span-7", i % 2 === 1 && "lg:order-1"]}>
+							<Crop crop={tile.crop} alt={tile.cropAlt} />
+						</div>
+					</section>
+				))}
+			</div>
+		</section>
+
+		<section id="limits" aria-labelledby="limits-title" class="mx-auto w-full max-w-6xl scroll-mt-4 px-4 py-14 sm:px-6">
+			<h2 id="limits-title" class="text-3xl font-bold tracking-tight">What it never does</h2>
+			<div class="mt-8 grid gap-4 md:grid-cols-2">
+				<div class="rounded-2xl border-t-4 border-brand bg-day-card p-6 shadow-sm ring-1 ring-day-line">
+					<h3 class="text-2xl font-bold">It never writes a line of code.</h3>
+					<p class="mt-3 text-base leading-relaxed">
+						The agent CLIs write the code. Yellowhammer composes the instruction and reads the result.
+					</p>
+				</div>
+				<div class="rounded-2xl border-t-4 border-brand bg-day-card p-6 shadow-sm ring-1 ring-day-line">
+					<h3 class="text-2xl font-bold">It never merges to main.</h3>
+					<p class="mt-3 text-base leading-relaxed">
+						The product hands off at the pull request. The merge is yours.
+					</p>
+				</div>
+			</div>
+			<p class="mt-6 max-w-2xl text-lg leading-relaxed">
+				The agent CLIs write the code. Yellowhammer judges between them. It picks the route, bounds the rounds and attempts, and checks each Work Card against its Definition of Done.
+			</p>
+			<h3 class="mt-10 text-xl font-bold">Also never</h3>
+			<ul class="mt-4 grid gap-4 sm:grid-cols-3">
+				{nevers.map((item) => (
+					<li class="rounded-xl bg-day-card p-4 ring-1 ring-day-line">
+						<p class="text-lg font-semibold">{item.title}</p>
+						<p class="mt-1 text-base text-ink-soft">{item.text}</p>
+					</li>
+				))}
+			</ul>
+		</section>
+
+		<section id="requirements" aria-labelledby="requirements-title" class="mx-auto w-full max-w-6xl scroll-mt-4 px-4 py-14 sm:px-6">
+			<h2 id="requirements-title" class="text-3xl font-bold tracking-tight">What you need</h2>
+			<ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				{needs.map((item) => (
+					<li class="rounded-2xl bg-day-card p-5 shadow-sm ring-1 ring-day-line">
+						<h3 class="text-lg font-bold">{item.name}</h3>
+						<p class="mt-2 text-base leading-relaxed text-ink-soft">{item.text}</p>
+					</li>
+				))}
+			</ul>
+		</section>
+
+		<section aria-labelledby="get-title" class="mx-auto w-full max-w-6xl px-4 pb-20 pt-6 sm:px-6">
+			<div class="flex flex-col items-start gap-6 rounded-3xl bg-day-card p-6 shadow-md ring-1 ring-day-line sm:flex-row sm:items-center sm:p-10">
+				<img src="/app-icon-sky-light.svg" alt="The Yellowhammer app icon." width="96" height="96" class="size-24 shrink-0" />
+				<div>
+					<h2 id="get-title" class="text-3xl font-bold tracking-tight">Open source, under the MIT licence</h2>
+					<p class="mt-2 max-w-xl text-base leading-relaxed text-ink-soft">
+						Read the source, file an issue, or take the app for your Mac.
+					</p>
+					<div class="mt-5 flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:items-center">
+						<a href={DOWNLOAD_URL} class={primaryButton}>Download for Mac</a>
+						<a href={REPO_URL} class={secondaryButton}>View on GitHub</a>
+						<p class="text-base text-ink-soft">Requires macOS 26</p>
+					</div>
+				</div>
+			</div>
+		</section>
 	</main>
+
+	<footer class="border-t border-day-line">
+		<div class="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 py-8 text-base text-ink-soft sm:flex-row sm:items-center sm:justify-between sm:px-6">
+			<p class="flex items-center gap-3">
+				<img src="/yellowhammer-mark-monochrome.svg" alt="" width="24" height="24" class="size-6" />
+				<span>© Summer Hammer, LLC</span>
+			</p>
+			<p>
+				MIT licence ·
+				<a href={REPO_URL} class="text-link underline underline-offset-4">Source on GitHub</a>
+			</p>
+		</div>
+	</footer>
+	</div>
 </Layout>
