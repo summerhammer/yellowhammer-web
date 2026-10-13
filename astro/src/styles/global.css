@@ -1,1 +1,122 @@
 @import "tailwindcss";
+
+/*
+  readme variant: neutral system surfaces, system blue for links and the primary action.
+  Follows the system appearance. Brand yellow appears only inside the logo SVG.
+*/
+/* Tokens are plain custom properties (Biome's CSS parser does not read Tailwind's @theme). */
+:root {
+	--font-sans: -apple-system, system-ui, sans-serif;
+	--font-mono: ui-monospace, Menlo, monospace;
+
+	--color-canvas: #ffffff;
+	--color-ink: #1d1d1f;
+	--color-muted: #636366;
+	--color-line: #d2d2d7;
+	--color-well: #f5f5f7;
+	--color-link: #0066cc;
+	--color-action: #0066cc;
+	--color-action-hover: #0058b0;
+	--color-on-action: #ffffff;
+}
+
+:root {
+	color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-canvas: #16120c;
+		--color-ink: #f5f0e8;
+		--color-muted: #a8a39a;
+		--color-line: #3d362b;
+		--color-well: #221d15;
+		--color-link: #4da3ff;
+		--color-action: #0a84ff;
+		--color-action-hover: #409cff;
+		--color-on-action: #16120c;
+	}
+}
+
+@layer base {
+	body {
+		background-color: var(--color-canvas);
+		color: var(--color-ink);
+		font-family: var(--font-sans);
+		line-height: 1.6;
+	}
+
+	a {
+		color: var(--color-link);
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+	}
+
+	a:hover {
+		text-decoration-thickness: 2px;
+	}
+
+	:focus-visible {
+		outline: 3px solid var(--color-link);
+		outline-offset: 2px;
+		border-radius: 2px;
+	}
+
+	code {
+		font-family: var(--font-mono);
+		font-size: 0.9em;
+		background-color: var(--color-well);
+		border-radius: 4px;
+		padding: 0.1em 0.35em;
+	}
+}
+
+@layer components {
+	.btn-primary {
+		display: inline-block;
+		background-color: var(--color-action);
+		color: var(--color-on-action);
+		font-weight: 600;
+		text-decoration: none;
+		padding: 0.6rem 1.1rem;
+		border-radius: 8px;
+		transition: background-color 120ms ease-out;
+	}
+
+	.btn-primary:hover {
+		background-color: var(--color-action-hover);
+		text-decoration: none;
+	}
+
+	.btn-primary:focus-visible {
+		outline-color: var(--color-ink);
+		border-radius: 8px;
+	}
+
+	.btn-primary:visited {
+		color: var(--color-on-action);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.btn-primary {
+		transition: none;
+	}
+}
+
+/* Colour utilities backed by the tokens above. */
+.bg-canvas {
+	background-color: var(--color-canvas);
+}
+
+.text-ink {
+	color: var(--color-ink);
+}
+
+.text-muted {
+	color: var(--color-muted);
+}
+
+.border-line {
+	border-color: var(--color-line);
+}

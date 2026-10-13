@@ -1,10 +1,328 @@
 ---
+import { Image } from "astro:assets";
+import pulse from "../assets/pulse-001.png";
 import Layout from "../layouts/Layout.astro";
+
+const DOWNLOAD_URL =
+	"https://github.com/summerhammer/yellowhammer/releases/latest/download/Yellowhammer.dmg";
+const REPO_URL = "https://github.com/summerhammer/yellowhammer";
+
+const terms = [
+	{
+		term: "Operator",
+		def: "The single human Yellowhammer serves. They own the specification, the configuration, the machine and the money. Work Cards that need a decision are assigned to them.",
+	},
+	{
+		term: "Night",
+		def: "One unattended run for one Project, from the first Act firing until the Night Card is completed. A Night that produced nothing is still a Night and still gets a Night Summary.",
+	},
+	{
+		term: "Act",
+		def: "One of exactly three named, ordered phases of the engine: author, build and land. Each Act is fired by a scheduled invocation (native macOS launchd or cron). The engine wakes, does one Act's work, writes back and exits.",
+	},
+	{
+		term: "Feature",
+		def: "The unit of intent: one product feature, with exactly one in flight per Project at a time. Work that needs other work to exist first is split into a sequence of Features.",
+	},
+	{
+		term: "Work Card",
+		def: "The unit of dispatchable work: a card on the Board (in v1 a Linear issue) plus a local record Yellowhammer keeps. One Work Card is one repository and one unit of work. A Work Card never depends on another.",
+	},
+	{
+		term: "Repo Lane",
+		def: "The Work Cards of one Feature that belong to one repository. They run one after another, in authored order, in one Worktree and onto one Feature Branch, and produce one pull request.",
+	},
+	{
+		term: "Definition of Done",
+		def: "The clauses that state what must be true for a Feature or Work Card to be finished. They are authored during the author Act, before any code exists. Each clause cites a specific location in the specification.",
+	},
+	{
+		term: "Bound",
+		def: "An Operator-set numeric limit at which Yellowhammer either stops work or promotes an item to a standing decision, rather than grinding. All Bounds are set per Project.",
+	},
+	{
+		term: "Waiting on You",
+		def: "A Linear workflow state shared by Work Cards and the Feature Card. A comment says what needs deciding, and the issue is assigned to the Operator.",
+	},
+	{
+		term: "Night Summary",
+		def: "The account of one Night, carried on the Night Card. It is written every Night, including the ones where nothing was ready.",
+	},
+];
+
+const requirements = [
+	{
+		need: "A Mac on macOS 26",
+		why: "The app requires macOS 26. Everything runs locally on one Mac that stays awake.",
+	},
+	{
+		need: "Orca ADE",
+		why: "It creates, places and cleans up every Worktree. Yellowhammer runs on top of it.",
+	},
+	{
+		need: "A Linear workspace",
+		why: "Linear is the Board. In v1 the person running setup must be a workspace admin.",
+	},
+	{
+		need: "GitHub",
+		why: "Credentials that can push branches and open pull requests, through your own gh CLI or a token in the macOS Keychain.",
+	},
+	{
+		need: "At least one supported agent CLI",
+		why: "Installed and authenticated. The specification has probed claude and codex so far.",
+	},
+	{
+		need: "A specification",
+		why: "Each Project reads one specification source. The author Act selects its Features from it.",
+	},
+	{
+		need: "Your own model access",
+		why: "Subscriptions or API keys that you already hold. A Night rides them.",
+	},
+];
+
+const commands = [
+	{
+		cmd: "yh setup",
+		use: "Connect Linear and GitHub and configure a Project.",
+	},
+	{ cmd: "yh status", use: "Check on demand whether a Night ran." },
+	{
+		cmd: "yh doctor",
+		use: "Diagnose the installation and its scheduled jobs.",
+	},
+];
 ---
 
-<Layout title="Yellowhammer">
-	<main class="flex min-h-screen flex-col items-center justify-center text-center">
-		<h1 class="text-4xl font-semibold">Yellowhammer</h1>
-		<p class="mt-2">Coming soon.</p>
-	</main>
+<Layout
+	title="Yellowhammer"
+	description="Yellowhammer runs an unattended engineering Night per Project, on top of Orca ADE. It never writes a line of code and never merges to main."
+>
+	<div class="mx-auto max-w-[44rem] px-4 pb-16 pt-8 sm:px-6">
+		<header>
+			<div class="flex items-center gap-3">
+				<img
+					src="/yellowhammer-mark.svg"
+					alt="Yellowhammer mark"
+					width="44"
+					height="44"
+					class="h-11 w-11"
+				/>
+				<p class="text-lg font-semibold">Yellowhammer</p>
+			</div>
+			<h1 class="mt-8 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
+				An unattended engineering Night for every Project.
+			</h1>
+			<p class="mt-4 text-lg">
+				Yellowhammer runs on top of Orca ADE. It takes intent from a Linear board, runs the work
+				overnight, and opens one pull request per repository. You read the result in the morning.
+			</p>
+			<div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
+				<a class="btn-primary" href={DOWNLOAD_URL}>Download for Mac</a>
+				<span class="text-muted">Requires macOS 26</span>
+			</div>
+			<p class="mt-4">
+				<a href={REPO_URL}>View on GitHub</a>
+				<span class="text-muted"> · Open source, MIT licence</span>
+			</p>
+		</header>
+
+		<nav aria-label="Contents" class="mt-10 border-y border-line py-4">
+			<ul class="flex flex-wrap gap-x-5 gap-y-1">
+				<li><a href="#what-it-does">What it does</a></li>
+				<li><a href="#what-it-never-does">What it never does</a></li>
+				<li><a href="#terms">Terms</a></li>
+				<li><a href="#how-a-night-runs">How a Night runs</a></li>
+				<li><a href="#requirements">Requirements</a></li>
+				<li><a href="#command-line">Command line</a></li>
+				<li><a href="#licence">Licence</a></li>
+			</ul>
+		</nav>
+
+		<main>
+			<section aria-labelledby="what-it-does" class="mt-10">
+				<h2 id="what-it-does" class="border-b border-line pb-2 text-2xl font-semibold">What it does</h2>
+				<p class="mt-4">
+					Yellowhammer runs one unattended Night per configured Project. All of them run
+					concurrently.
+				</p>
+				<p class="mt-4">
+					It takes intent from a Linear board. When the board is empty, it authors the work itself
+					from your specification.
+				</p>
+				<p class="mt-4">
+					It routes each Work Card to an agent CLI and runs it in a Worktree. It opens one pull
+					request per repository.
+				</p>
+				<p class="mt-4">
+					It verifies the result against a Definition of Done that was written before any code
+					existed. Then it reports back to the board.
+				</p>
+				<p class="mt-4">
+					It is for a solo developer or a very small team with one or more multi-repo products.
+				</p>
+			</section>
+
+			<section aria-labelledby="what-it-never-does" class="mt-10">
+				<h2 id="what-it-never-does" class="border-b border-line pb-2 text-2xl font-semibold">
+					What it never does
+				</h2>
+				<p class="mt-4 font-semibold">It never writes a line of code, and it never merges to main.</p>
+				<p class="mt-4">
+					The agent CLIs write the code. Yellowhammer judges between them. The product hands off at
+					the pull request, and the merge is the Operator's.
+				</p>
+				<p class="mt-4">Two more limits, both by design:</p>
+				<ul class="mt-2 list-disc pl-6">
+					<li>It does not deploy or release.</li>
+					<li>It does not run in the cloud. Your code, credentials and models stay on your Mac.</li>
+				</ul>
+			</section>
+
+			<section aria-labelledby="terms" class="mt-10">
+				<h2 id="terms" class="border-b border-line pb-2 text-2xl font-semibold">Terms</h2>
+				<p class="mt-4">The words below are used exactly as the specification defines them.</p>
+				<dl class="mt-2">
+					{
+						terms.map(({ term, def }) => (
+							<div class="mt-5">
+								<dt class="font-semibold">{term}</dt>
+								<dd class="mt-1 text-muted">{def}</dd>
+							</div>
+						))
+					}
+				</dl>
+			</section>
+
+			<section aria-labelledby="how-a-night-runs" class="mt-10">
+				<h2 id="how-a-night-runs" class="border-b border-line pb-2 text-2xl font-semibold">
+					How a Night runs
+				</h2>
+				<ol class="mt-4 list-decimal space-y-3 pl-6 marker:font-semibold">
+					<li>
+						The author Act runs when no Work Card is ready. It selects one Feature from the
+						specification and authors its Work Cards. Every Work Card gets a Definition of Done
+						before any code exists. If the specification is too thin to cite, the Feature goes to
+						Waiting on You and nothing is dispatched.
+					</li>
+					<li>
+						The Work Cards are grouped into one Repo Lane per repository. Each lane gets its own
+						Worktree from Orca ADE, requested under a name of the form
+						<code>yh-&lt;project&gt;-&lt;feature&gt;</code>.
+					</li>
+					<li>
+						The build Act routes each Work Card to an agent CLI by its Work Kind. Within a lane the
+						Work Cards run one after another. Lanes run in parallel.
+					</li>
+					<li>
+						The engine runs the repository's Check itself. A reviewer never sees code that fails
+						it.
+					</li>
+					<li>
+						When a Bound is reached, work stops. A Work Card that needs a decision goes to Waiting
+						on You, and the lane runs on past it.
+					</li>
+					<li>
+						The land Act pushes each Feature Branch and opens one pull request per repository. A
+						different agent then verifies each clause of the Definition of Done against the
+						specification location it cites.
+					</li>
+					<li>Yellowhammer writes the Night Summary on the Night Card in Linear.</li>
+				</ol>
+				<p class="mt-4">You read the result in the morning. The merge is yours.</p>
+
+				<figure class="mt-6">
+					<Image
+						src={pulse}
+						alt="The Yellowhammer main window showing the Pulse for one Project, idle. Tiles read Needs you, Now, Feature, Night and Health. An inspector on the right lists one Repo Lane with three Work Cards done and one pull request."
+						width={1100}
+						height={853}
+						widths={[640, 1100]}
+						sizes="(min-width: 704px) 672px, calc(100vw - 32px)"
+						format="webp"
+						loading="lazy"
+						class="h-auto w-full rounded-lg border border-line"
+					/>
+					<figcaption class="mt-2 text-sm text-muted">
+						The Pulse, the status view in the main window, shown idle. Answers go in Linear, not
+						here.
+					</figcaption>
+				</figure>
+			</section>
+
+			<section aria-labelledby="requirements" class="mt-10">
+				<h2 id="requirements" class="border-b border-line pb-2 text-2xl font-semibold">Requirements</h2>
+				<table class="mt-4 w-full border-collapse text-left">
+					<caption class="sr-only">What you need before the first Night</caption>
+					<thead>
+						<tr class="border-b border-line">
+							<th scope="col" class="py-2 pr-4 font-semibold">You need</th>
+							<th scope="col" class="py-2 font-semibold">Why</th>
+						</tr>
+					</thead>
+					<tbody>
+						{
+							requirements.map(({ need, why }) => (
+								<tr class="border-b border-line align-top">
+									<th scope="row" class="w-2/5 py-3 pr-4 font-semibold">
+										{need}
+									</th>
+									<td class="py-3 text-muted">{why}</td>
+								</tr>
+							))
+						}
+					</tbody>
+				</table>
+				<div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
+					<a class="btn-primary" href={DOWNLOAD_URL}>Download for Mac</a>
+					<span class="text-muted">Requires macOS 26</span>
+				</div>
+			</section>
+
+			<section aria-labelledby="command-line" class="mt-10">
+				<h2 id="command-line" class="border-b border-line pb-2 text-2xl font-semibold">Command line</h2>
+				<p class="mt-4">
+					The app ships a command line tool, <code>yh</code>. To put it on your
+					<code>$PATH</code>, choose Yellowhammer, then Install Command Line Tool.
+				</p>
+				<table class="mt-4 w-full border-collapse text-left">
+					<caption class="sr-only">Commands</caption>
+					<thead>
+						<tr class="border-b border-line">
+							<th scope="col" class="py-2 pr-4 font-semibold">Command</th>
+							<th scope="col" class="py-2 font-semibold">Use</th>
+						</tr>
+					</thead>
+					<tbody>
+						{
+							commands.map(({ cmd, use }) => (
+								<tr class="border-b border-line align-top">
+									<th scope="row" class="py-3 pr-4 font-normal">
+										<code>{cmd}</code>
+									</th>
+									<td class="py-3 text-muted">{use}</td>
+								</tr>
+							))
+						}
+					</tbody>
+				</table>
+				<p class="mt-4">
+					Commands that act on one Project take <code>--project &lt;id&gt;</code>. It is required
+					when more than one Project is configured.
+				</p>
+			</section>
+
+			<section aria-labelledby="licence" class="mt-10">
+				<h2 id="licence" class="border-b border-line pb-2 text-2xl font-semibold">Licence</h2>
+				<p class="mt-4">
+					Yellowhammer is open source under the MIT licence.
+					<a href={REPO_URL}>Read the source on GitHub</a>.
+				</p>
+			</section>
+		</main>
+
+		<footer class="mt-12 border-t border-line pt-4 text-sm text-muted">
+			<p>© Summer Hammer, LLC</p>
+		</footer>
+	</div>
 </Layout>
