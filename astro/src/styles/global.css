@@ -1,1 +1,53 @@
 @import "tailwindcss";
+
+/*
+ * native-mac palette. Neutral system surfaces and system blue for the action.
+ * Brand yellow appears only inside the logo artwork, never as a UI colour.
+ * Light follows Apple's light surfaces. Dark uses the spec's warm near-black #16120C.
+ */
+:root {
+	color-scheme: light dark;
+
+	--canvas: #ffffff;
+	--canvas-alt: #f5f5f7;
+	--ink: #1d1d1f;
+	--ink-muted: #5e5e63;
+	--rule: #d2d2d7;
+	--action: #0066cc;
+	--action-hover: #0058b0;
+	--on-action: #ffffff;
+	--link: #0066cc;
+	--ring: #0066cc;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--canvas: #16120c;
+		--canvas-alt: #1f1a13;
+		--ink: #f5f1ea;
+		--ink-muted: #b3aca1;
+		--rule: #3a332a;
+		--action: #0a84ff;
+		--action-hover: #409cff;
+		--on-action: #16120c;
+		--link: #5aa9ff;
+		--ring: #5aa9ff;
+	}
+}
+
+html {
+	font-family: -apple-system, system-ui, sans-serif;
+	-webkit-text-size-adjust: 100%;
+	-webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+	outline: 3px solid var(--ring);
+	outline-offset: 3px;
+}
+
+code,
+kbd,
+pre {
+	font-family: ui-monospace, Menlo, monospace;
+}

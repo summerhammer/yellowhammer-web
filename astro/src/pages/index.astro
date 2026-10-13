@@ -1,10 +1,209 @@
 ---
+import { Image } from "astro:assets";
+import pulse from "../assets/pulse-001.png";
 import Layout from "../layouts/Layout.astro";
+
+const DOWNLOAD_URL =
+	"https://github.com/summerhammer/yellowhammer/releases/latest/download/Yellowhammer.dmg";
+const REPO_URL = "https://github.com/summerhammer/yellowhammer";
+
+const capabilities = [
+	{
+		title: "Ships while you sleep",
+		body: "Go to bed with a specification and wake up with pull requests, even from an empty board.",
+	},
+	{
+		title: "A morning of triage",
+		body: "The board says what needs you. Every Night has one Night Summary, including Nights where nothing was ready.",
+	},
+	{
+		title: "A stop built in",
+		body: "Rounds and Attempts are bounded. When a Bound fires, work stops and carries the reason.",
+	},
+	{
+		title: "Routed by Work Kind",
+		body: "Each Work Card goes to a route suited to it. A retry never repeats a route that already failed.",
+	},
+	{
+		title: "Multi-repo by default",
+		body: "One Feature, one pull request per repository, and no disconnected tickets.",
+	},
+	{
+		title: "Judgement between agents",
+		body: "It never writes a line of code, and it never merges to main. The agent CLIs write the code. Yellowhammer judges between them.",
+	},
+];
+
+const requirements = [
+	{ name: "A Mac", detail: "Running macOS 26." },
+	{
+		name: "Orca ADE",
+		detail: "Yellowhammer runs on top of it. Orca owns the Worktrees.",
+	},
+	{
+		name: "A Linear workspace",
+		detail: "Intent comes in from the board. The report goes back to it.",
+	},
+	{
+		name: "GitHub",
+		detail: "Receives each Feature Branch and its pull request.",
+	},
+	{
+		name: "An agent CLI",
+		detail: "At least one supported agent CLI, such as Claude Code or Codex.",
+	},
+];
+
+const primaryButton =
+	"inline-flex min-h-12 items-center justify-center rounded-full bg-(--action) px-8 text-[1.0625rem] font-medium text-(color:--on-action) transition-colors hover:bg-(--action-hover) motion-reduce:transition-none";
+const secondaryButton =
+	"inline-flex min-h-12 items-center justify-center rounded-full border border-(--link) px-8 text-[1.0625rem] font-medium text-(color:--link) transition-colors hover:bg-(--canvas-alt) motion-reduce:transition-none";
 ---
 
-<Layout title="Yellowhammer">
-	<main class="flex min-h-screen flex-col items-center justify-center text-center">
-		<h1 class="text-4xl font-semibold">Yellowhammer</h1>
-		<p class="mt-2">Coming soon.</p>
+<Layout
+	title="Yellowhammer"
+	description="Yellowhammer runs an unattended engineering Night for every Project, on top of Orca ADE. It never writes a line of code and never merges to main."
+>
+	<a
+		href="#main"
+		class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:rounded-md focus:bg-(--canvas) focus:px-4 focus:py-2"
+		>Skip to content</a
+	>
+
+	<header class="border-b border-(--rule)">
+		<nav
+			aria-label="Primary"
+			class="mx-auto flex min-h-14 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6"
+		>
+			<a href="/" class="flex items-center gap-2 text-[0.9375rem] font-semibold">
+				<img src="/yellowhammer-mark.svg" alt="" width="28" height="28" class="size-7" />
+				Yellowhammer
+			</a>
+			<ul class="flex items-center gap-5 text-[0.9375rem]">
+				<li>
+					<a href="#requirements" class="text-(color:--ink-muted) hover:text-(color:--ink)">Requirements</a>
+				</li>
+				<li>
+					<a href={REPO_URL} class="text-(color:--ink-muted) hover:text-(color:--ink)">GitHub</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
+
+	<main id="main">
+		<section class="mx-auto max-w-4xl px-4 pb-16 pt-16 text-center sm:px-6 sm:pt-24 lg:pt-28">
+			<img
+				src="/yellowhammer-mark.svg"
+				alt="The Yellowhammer mark, a yellow bird"
+				width="160"
+				height="160"
+				class="mx-auto size-32 sm:size-40"
+			/>
+			<h1 class="mt-8 text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
+				Yellowhammer
+			</h1>
+			<p class="mx-auto mt-5 max-w-2xl text-xl leading-snug text-(color:--ink-muted) sm:text-2xl">
+				An unattended engineering Night for every Project, on top of Orca ADE.
+			</p>
+			<div class="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
+				<a href={DOWNLOAD_URL} class={primaryButton}>Download for Mac</a>
+				<a href={REPO_URL} class={secondaryButton}>View on GitHub</a>
+			</div>
+			<p class="mt-5 text-sm text-(color:--ink-muted)">Requires macOS 26.</p>
+		</section>
+
+		<section class="mx-auto max-w-6xl px-4 pb-20 sm:px-6 sm:pb-28" aria-labelledby="pulse-heading">
+			<h2 id="pulse-heading" class="sr-only">The app</h2>
+			<figure>
+				<Image
+					src={pulse}
+					alt="Pulse, the Yellowhammer main window, after a Night. Nothing needs you. Feature YLH-347 shows 3 of 3 Work Cards done and pull request #471 open."
+					width={1600}
+					height={1241}
+					widths={[640, 960, 1280, 1600, 2000]}
+					sizes="(min-width: 1152px) 1120px, 100vw"
+					format="webp"
+					loading="lazy"
+					class="h-auto w-full"
+				/>
+				<figcaption class="mt-4 text-center text-sm text-(color:--ink-muted)">
+					Pulse, the main window, after a Night.
+				</figcaption>
+			</figure>
+		</section>
+
+		<section class="bg-(--canvas-alt) py-20 sm:py-28" aria-labelledby="does-heading">
+			<div class="mx-auto max-w-6xl px-4 sm:px-6">
+				<h2
+					id="does-heading"
+					class="mx-auto max-w-3xl text-center text-3xl font-bold tracking-tight sm:text-5xl"
+				>
+					One Night for every Project.
+				</h2>
+				<p class="mx-auto mt-6 max-w-2xl text-center text-lg leading-relaxed text-(color:--ink-muted)">
+					Yellowhammer takes intent from a Linear board and authors the work itself when the board is
+					empty. It routes each Work Card to an agent CLI and runs it in a Worktree. It opens one pull
+					request per repository. It verifies the result against a Definition of Done written before
+					any code existed, then reports back to the board. You read the result in the morning.
+				</p>
+				<ul class="mt-14 grid gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
+					{
+						capabilities.map((item) => (
+							<li class="rounded-2xl bg-(--canvas) p-7 sm:p-8">
+								<h3 class="text-xl font-semibold leading-snug tracking-tight">{item.title}</h3>
+								<p class="mt-3 leading-relaxed text-(color:--ink-muted)">{item.body}</p>
+							</li>
+						))
+					}
+				</ul>
+			</div>
+		</section>
+
+		<section
+			id="requirements"
+			class="mx-auto max-w-4xl scroll-mt-4 px-4 py-20 sm:px-6 sm:py-28"
+			aria-labelledby="requirements-heading"
+		>
+			<h2
+				id="requirements-heading"
+				class="text-center text-3xl font-bold tracking-tight sm:text-5xl"
+			>
+				What you need.
+			</h2>
+			<ul class="mt-12 border-t border-(--rule)">
+				{
+					requirements.map((item) => (
+						<li class="grid gap-1 border-b border-(--rule) py-5 sm:grid-cols-[14rem_1fr] sm:gap-8">
+							<span class="text-lg font-semibold">{item.name}</span>
+							<span class="text-lg text-(color:--ink-muted)">{item.detail}</span>
+						</li>
+					))
+				}
+			</ul>
+
+			<div class="mt-16 text-center">
+				<h3 class="text-2xl font-semibold tracking-tight">Open source.</h3>
+				<p class="mx-auto mt-3 max-w-xl text-lg leading-relaxed text-(color:--ink-muted)">
+					Yellowhammer is released under the MIT licence.
+				</p>
+				<div class="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
+					<a href={DOWNLOAD_URL} class={primaryButton}>Download for Mac</a>
+					<a href={REPO_URL} class={secondaryButton}>View on GitHub</a>
+				</div>
+				<p class="mt-5 text-sm text-(color:--ink-muted)">Requires macOS 26.</p>
+			</div>
+		</section>
 	</main>
+
+	<footer class="border-t border-(--rule)">
+		<div
+			class="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-8 text-sm text-(color:--ink-muted) sm:flex-row sm:items-center sm:justify-between sm:px-6"
+		>
+			<p>&copy; Summer Hammer, LLC.</p>
+			<p>
+				MIT licence.
+				<a href={REPO_URL} class="text-(color:--link) underline underline-offset-2">Source on GitHub</a>
+			</p>
+		</div>
+	</footer>
 </Layout>
