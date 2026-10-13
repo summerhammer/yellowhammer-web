@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Part of the Yellowhammer multi-repo product (siblings under `../`). It hosts two Cloudflare apps:
 
 - **Relay** (`relay/`): Cloudflare Workers + Static Assets + Workers KV, built with Hono (TypeScript + JSX, server-rendered) + Tailwind. It is the "Code Relay" for issue-tracker auth, and only Linear is supported. Served at `app.yellowhammer.dev`.
-- **Landing** (`astro/`): the marketing site, built with Astro + Tailwind and deployed to Cloudflare Pages. It contains no auth logic.
+- **Landing** (`astro/`): the marketing site, built with Astro + Tailwind and deployed to Cloudflare Pages. It contains no auth logic. Served at `yellowhammer.dev`.
 
 Stay on the Cloudflare **Free Tier**. KV allows 1,000 writes/day, so be careful with anything that writes per request.
 
@@ -48,10 +48,11 @@ Stay on the Cloudflare **Free Tier**. KV allows 1,000 writes/day, so be careful 
 - Security headers: strict CSP, `no-referrer`, `nosniff`, HSTS without `includeSubDomains`, `no-store` on HTML routes.
 - `/callback` 303s to `/done?result=…`; a replayed callback writes nothing and shows "already handled"; an expired or unknown session gets a 404 page.
 - KV binding `SESSIONS`, one environment, custom domain `app.yellowhammer.dev`.
+- Landing domain: the apex `yellowhammer.dev`, a custom domain on the Pages project `yellowhammer-landing`. `www.yellowhammer.dev` 301s to the apex, keeping path and query, through one zone Redirect Rule (dashboard-only, not in this repo).
 - `client_id` allowlisted per provider (Linear: Yellowhammer's public app id); `code_challenge` must be 43 base64url chars.
 
 - Distributed abuse exhausting the 1,000 KV writes/day across many IPs is an **accepted risk**. Per-IP limits only, and no storage change.
 
 ## Still open — raise them, do not invent them
 
-- Environments beyond production, landing domain, licence.
+- Environments beyond production, licence.
