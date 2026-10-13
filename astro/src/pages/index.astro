@@ -1,10 +1,522 @@
 ---
+import { Image } from "astro:assets";
+import pulse from "../assets/pulse-001.png";
+import Glyph from "../components/Glyph.astro";
 import Layout from "../layouts/Layout.astro";
+
+const DOWNLOAD =
+	"https://github.com/summerhammer/yellowhammer/releases/latest/download/Yellowhammer.dmg";
+const REPO = "https://github.com/summerhammer/yellowhammer";
+
+// Example wording from the brand personality page. Not output from a real Night.
+const verdicts = [
+	{
+		glyph: "night",
+		tone: "text-info",
+		label: "Night Summary",
+		line: "Night done. 2 pull requests open.",
+	},
+	{
+		glyph: "night",
+		tone: "text-info",
+		label: "Night Summary",
+		line: "Night done. Nothing was ready.",
+	},
+	{
+		glyph: "blocked",
+		tone: "text-error",
+		label: "Blocked",
+		line: "Blocked: check failure. Answer it in Linear, not here.",
+	},
+	{
+		glyph: "waiting",
+		tone: "text-attention",
+		label: "Waiting on You",
+		line: "Waiting on you",
+	},
+] as const;
+
+const readings = [
+	{
+		glyph: "night",
+		tone: "text-info",
+		label: "Night Summary",
+		title: "The verdict",
+		body: [
+			"Read the Night Card first. It carries the Night Summary for one Project.",
+			"The Night Summary is written every Night, including a Night where nothing was ready.",
+			"The Night Card is created by the first Act, so a Night that died at 02:00 still leaves a card saying it opened.",
+		],
+	},
+	{
+		glyph: "landed",
+		tone: "text-success",
+		label: "Landed",
+		title: "What landed",
+		body: [
+			"One pull request per repository.",
+			"A green Work Card carries its Definition of Done clauses, each with its Spec Citation.",
+			"You can accept it without reopening the diff.",
+		],
+	},
+	{
+		glyph: "waiting",
+		tone: "text-attention",
+		label: "Waiting on You",
+		title: "What is Waiting on You",
+		body: [
+			"An agent stopped instead of guessing.",
+			"The Work Card is assigned to you, with the question in a comment.",
+			"Asking cost no Round and no Attempt.",
+		],
+	},
+	{
+		glyph: "blocked",
+		tone: "text-error",
+		label: "Blocked",
+		title: "What Blocked, and why",
+		body: [
+			"Nothing moves until you act.",
+			"The Block Reason says where to look, so you open nothing to find out.",
+			"Read the review history and decide whether the approach was wrong.",
+		],
+	},
+] as const;
+
+const blockReasons = [
+	"reviewer rejection",
+	"check failure",
+	"route failure",
+	"host crash",
+	"engine fault",
+	"operator abort",
+	"reply overdue",
+	"decision overdue",
+	"feature abandoned",
+	"failure recurrence",
+];
+
+const answerSteps = [
+	{
+		title: "Open the Work Card in Linear.",
+		body: "It is in the Waiting on You state and assigned to you, so Linear notifies you as it does for any assignment.",
+	},
+	{
+		title: "Read the question.",
+		body: "It is in a comment on the Work Card.",
+	},
+	{
+		title: "Reply to that comment.",
+		body: "Your reply is the answer.",
+	},
+	{
+		title: "Yellowhammer resumes the Work Card.",
+		body: "The next build Act reads your reply and moves the Work Card out of Waiting on You itself. It acknowledges you with one line: “It runs on the next build Act.”",
+	},
+] as const;
+
+const waitingKinds = [
+	{
+		name: "question",
+		body: "An agent asked mid-run. Reply to the question comment.",
+	},
+	{
+		name: "divergence",
+		body: "The repository moved and the work no longer holds. Decide whether the work is still wanted. A reply is recorded and nothing runs.",
+	},
+	{
+		name: "overreach",
+		body: "The Declared Scope overlaps a Protected Path. Edit the Scope line or the Protected Paths configuration. A reply is never the answer.",
+	},
+] as const;
+
+const acts = [
+	{
+		name: "Author",
+		when: "Fires when no Work Cards are ready, or when you force it.",
+		body: "Selects one Feature from your specification and authors its Cycle and Work Cards. Each Definition of Done is written before any code exists.",
+	},
+	{
+		name: "Build",
+		when: "Fires repeatedly through the Night.",
+		body: "Routes each Work Card to an agent CLI by its Work Kind. Runs it in a Worktree, one Repo Lane per repository.",
+	},
+	{
+		name: "Land",
+		when: "Fires when the Cycle has no unfinished Work Cards.",
+		body: "Pushes each Feature Branch and opens one pull request per repository. A different agent verifies the result against the Definition of Done. Then it reports to the board.",
+	},
+] as const;
+
+const never = [
+	{ title: "Deploy and release", body: "Not deferred. Never." },
+	{
+		title: "Cloud execution",
+		body: "Your code, credentials and models stay on your Mac.",
+	},
+	{
+		title: "A second board",
+		body: "Linear is the board. The app is a glance, and you answer in Linear.",
+	},
+] as const;
+
+const needs = [
+	{
+		name: "A Mac on macOS 26",
+		note: "Everything runs locally on one Mac that stays awake.",
+	},
+	{ name: "Orca ADE", note: "It owns Worktrees." },
+	{
+		name: "A Linear workspace",
+		note: "It is the board. Setup needs a workspace admin.",
+	},
+	{ name: "GitHub", note: "It receives Feature Branches and pull requests." },
+	{
+		name: "At least one agent CLI",
+		note: "Such as Claude Code or Codex. Each has its own CLI Adapter.",
+	},
+] as const;
+
+const linkClass =
+	"text-action-text underline decoration-action-text/50 underline-offset-4 hover:text-action-text-hover hover:decoration-action-text-hover";
+const primaryClass =
+	"inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-action px-6 py-3 text-base font-semibold text-white hover:bg-action-hover";
+const secondaryClass =
+	"inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-line-strong px-6 py-3 text-base font-semibold text-action-text hover:border-action-text hover:text-action-text-hover";
 ---
 
-<Layout title="Yellowhammer">
-	<main class="flex min-h-screen flex-col items-center justify-center text-center">
-		<h1 class="text-4xl font-semibold">Yellowhammer</h1>
-		<p class="mt-2">Coming soon.</p>
-	</main>
+<Layout
+	title="Yellowhammer"
+	description="Yellowhammer runs an unattended Night per Project on top of Orca ADE. The morning is triage, not archaeology."
+>
+	<a
+		href="#main"
+		class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-surface-2 focus:px-4 focus:py-2 focus:text-ink"
+		>Skip to content</a
+	>
+
+	<div class="embers">
+		<header class="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-5 sm:px-6">
+			<a href="/" class="flex items-center gap-3 rounded-lg">
+				<img src="/logos/yellowhammer-mark.svg" alt="" width="36" height="36" class="size-9" />
+				<span class="text-lg font-bold tracking-tight">Yellowhammer</span>
+			</a>
+			<nav aria-label="Primary" class="flex items-center gap-5 text-sm">
+				<a href="#answer" class="hidden text-muted hover:text-ink sm:inline">Answering</a>
+				<a href="#never" class="hidden text-muted hover:text-ink sm:inline">Limits</a>
+				<a href={REPO} class="font-semibold text-action-text hover:text-action-text-hover">GitHub</a>
+			</nav>
+		</header>
+
+		<main id="main">
+			<!-- Hero -->
+			<section aria-labelledby="hero-title" class="mx-auto w-full max-w-6xl px-4 pb-16 pt-10 sm:px-6 sm:pb-24 sm:pt-16">
+				<div class="grid items-center gap-12 lg:grid-cols-[1.15fr_1fr]">
+					<div>
+						<p class="flex items-center gap-3 text-sm font-semibold text-muted">
+							<span class="ember-dot inline-block size-2.5 rounded-full" aria-hidden="true"></span>
+							Yellowhammer for Mac
+						</p>
+						<h1 id="hero-title" class="mt-5 text-4xl font-bold leading-[1.08] tracking-tight sm:text-6xl">
+							The morning is triage, not archaeology.
+						</h1>
+						<p class="mt-6 max-w-[60ch] text-lg leading-relaxed text-muted sm:text-xl">
+							Yellowhammer runs an unattended Night per Project on top of Orca ADE. You wake up and read
+							the verdict first.
+						</p>
+						<div class="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
+							<a href={DOWNLOAD} class={primaryClass}>
+								<svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14" /></svg>
+								Download for Mac
+							</a>
+							<a href={REPO} class={secondaryClass}>View on GitHub</a>
+						</div>
+						<p class="mt-4 text-sm text-dim">Requires macOS 26. Open source, MIT licence.</p>
+					</div>
+
+					<figure class="rounded-2xl border border-line bg-surface p-5 sm:p-6">
+						<figcaption class="text-sm font-semibold text-muted">
+							What the board says in the morning
+							<span class="block text-xs font-normal text-dim">Example wording. Not output from a real Night.</span>
+						</figcaption>
+						<ul class="mt-4 divide-y divide-line">
+							{
+								verdicts.map((v) => (
+									<li class="flex items-start gap-3 py-3.5">
+										<Glyph name={v.glyph} class={`mt-0.5 size-6 shrink-0 ${v.tone}`} />
+										<div>
+											<p class={`text-xs font-semibold uppercase tracking-wider ${v.tone}`}>{v.label}</p>
+											<p class="mt-0.5 text-base font-medium leading-snug">{v.line}</p>
+										</div>
+									</li>
+								))
+							}
+						</ul>
+					</figure>
+				</div>
+			</section>
+
+			<!-- The morning, in reading order -->
+			<section aria-labelledby="readings-title" class="border-t border-line bg-surface/40">
+				<div class="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+					<h2 id="readings-title" class="max-w-[24ch] text-3xl font-bold tracking-tight sm:text-4xl">
+						Four things to read, in this order.
+					</h2>
+					<p class="mt-4 max-w-[62ch] text-lg text-muted">
+						Each Project has its own Night Card, its own Night Summary and its own decision Work Cards. You
+						read one Project at a time.
+					</p>
+					<ol class="mt-12 grid gap-5 md:grid-cols-2">
+						{
+							readings.map((r, i) => (
+								<li class="rounded-2xl border border-line bg-surface p-6">
+									<div class="flex items-center gap-3">
+										<span class="flex size-8 items-center justify-center rounded-full bg-surface-2 text-sm font-bold text-ink">
+											{i + 1}
+										</span>
+										<Glyph name={r.glyph} class={`size-6 ${r.tone}`} />
+										<span class={`text-sm font-semibold uppercase tracking-wider ${r.tone}`}>{r.label}</span>
+									</div>
+									<h3 class="mt-4 text-xl font-bold tracking-tight">{r.title}</h3>
+									<div class="mt-3 space-y-2 text-base leading-relaxed text-muted">
+										{r.body.map((line) => (
+											<p>{line}</p>
+										))}
+									</div>
+								</li>
+							))
+						}
+					</ol>
+
+					<div class="mt-8 rounded-2xl border border-line bg-surface p-6">
+						<h3 class="text-base font-bold">Block Reasons</h3>
+						<p class="mt-2 max-w-[70ch] text-base text-muted">
+							Each Blocked Work Card carries one of ten Block Reasons. “Blocked: check failure” points at a
+							possible flaky Check. “Blocked: reviewer rejection” points at a design conversation.
+						</p>
+						<ul class="mt-4 flex flex-wrap gap-2">
+							{
+								blockReasons.map((reason) => (
+									<li class="inline-flex items-center gap-2 rounded-full border border-line bg-surface-2 px-3 py-1.5 font-mono text-sm text-ink">
+										<Glyph name="blocked" class="size-4 text-error" />
+										{reason}
+									</li>
+								))
+							}
+						</ul>
+					</div>
+				</div>
+			</section>
+
+			<!-- Answering -->
+			<section id="answer" aria-labelledby="answer-title" class="border-t border-line">
+				<div class="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+					<h2 id="answer-title" class="max-w-[24ch] text-3xl font-bold tracking-tight sm:text-4xl">
+						You answer in Linear, not in the app.
+					</h2>
+					<p class="mt-4 max-w-[62ch] text-lg text-muted">
+						Linear is the board and the only place you touch a Card. Waiting on You is a Linear workflow state
+						with a question in a comment.
+					</p>
+
+					<div class="mt-12 grid gap-10 lg:grid-cols-[1.1fr_1fr]">
+						<ol class="space-y-6">
+							{
+								answerSteps.map((s, i) => (
+									<li class="flex gap-4">
+										<span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-attention font-bold text-canvas">
+											{i + 1}
+										</span>
+										<div>
+											<h3 class="text-lg font-bold leading-snug">{s.title}</h3>
+											<p class="mt-1 max-w-[56ch] text-base leading-relaxed text-muted">{s.body}</p>
+										</div>
+									</li>
+								))
+							}
+						</ol>
+
+						<div class="rounded-2xl border border-line bg-surface p-6">
+							<h3 class="text-base font-bold">Not every Waiting on You is a question</h3>
+							<dl class="mt-4 space-y-4">
+								{
+									waitingKinds.map((k) => (
+										<div>
+											<dt class="inline-flex items-center gap-2 font-mono text-sm text-attention">
+												<Glyph name="waiting" class="size-4" />
+												{k.name}
+											</dt>
+											<dd class="mt-1 text-base leading-relaxed text-muted">{k.body}</dd>
+										</div>
+									))
+								}
+							</dl>
+						</div>
+					</div>
+
+					<div class="mt-10 grid gap-5 md:grid-cols-2">
+						<div class="rounded-2xl border border-line bg-surface p-6">
+							<h3 class="text-base font-bold">Silence has a limit</h3>
+							<p class="mt-2 text-base leading-relaxed text-muted">
+								After overdue_nights_max of that Project’s own Nights, an unanswered Work Card is Blocked.
+								Its counters, round history and Block Reason are kept, and a later Feature can adopt it.
+							</p>
+						</div>
+						<div class="rounded-2xl border border-line bg-surface p-6">
+							<h3 class="text-base font-bold">Then settle the Feature</h3>
+							<p class="mt-2 text-base leading-relaxed text-muted">
+								Each Project has one Feature in flight. Settle it as Unsettled, Kept in flight or Abandoned.
+								Merging its pull requests is your decision.
+							</p>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- The app -->
+			<section aria-labelledby="app-title" class="border-t border-line bg-surface/40">
+				<div class="mx-auto grid w-full max-w-6xl items-center gap-10 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-[1fr_1.5fr]">
+					<div>
+						<h2 id="app-title" class="text-3xl font-bold tracking-tight sm:text-4xl">The Pulse is a glance.</h2>
+						<p class="mt-4 max-w-[52ch] text-lg leading-relaxed text-muted">
+							The Pulse is the status view of the main window. It shows what needs you, what is running, the
+							Feature, the Night and health.
+						</p>
+						<p class="mt-3 max-w-[52ch] text-lg leading-relaxed text-muted">
+							It is not a second board. The board is Linear.
+						</p>
+					</div>
+					<figure>
+						<div class="overflow-hidden rounded-2xl border border-line bg-black">
+							<Image
+								src={pulse}
+								alt="The Yellowhammer Pulse window while idle. Tiles read Needs you 0, Now idle, Feature 3 of 3, Night done and Health OK, above the Feature, Tonight or last Night and Health sections."
+								widths={[640, 960, 1280, 1600]}
+								sizes="(min-width: 1024px) 60vw, 100vw"
+								format="webp"
+								loading="lazy"
+								class="h-auto w-full"
+							/>
+						</div>
+						<figcaption class="mt-3 text-sm text-dim">The Pulse, idle.</figcaption>
+					</figure>
+				</div>
+			</section>
+
+			<!-- What ran overnight -->
+			<section aria-labelledby="night-title" class="border-t border-line">
+				<div class="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+					<h2 id="night-title" class="max-w-[26ch] text-3xl font-bold tracking-tight sm:text-4xl">
+						What ran while you slept.
+					</h2>
+					<p class="mt-4 max-w-[64ch] text-lg text-muted">
+						One Night per configured Project, all at once. Yellowhammer takes intent from a Linear board, and
+						authors the work itself when the board is empty. Each Night runs three Acts.
+					</p>
+
+					<div class="relative mt-12">
+					<div class="absolute left-[1.15rem] top-3 h-[calc(100%-1.5rem)] w-px bg-line-strong md:hidden" aria-hidden="true"></div>
+					<div class="absolute left-[1.15rem] right-[calc(33.333%-2.15rem)] top-[1.15rem] hidden h-px bg-line-strong md:block" aria-hidden="true"></div>
+					<ol class="relative grid gap-8 md:grid-cols-3 md:gap-6">
+						{
+							acts.map((a, i) => (
+								<li class="relative pl-14 md:pl-0 md:pt-14">
+									<span class="absolute left-0 top-0 flex size-9 items-center justify-center rounded-full border border-line-strong bg-canvas text-sm font-bold text-info md:left-0">
+										{i + 1}
+									</span>
+									<h3 class="text-xl font-bold tracking-tight">{a.name} Act</h3>
+									<p class="mt-1 text-sm font-semibold text-info">{a.when}</p>
+									<p class="mt-3 text-base leading-relaxed text-muted">{a.body}</p>
+								</li>
+							))
+						}
+					</ol>
+					</div>
+				</div>
+			</section>
+
+			<!-- Never -->
+			<section id="never" aria-labelledby="never-title" class="border-t border-line bg-surface/40">
+				<div class="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+					<p class="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-accent">
+						<Glyph name="never" class="size-5" />
+						What it never does
+					</p>
+					<h2 id="never-title" class="mt-4 max-w-[22ch] text-3xl font-bold tracking-tight sm:text-5xl">
+						It never writes a line of code, and it never merges to main.
+					</h2>
+					<div class="mt-8 grid gap-5 md:grid-cols-2">
+						<p class="rounded-2xl border border-line bg-surface p-6 text-lg leading-relaxed">
+							The agent CLIs write the code. Yellowhammer judges between them.
+						</p>
+						<p class="rounded-2xl border border-line bg-surface p-6 text-lg leading-relaxed">
+							The pull request is where it stops. The merge is yours.
+						</p>
+					</div>
+					<ul class="mt-5 grid gap-5 md:grid-cols-3">
+						{
+							never.map((n) => (
+								<li class="rounded-2xl border border-line bg-surface p-6">
+									<h3 class="flex items-center gap-2 text-base font-bold">
+										<Glyph name="never" class="size-5 shrink-0 text-accent" />
+										Never: {n.title}
+									</h3>
+									<p class="mt-2 text-base leading-relaxed text-muted">{n.body}</p>
+								</li>
+							))
+						}
+					</ul>
+				</div>
+			</section>
+
+			<!-- Needs -->
+			<section aria-labelledby="needs-title" class="border-t border-line">
+				<div class="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+					<h2 id="needs-title" class="text-3xl font-bold tracking-tight sm:text-4xl">What you need.</h2>
+					<ul class="mt-10 grid gap-x-8 gap-y-5 md:grid-cols-2">
+						{
+							needs.map((n) => (
+								<li class="flex items-start gap-3">
+									<Glyph name="check" class="mt-1 size-5 shrink-0 text-active" />
+									<p class="text-base leading-relaxed">
+										<span class="font-semibold">{n.name}.</span>
+										<span class="text-muted"> {n.note}</span>
+									</p>
+								</li>
+							))
+						}
+					</ul>
+				</div>
+			</section>
+
+			<!-- Download and open source -->
+			<section aria-labelledby="get-title" class="border-t border-line bg-surface/40">
+				<div class="mx-auto flex w-full max-w-6xl flex-col items-start gap-8 px-4 py-16 sm:px-6 sm:py-24 md:flex-row md:items-center">
+					<img src="/app-icon/app-icon-dark.svg" alt="Yellowhammer app icon" width="112" height="112" class="size-24 shrink-0 sm:size-28" />
+					<div>
+						<h2 id="get-title" class="text-3xl font-bold tracking-tight sm:text-4xl">Get Yellowhammer for Mac.</h2>
+						<p class="mt-3 max-w-[56ch] text-lg text-muted">
+							Open source under the MIT licence. Read the code in the
+							<a href={REPO} class={linkClass}>Yellowhammer repository</a>.
+						</p>
+						<div class="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center">
+							<a href={DOWNLOAD} class={primaryClass}>Download for Mac</a>
+							<a href={REPO} class={secondaryClass}>Star on GitHub</a>
+						</div>
+						<p class="mt-4 text-sm text-dim">Requires macOS 26.</p>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<footer class="border-t border-line">
+			<div class="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
+				<p>© Summer Hammer, LLC.</p>
+				<p>
+					<a href={REPO} class={linkClass}>github.com/summerhammer/yellowhammer</a>
+					<span class="text-dim"> · MIT licence</span>
+				</p>
+			</div>
+		</footer>
+	</div>
 </Layout>

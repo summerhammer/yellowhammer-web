@@ -1,1 +1,107 @@
 @import "tailwindcss";
+
+/*
+ * Morning: the campfire dark theme from the brand spec (docs/brand/colors.md),
+ * dark only. Anchors are the spec's dark values. Surfaces, lines and ink are
+ * derived from the warm near-black canvas and are not specified by the spec.
+ */
+@theme {
+	--font-sans: -apple-system, system-ui, sans-serif;
+	--font-mono: ui-monospace, Menlo, monospace;
+
+	/* Surfaces and ink (derived) */
+	--color-canvas: #16120c;
+	--color-surface: #211d17;
+	--color-surface-2: #2a251e;
+	--color-line: #3d362c;
+	--color-line-strong: #7a6f60;
+	--color-ink: #f4efe7;
+	--color-muted: #b9afa3;
+	--color-dim: #9a9084;
+
+	/* Anchors, dark values */
+	--color-brand: #ffd426; /* fills and the logo only, never text */
+	--color-accent: #ee8c5f;
+	--color-attention: #ff6bc1;
+	--color-active: #30d158;
+	--color-success: #b98cff;
+	--color-info: #8285ff;
+	--color-warning: #ff9f0a;
+	--color-error: #ff5a50;
+
+	/* Primary action: Apple blue family, white label at 4.7:1 */
+	--color-action: #0071e3;
+	--color-action-hover: #0066cc;
+	--color-action-text: #4da3ff; /* link text on canvas, 7.1:1 */
+	--color-action-text-hover: #8cc3ff;
+}
+
+:root {
+	color-scheme: dark;
+}
+
+html {
+	background-color: var(--color-canvas);
+	scroll-behavior: smooth;
+}
+
+body {
+	font-family: var(--font-sans);
+	background-color: var(--color-canvas);
+	color: var(--color-ink);
+	-webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+	outline: 3px solid var(--color-action-text);
+	outline-offset: 3px;
+	border-radius: 6px;
+}
+
+::selection {
+	background-color: var(--color-action);
+	color: #fff;
+}
+
+/* Embers: a warm glow at the top of the page. Decoration only. */
+.embers {
+	background-image:
+		radial-gradient(
+			48rem 24rem at 80% -4rem,
+			rgb(238 140 95 / 0.16),
+			transparent 70%
+		),
+		radial-gradient(
+			36rem 20rem at 10% -6rem,
+			rgb(255 212 38 / 0.09),
+			transparent 70%
+		);
+}
+
+/* The yellow dot is a fill. It breathes slowly, and only when motion is welcome. */
+.ember-dot {
+	background-color: var(--color-brand);
+	box-shadow: 0 0 0 4px rgb(255 212 38 / 0.14);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.ember-dot {
+		animation: ember 4.5s ease-in-out infinite;
+	}
+
+	@keyframes ember {
+		0%,
+		100% {
+			box-shadow: 0 0 0 4px rgb(255 212 38 / 0.14);
+		}
+		50% {
+			box-shadow: 0 0 0 9px rgb(255 212 38 / 0.04);
+		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
