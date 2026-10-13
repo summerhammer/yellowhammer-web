@@ -1,6 +1,7 @@
 packages:
   - relay
   - astro
+  - figures
 allowBuilds:
   '@parcel/watcher': true
   esbuild: true

@@ -7,7 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"includes": ["**", "!.claude"]
+		"includes": ["**", "!.claude", "!figures/src/iso"]
 	},
 	"formatter": {
 		"enabled": true,
@@ -20,6 +20,16 @@
 		}
 	},
 	"overrides": [
+		{
+			"includes": ["figures/src/**/*.tsx"],
+			"linter": {
+				"rules": {
+					"suspicious": {
+						"noArrayIndexKey": "off"
+					}
+				}
+			}
+		},
 		{
 			"includes": ["**/*.astro"],
 			"linter": {
