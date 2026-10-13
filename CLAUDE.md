@@ -15,11 +15,20 @@ Stay on the Cloudflare **Free Tier**. KV allows 1,000 writes/day, so be careful 
 
 - The spec lives in `../yellowhammer-spec`. Read it there, using the spec's `spec-lookup` / `spec-implement` skills or the `spec` MCP server. Never copy spec content into this repo and never edit the spec from here.
 - ADR status matters. An `accepted` ADR is binding. **`proposed` is not binding**, so flag it before building on one.
-  - Relay design: `docs/tech/decisions/006-remote-admin-approval-code-relay.md`. It is **proposed** and waits on probes L8–L11.
+  - Relay design: ADR-006, `docs/tech/decisions/006-remote-admin-approval-code-relay.md`. It is accepted: probes L9 and L10 passed, and L8 and L11 were ruled non-blocking.
   - Protocol detail: `docs/tech/investigations/2026-09-27-linear-remote-auth-relay.md`.
   - Linear auth basis: ADR-005. It is accepted: a shared public OAuth app, PKCE, `actor=app`, and no client secret.
 - Use glossary terms verbatim (`docs/glossary.md`), e.g. "Code Relay".
-- Brand (`docs/brand/*`) is unfilled. Don't invent colours, fonts or tone.
+- Brand (`docs/brand/*`: colours, typography, personality and tone of voice) is a **draft**. Follow it as direction, not a contract. Don't invent colours, fonts or tone beyond it.
+
+## Artwork
+
+- Logos, favicons, app icons and app screenshots live in the sibling repo `../yellowhammer-artwork`. Figma is their source of truth and that repo holds the exports. Don't redraw, re-export or hand-edit them here.
+  - `logos/`: `yellowhammer-mark.svg`, `yellowhammer-mark-monochrome.svg`, `yellowhammer-mark-monochrome-white.svg`.
+  - `icons/favicon/`: `favicon.svg`, `favicon.ico`, `favicon-16.png`, `favicon-32.png`, `apple-touch-icon.png`.
+  - `icons/app-icon/` and `icons/app-icon-dark/`: the macOS app icon, light and dark, as SVG and PNG sizes.
+  - `screenshots/`: app screenshots, e.g. `pulse-001.png`.
+- Copy what a page needs, unchanged, into `astro/public/` (Landing) or `relay/public/` (Relay). If an asset is missing, ask for it. New artwork is made in the artwork repo, not here.
 
 ## Relay security invariants
 
