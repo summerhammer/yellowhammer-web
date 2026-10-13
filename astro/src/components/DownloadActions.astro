@@ -1,0 +1,75 @@
+---
+interface Props {
+	tone: "day" | "night";
+}
+
+const { tone } = Astro.props;
+
+const DMG =
+	"https://github.com/summerhammer/yellowhammer/releases/latest/download/Yellowhammer.dmg";
+const REPO = "https://github.com/summerhammer/yellowhammer";
+
+const primary =
+	tone === "day"
+		? "bg-action-day text-white hover:bg-action-day-hover"
+		: "bg-action-night text-night-bottom hover:bg-action-night-hover";
+const secondary =
+	tone === "day"
+		? "border-action-day bg-day-card text-action-day hover:bg-day-bottom"
+		: "border-night-link text-night-link hover:bg-night-card";
+const note = tone === "day" ? "text-day-muted" : "text-night-muted";
+---
+
+<div class:list={["flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap", tone === "day" ? "tone-day" : "tone-night"]}>
+	<div>
+		<a
+			href={DMG}
+			class:list={[
+				"inline-flex min-h-12 items-center gap-2 rounded-xl px-6 py-3 text-base font-semibold transition-colors",
+				primary,
+			]}
+		>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="20"
+				height="20"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				aria-hidden="true"
+			>
+				<path d="M12 3v12" />
+				<path d="m7 11 5 5 5-5" />
+				<path d="M5 21h14" />
+			</svg>
+			Download for Mac
+		</a>
+		<p class:list={["mt-2 text-sm", note]}>Requires macOS 26</p>
+	</div>
+	<a
+		href={REPO}
+		class:list={[
+			"inline-flex min-h-12 items-center gap-2 rounded-xl border-2 px-6 py-3 text-base font-semibold transition-colors",
+			secondary,
+		]}
+	>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="20"
+			height="20"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			aria-hidden="true"
+		>
+			<path d="m12 3 2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.4 6.6 19.5l1.2-6-4.5-4.2 6.1-.7z" />
+		</svg>
+		Star or view on GitHub
+	</a>
+</div>

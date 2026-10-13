@@ -1,1 +1,141 @@
 @import "tailwindcss";
+
+/*
+ * Day-to-night: one fixed rendering, a sky that moves from Day sky to Night sky down the page.
+ * Sky blues are NOT brand anchors; they are a departure from the draft brand (colors.md).
+ * Brand yellow is used for fills and the logo only, never for text.
+ */
+@theme {
+	--font-sans: -apple-system, system-ui, sans-serif;
+	--font-mono: ui-monospace, Menlo, monospace;
+
+	/* Day sky */
+	--color-day-top: #cfe8ff;
+	--color-day-bottom: #f2f9ff;
+	--color-day-ink: #0b1b33;
+	--color-day-muted: #2b4062;
+	--color-day-card: #ffffff;
+	--color-day-line: #a9c6e8;
+	--color-day-link: #0a4f9c;
+	--color-action-day: #0066cc;
+	--color-action-day-hover: #0055aa;
+
+	/* Dusk band between the two skies */
+	--color-dusk-soft: #a9bdea;
+	--color-dusk-mid: #5662b0;
+
+	/* Night sky */
+	--color-night-top: #1a2456;
+	--color-night-bottom: #0b1433;
+	--color-night-ink: #eef2ff;
+	--color-night-muted: #b9c4ea;
+	--color-night-card: #111b45;
+	--color-night-line: #4a5ca8;
+	--color-night-link: #9cc8ff;
+	--color-night-indigo: #8285ff;
+	--color-action-night: #0a84ff;
+	--color-action-night-hover: #5aa9ff;
+
+	/* Brand yellow: fills and logo only */
+	--color-brand: #f4c900;
+	--color-brand-dark: #ffd426;
+}
+
+:root {
+	color-scheme: light;
+}
+
+html {
+	background-color: var(--color-day-top);
+	scroll-behavior: auto;
+}
+
+/* Visible focus ring, tuned per sky. */
+.tone-day {
+	--focus: #0066cc;
+}
+
+.tone-night {
+	--focus: #9cc8ff;
+}
+
+:focus-visible {
+	outline: 3px solid var(--focus, #0066cc);
+	outline-offset: 3px;
+}
+
+/* Sun glow in the hero: a brand-yellow fill, no text sits on it. */
+.sun-glow {
+	background-image: radial-gradient(
+		closest-side,
+		rgb(244 201 0 / 0.55),
+		rgb(244 201 0 / 0.18) 55%,
+		transparent 100%
+	);
+}
+
+/* Horizon hairline at the dusk line: a brand-yellow fill. */
+.horizon-line {
+	background-image: linear-gradient(
+		to right,
+		transparent,
+		var(--color-brand-dark) 30%,
+		var(--color-brand-dark) 70%,
+		transparent
+	);
+}
+
+.mark-glow {
+	filter: drop-shadow(0 0 28px rgb(255 212 38 / 0.6));
+}
+
+/* Stars: dots drawn with gradients, faded out toward the bottom of the layer. */
+.stars {
+	background-image:
+		radial-gradient(1.5px 1.5px at 24px 36px, #fff, transparent),
+		radial-gradient(1px 1px at 96px 120px, #fff, transparent),
+		radial-gradient(1.5px 1.5px at 168px 52px, #fff, transparent),
+		radial-gradient(1px 1px at 210px 188px, #fff, transparent),
+		radial-gradient(1px 1px at 60px 210px, #fff, transparent),
+		radial-gradient(1.5px 1.5px at 140px 160px, #fff, transparent);
+	background-size: 240px 240px;
+	mask-image: linear-gradient(to bottom, #000, transparent 85%);
+}
+
+.stars-offset {
+	background-position: 110px 70px;
+	background-size: 190px 190px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.stars {
+		animation: twinkle 7s ease-in-out infinite alternate;
+	}
+
+	.stars-offset {
+		animation-duration: 11s;
+		animation-delay: -4s;
+	}
+
+	.mark-glow {
+		animation: glow 6s ease-in-out infinite alternate;
+	}
+}
+
+@keyframes twinkle {
+	from {
+		opacity: 0.45;
+	}
+	to {
+		opacity: 0.95;
+	}
+}
+
+@keyframes glow {
+	from {
+		filter: drop-shadow(0 0 18px rgb(255 212 38 / 0.35));
+	}
+	to {
+		filter: drop-shadow(0 0 34px rgb(255 212 38 / 0.7));
+	}
+}

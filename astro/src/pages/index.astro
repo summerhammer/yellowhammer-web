@@ -1,10 +1,310 @@
 ---
+import { Image } from "astro:assets";
+import pulse from "../assets/pulse-001.png";
+import DownloadActions from "../components/DownloadActions.astro";
 import Layout from "../layouts/Layout.astro";
+
+const REPO = "https://github.com/summerhammer/yellowhammer";
+
+const byDay = [
+	"Write intent in Linear.",
+	"Answer what is Waiting on You, in Linear.",
+	"Read the Night Summary.",
+	"Review the pull requests.",
+	"Merge. The merge is yours.",
+];
+
+const byNight = [
+	"Takes intent from your Linear board.",
+	"Authors the work itself when the board is empty.",
+	"Routes each Work Card to an agent CLI.",
+	"Runs it in a Worktree, managed by Orca ADE.",
+	"Opens one pull request per repository.",
+	"Verifies against a Definition of Done written before any code, with a different agent, then reports back to the board.",
+];
+
+const needs = [
+	{
+		name: "A Mac on macOS 26",
+		detail:
+			"Apple Silicon. It stays awake overnight, because everything runs locally.",
+	},
+	{ name: "Orca ADE", detail: "Creates, places and cleans up the Worktrees." },
+	{
+		name: "A Linear workspace",
+		detail: "The board. Intent goes in and answers come back there.",
+	},
+	{
+		name: "GitHub",
+		detail: "Receives each Feature Branch and its pull request.",
+	},
+	{
+		name: "An agent CLI",
+		detail: "At least one supported agent CLI. It writes the code.",
+	},
+];
 ---
 
-<Layout title="Yellowhammer">
-	<main class="flex min-h-screen flex-col items-center justify-center text-center">
-		<h1 class="text-4xl font-semibold">Yellowhammer</h1>
-		<p class="mt-2">Coming soon.</p>
+<Layout
+	title="Yellowhammer"
+	description="Yellowhammer runs an unattended engineering Night on top of Orca ADE, for each Project you configure."
+>
+	<a
+		href="#main"
+		class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-10 focus:rounded-lg focus:bg-day-card focus:px-4 focus:py-2 focus:text-day-link"
+		>Skip to content</a
+	>
+
+	<!-- DAY: header -->
+	<header class="tone-day bg-day-top">
+		<div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-5 sm:px-6">
+			<a href="/" class="flex items-center gap-2 text-lg font-bold tracking-tight text-day-ink">
+				<img src="/yellowhammer-mark.svg" alt="" width="32" height="32" class="size-8" />
+				Yellowhammer
+			</a>
+			<a href={REPO} class="text-base font-semibold text-day-link underline underline-offset-4">GitHub</a>
+		</div>
+	</header>
+
+	<main id="main">
+		<!-- DAY: hero -->
+		<section
+			class="tone-day relative overflow-hidden bg-linear-to-b from-day-top to-day-bottom"
+			aria-labelledby="hero-title"
+		>
+			<div
+				class="sun-glow pointer-events-none absolute -right-24 -top-24 size-[28rem] sm:-right-10 sm:size-[40rem]"
+				aria-hidden="true"
+			>
+			</div>
+			<div class="relative mx-auto max-w-5xl px-4 pb-16 pt-8 sm:px-6 sm:pb-24 sm:pt-14">
+				<div class="grid items-center gap-10 lg:grid-cols-[1fr_auto]">
+					<div class="max-w-2xl">
+						<p class="text-sm font-semibold uppercase tracking-wide text-day-muted">For Mac</p>
+						<h1
+							id="hero-title"
+							class="mt-3 text-4xl font-bold tracking-tight text-day-ink sm:text-5xl lg:text-6xl"
+						>
+							An unattended engineering Night for every Project.
+						</h1>
+						<p class="mt-6 text-lg text-day-muted sm:text-xl">
+							Yellowhammer runs on top of Orca ADE. It takes intent from your Linear board, opens pull requests
+							overnight and reports back to the board. You read the result in the morning.
+						</p>
+						<div class="mt-8">
+							<DownloadActions tone="day" />
+						</div>
+					</div>
+					<div class="flex justify-start lg:justify-end">
+						<div
+							class="flex size-40 items-center justify-center rounded-[2.5rem] border border-day-line bg-day-card shadow-lg sm:size-56"
+						>
+							<img
+								src="/yellowhammer-mark.svg"
+								alt="The Yellowhammer mark: a yellowhammer bird."
+								width="160"
+								height="160"
+								class="size-28 sm:size-40"
+							/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+			<!-- DAY: the promise -->
+			<section class="bg-day-bottom" aria-labelledby="never-title">
+				<div class="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-20">
+					<h2 id="never-title" class="max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl">
+						It never writes a line of code. It never merges to main.
+					</h2>
+					<div class="mt-6 grid gap-6 text-lg text-day-muted md:grid-cols-2 md:gap-10">
+						<p>
+							The agent CLIs write the code. Yellowhammer judges between them: it routes each Work Card,
+							verifies the result and reports.
+						</p>
+						<p>
+							The product hands off at the pull request. The merge is yours.
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- DAY to DUSK: the handoff -->
+			<section class="tone-day bg-linear-to-b from-day-bottom to-dusk-soft" aria-labelledby="handoff-title">
+				<div class="mx-auto max-w-5xl px-4 pb-20 pt-6 sm:px-6 sm:pb-28">
+					<h2 id="handoff-title" class="max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl">
+						The handoff: you by day, Yellowhammer by night.
+					</h2>
+					<p class="mt-4 max-w-2xl text-lg text-day-muted">
+						Each configured Project gets its own Night. All of them run concurrently on your Mac.
+					</p>
+
+					<div class="mt-10 grid gap-6 lg:grid-cols-2">
+						<article
+							class="rounded-3xl border border-day-line bg-day-card p-6 text-day-ink shadow-md sm:p-8"
+							aria-labelledby="day-col"
+						>
+							<div class="flex items-center gap-3">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="28"
+									height="28"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="shrink-0 text-day-link"
+									aria-hidden="true"
+								>
+									<circle cx="12" cy="12" r="4" />
+									<path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+								</svg>
+								<div>
+									<p class="text-sm font-semibold uppercase tracking-wide text-day-muted">Day · the Operator</p>
+									<h3 id="day-col" class="text-2xl font-bold tracking-tight">You, by day</h3>
+								</div>
+							</div>
+							<ol class="mt-5 list-decimal space-y-3 pl-6 text-lg marker:font-semibold marker:text-day-link">
+								{byDay.map((item) => <li class="pl-1">{item}</li>)}
+							</ol>
+						</article>
+
+						<article
+							class="rounded-3xl border border-night-line bg-night-card p-6 text-night-ink shadow-md sm:p-8"
+							aria-labelledby="night-col"
+						>
+							<div class="flex items-center gap-3">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="28"
+									height="28"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="shrink-0 text-night-link"
+									aria-hidden="true"
+								>
+									<path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z" />
+								</svg>
+								<div>
+									<p class="text-sm font-semibold uppercase tracking-wide text-night-muted">Night · the engine</p>
+									<h3 id="night-col" class="text-2xl font-bold tracking-tight">Yellowhammer, by night</h3>
+								</div>
+							</div>
+							<ol class="mt-5 list-decimal space-y-3 pl-6 text-lg marker:font-semibold marker:text-night-indigo">
+								{byNight.map((item) => <li class="pl-1">{item}</li>)}
+							</ol>
+						</article>
+					</div>
+				</div>
+			</section>
+
+	<!-- DUSK: the mark sits on the horizon -->
+	<div class="relative h-56 overflow-hidden bg-linear-to-b from-dusk-soft via-dusk-mid to-night-top sm:h-72" aria-hidden="true">
+		<div class="stars stars-offset absolute inset-0 top-1/3"></div>
+		<div class="horizon-line absolute inset-x-0 top-1/2 h-0.5"></div>
+		<div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+			<img
+				src="/yellowhammer-mark.svg"
+				alt=""
+				width="144"
+				height="144"
+				class="mark-glow size-28 sm:size-36"
+			/>
+		</div>
+	</div>
+
+	<!-- NIGHT -->
+	<div class="tone-night relative overflow-hidden bg-linear-to-b from-night-top to-night-bottom text-night-ink">
+		<div class="stars absolute inset-x-0 top-0 h-[40rem]" aria-hidden="true"></div>
+
+		<section class="relative mx-auto max-w-5xl px-4 pb-16 pt-12 sm:px-6 sm:pb-24" aria-labelledby="report-title">
+			<h2 id="report-title" class="max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl">
+				Every Night reports, including the empty ones.
+			</h2>
+			<p class="mt-4 max-w-2xl text-lg text-night-muted">
+				Each Night ends with a Night Summary on the Night Card in Linear. A Night that produced nothing still
+				gets one.
+			</p>
+			<ul class="mt-6 max-w-xl space-y-3 font-mono text-base sm:text-lg">
+				<li class="rounded-xl border border-night-line bg-night-card px-4 py-3">Night done. 2 pull requests open.</li>
+				<li class="rounded-xl border border-night-line bg-night-card px-4 py-3">Night done. Nothing was ready.</li>
+			</ul>
+			<p class="mt-3 text-sm text-night-muted">Example Night Summary lines.</p>
+
+			<figure class="mt-12">
+				<div class="overflow-hidden rounded-2xl border border-night-line bg-black">
+					<Image
+						src={pulse}
+						alt="The Pulse, the status view of the Yellowhammer app, shown idle. Five tiles read Needs you, Now, Feature, Night and Health. Below them, one panel per tile. An inspector on the right lists the Repo Lane's Cards as three of three done, with pull request 471."
+						widths={[640, 960, 1280, 1600]}
+						sizes="(min-width: 1024px) 960px, 100vw"
+						format="webp"
+						loading="lazy"
+						class="h-auto w-full"
+					/>
+				</div>
+				<figcaption class="mt-3 text-sm text-night-muted">The Pulse in the Yellowhammer app, shown idle.</figcaption>
+			</figure>
+		</section>
+
+		<section class="relative mx-auto max-w-5xl px-4 pb-16 sm:px-6 sm:pb-24" aria-labelledby="stops-title">
+			<h2 id="stops-title" class="max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl">
+				It stops when it should.
+			</h2>
+			<p class="mt-4 max-w-2xl text-lg text-night-muted">
+				Rounds, attempts and overdue Nights are each a Bound, set per Project. A Work Card that needs you goes
+				Waiting on You. Its Repo Lane runs on. You can leave it running.
+			</p>
+		</section>
+
+		<section class="relative mx-auto max-w-5xl px-4 pb-16 sm:px-6 sm:pb-24" aria-labelledby="needs-title">
+			<h2 id="needs-title" class="max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl">What you need</h2>
+			<ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				{
+					needs.map((item) => (
+						<li class="rounded-2xl border border-night-line bg-night-card p-5">
+							<p class="text-lg font-semibold">{item.name}</p>
+							<p class="mt-1 text-night-muted">{item.detail}</p>
+						</li>
+					))
+				}
+			</ul>
+		</section>
+
+		<section class="relative border-t border-night-line" aria-labelledby="get-title">
+			<div class="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-24">
+				<h2 id="get-title" class="max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl">
+					Get Yellowhammer for Mac.
+				</h2>
+				<p class="mt-4 max-w-2xl text-lg text-night-muted">
+					Open source under the MIT licence. It runs locally. Your code, credentials and models stay on your
+					Mac.
+				</p>
+				<div class="mt-8">
+					<DownloadActions tone="night" />
+				</div>
+			</div>
+		</section>
+
+	</div>
 	</main>
+
+	<footer class="tone-night border-t border-night-line bg-night-bottom text-night-ink">
+		<div
+			class="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-8 text-sm text-night-muted sm:flex-row sm:items-center sm:justify-between sm:px-6"
+		>
+			<p>© Summer Hammer, LLC</p>
+			<p>
+				<a href={REPO} class="font-semibold text-night-link underline underline-offset-4">Yellowhammer on GitHub</a>
+				· MIT licence
+			</p>
+		</div>
+	</footer>
 </Layout>
