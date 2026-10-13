@@ -1,0 +1,20 @@
+---
+interface Props {
+	id: string;
+	question: string;
+}
+
+const { id, question } = Astro.props;
+---
+
+<section
+	id={id}
+	aria-labelledby={`${id}-q`}
+	class="card relative scroll-mt-6 overflow-hidden rounded-2xl border border-line bg-card p-6 pl-8 shadow-sm sm:p-8 sm:pl-10"
+>
+	<span class="absolute inset-y-0 left-0 w-2 bg-brand" aria-hidden="true"></span>
+	<h2 id={`${id}-q`} class="text-2xl font-bold tracking-tight text-balance">{question}</h2>
+	<div class="mt-4 space-y-4 text-lg leading-relaxed max-w-[70ch]">
+		<slot />
+	</div>
+</section>

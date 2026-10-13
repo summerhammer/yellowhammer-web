@@ -1,10 +1,246 @@
 ---
+import { Image } from "astro:assets";
+import pulse from "../assets/pulse-001.png";
+import Disclosure from "../components/Disclosure.astro";
+import Question from "../components/Question.astro";
 import Layout from "../layouts/Layout.astro";
+
+const DOWNLOAD_URL =
+	"https://github.com/summerhammer/yellowhammer/releases/latest/download/Yellowhammer.dmg";
+const REPO_URL = "https://github.com/summerhammer/yellowhammer";
+
+const primaryButton =
+	"btn inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-base font-semibold text-on-primary hover:bg-primary-hover";
+const secondaryButton =
+	"btn inline-flex min-h-11 items-center justify-center rounded-full border-2 border-outline px-5 py-2 text-base font-semibold text-ink hover:bg-tint";
+const link = "font-medium text-link underline underline-offset-4 decoration-2";
+
+const questions = [
+	["what-is-it", "What is it?"],
+	["never-does", "What does it never do?"],
+	["agent-fails", "What happens when an agent fails?"],
+	["what-you-need", "What do I need?"],
+	["touch-main", "Does it touch main?"],
+	["open-source", "Is it open source?"],
+	["start", "How do I start?"],
+];
+
+const needs = [
+	"A Mac on macOS 26.",
+	"Orca ADE, which creates and cleans up the Worktrees.",
+	"A Linear workspace, which holds the board.",
+	"GitHub, where the pull requests open.",
+	"At least one supported agent CLI, which does the coding.",
+];
 ---
 
-<Layout title="Yellowhammer">
-	<main class="flex min-h-screen flex-col items-center justify-center text-center">
-		<h1 class="text-4xl font-semibold">Yellowhammer</h1>
-		<p class="mt-2">Coming soon.</p>
+<Layout
+	title="Yellowhammer: questions and answers"
+	description="Yellowhammer runs an unattended Night per Project on a Mac. It never writes a line of code and never merges to main."
+>
+	<a
+		href="#main"
+		class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:rounded-lg focus:bg-card focus:px-4 focus:py-2 focus:text-ink"
+		>Skip to content</a
+	>
+
+	<header class="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-5 sm:px-6">
+		<a href="/" class="flex items-center gap-3 rounded-lg" aria-label="Yellowhammer, home">
+			<img src="/yellowhammer-mark.svg" alt="" width="1024" height="1024" class="size-10" />
+			<span class="text-xl font-bold tracking-tight">Yellowhammer</span>
+		</a>
+		<div class="flex flex-wrap items-center gap-x-4 gap-y-1">
+			<a href={DOWNLOAD_URL} class={primaryButton}>
+				<svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v10m0 0-4-4m4 4 4-4M4 17h12"></path></svg>
+				Download for Mac
+			</a>
+			<span class="text-sm text-muted">Requires macOS 26</span>
+		</div>
+	</header>
+
+	<main id="main" class="mx-auto max-w-3xl px-4 pb-16 sm:px-6">
+		<div class="relative isolate py-10 sm:py-14">
+			<div class="sun absolute -top-6 right-0 -z-10 size-64 sm:size-80" aria-hidden="true"></div>
+			<img
+				src="/yellowhammer-mark.svg"
+				alt="Yellowhammer mark"
+				width="1024"
+				height="1024"
+				class="size-20 sm:size-24"
+			/>
+			<h1 class="mt-6 text-4xl font-bold tracking-tight text-balance sm:text-5xl">
+				Yellowhammer runs an unattended Night on your repositories.
+			</h1>
+			<p class="mt-5 max-w-[60ch] text-xl leading-relaxed text-muted">
+				One Night per Project, on top of Orca ADE. You read the result in the morning.
+			</p>
+			<nav aria-labelledby="questions-heading" class="mt-8">
+				<h2 id="questions-heading" class="text-sm font-semibold uppercase tracking-wider text-muted">
+					Seven questions
+				</h2>
+				<ol class="mt-3 flex flex-wrap gap-2">
+					{
+						questions.map(([id, label]) => (
+							<li>
+								<a
+									href={`#${id}`}
+									class="btn inline-flex min-h-11 items-center rounded-full border border-line bg-card px-4 py-2 text-base font-medium text-link hover:bg-tint"
+								>
+									{label}
+								</a>
+							</li>
+						))
+					}
+				</ol>
+			</nav>
+		</div>
+
+		<div class="space-y-6">
+			<Question id="what-is-it" question="What is it?">
+				<p>
+					Yellowhammer is a Mac app that runs an unattended Night for each of your Projects. It takes
+					intent from a Linear board. When the board is empty, it authors the work itself from your
+					specification.
+				</p>
+				<p>
+					Each Work Card goes to an agent CLI and runs in its own Worktree. The Night ends with one
+					pull request per repository. You read the result in the morning.
+				</p>
+				<Disclosure summary="What happens in a Night?">
+					<ol class="list-decimal space-y-2 pl-5 marker:font-semibold">
+						<li>It takes intent from a Linear board, or authors the work when the board is empty.</li>
+						<li>It writes a Definition of Done for each Work Card before any code exists.</li>
+						<li>It routes each Work Card to an agent CLI.</li>
+						<li>It runs the Work Cards of each repository in order, in one Worktree: a Repo Lane.</li>
+						<li>It opens one pull request per repository.</li>
+						<li>It verifies the result against the Definition of Done.</li>
+						<li>It reports back to the board in a Night Summary.</li>
+					</ol>
+				</Disclosure>
+				<figure class="pt-2">
+					<Image
+						src={pulse}
+						alt="The Yellowhammer Pulse window after a Night. The tiles read: Needs you 0, Now idle, Feature 3 of 3 Cards, Night done, Health OK. The inspector shows one pull request, number 471, and three Work Cards marked Done."
+						width={1280}
+						widths={[640, 960, 1280]}
+						sizes="(min-width: 768px) 672px, calc(100vw - 4rem)"
+						format="webp"
+						loading="lazy"
+						class="h-auto w-full rounded-xl"
+					/>
+					<figcaption class="mt-3 text-sm text-muted">
+						The Pulse, the app's status view, after a Night. Nothing needs you.
+					</figcaption>
+				</figure>
+			</Question>
+
+			<Question id="never-does" question="What does it never do?">
+				<p>
+					<strong>It never writes a line of code, and it never merges to main.</strong>
+					The agent CLIs write the code. Yellowhammer judges between them.
+				</p>
+				<p>It hands off at the pull request. The merge is yours.</p>
+				<Disclosure summary="Also out of scope">
+					<ul class="list-disc space-y-2 pl-5">
+						<li>Deploy and release. Never, not deferred.</li>
+						<li>
+							Cloud execution. Your code, credentials and models stay on your machine, and the Night
+							rides the subscriptions you already have.
+						</li>
+						<li>A second board. Linear is the board.</li>
+					</ul>
+				</Disclosure>
+			</Question>
+
+			<Question id="agent-fails" question="What happens when an agent fails?">
+				<p>The work stops, and the board says why. Yellowhammer does not grind.</p>
+				<p>
+					Bounds limit the work, and you set them per Project. When a Bound fires,
+					it stops work and carries the reason, or it promotes the item to a standing decision. A retry
+					never lands on a route that already failed.
+				</p>
+				<div class="space-y-3">
+					<Disclosure summary="Bounds">
+						<p>
+							A Bound is a numeric limit you set. Each one is reported in the Night Summary, so you
+							see how close the Night came.
+						</p>
+						<p>
+							Review rounds end an Attempt, and the next Attempt runs on a different route. Attempts
+							per Work Card Block the Work Card once they are spent.
+						</p>
+					</Disclosure>
+					<Disclosure summary="Blocks">
+						<p>
+							A Blocked Work Card does not move until a human acts. It carries a Block Reason, so you
+							know where to look without opening anything.
+						</p>
+						<p>The reasons include reviewer rejection, check failure, route failure and reply overdue.</p>
+					</Disclosure>
+					<Disclosure summary="Waiting on You">
+						<p>
+							Waiting on You is a Linear workflow state. The Work Card is assigned to you, and the
+							question is in a comment. Answer it in Linear, not in the app.
+						</p>
+						<p>
+							A Work Card lands there when an agent asks instead of guessing, when it no longer fits
+							the repositories as they stand, or when it would touch a Protected Path. If you stay
+							silent for the number of Nights you set, it becomes Blocked.
+						</p>
+					</Disclosure>
+				</div>
+			</Question>
+
+			<Question id="what-you-need" question="What do I need?">
+				<p>Five things. It runs on your Mac and uses the tools you already have.</p>
+				<ul class="space-y-2">
+					{
+						needs.map((item) => (
+							<li class="flex gap-3">
+								<span class="mt-2.5 size-2 flex-none rounded-full bg-info" aria-hidden="true" />
+								<span>{item}</span>
+							</li>
+						))
+					}
+				</ul>
+			</Question>
+
+			<Question id="touch-main" question="Does it touch main?">
+				<p>No. It never merges to main.</p>
+				<p>
+					Each repository gets one Feature Branch, built in its own Worktree. Yellowhammer pushes the
+					branch and opens one pull request. You review it and merge it.
+				</p>
+			</Question>
+
+			<Question id="open-source" question="Is it open source?">
+				<p>Yes. Yellowhammer is open source under the MIT licence.</p>
+				<p>
+					<a href={REPO_URL} class={link}>Read the source on GitHub</a>.
+				</p>
+			</Question>
+
+			<Question id="start" question="How do I start?">
+				<p>Download the app for your Mac. Check the list under "What do I need?" first.</p>
+				<div class="flex flex-wrap items-center gap-x-5 gap-y-3 pt-1">
+					<a href={DOWNLOAD_URL} class={primaryButton}>
+						<svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v10m0 0-4-4m4 4 4-4M4 17h12"></path></svg>
+						Download for Mac
+					</a>
+					<a href={REPO_URL} class={secondaryButton}>Star on GitHub</a>
+				</div>
+				<p class="text-base text-muted">Requires macOS 26.</p>
+			</Question>
+		</div>
 	</main>
+
+	<footer class="border-t border-line">
+		<div class="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-8 text-sm text-muted sm:px-6">
+			<p>&copy; Summer Hammer, LLC</p>
+			<p>
+				MIT licence.
+				<a href={REPO_URL} class={link}>Source on GitHub</a>
+			</p>
+		</div>
+	</footer>
 </Layout>
