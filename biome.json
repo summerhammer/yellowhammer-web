@@ -7,7 +7,15 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"includes": ["**", "!.claude"]
+		"includes": [
+			"**",
+			"!.claude",
+			"!.agents",
+			"!skills-lock.json",
+			"!figures/src/iso",
+			"!figures/plant/shots",
+			"!figures/plant/*.html"
+		]
 	},
 	"formatter": {
 		"enabled": true,
@@ -20,6 +28,16 @@
 		}
 	},
 	"overrides": [
+		{
+			"includes": ["figures/src/**/*.tsx"],
+			"linter": {
+				"rules": {
+					"suspicious": {
+						"noArrayIndexKey": "off"
+					}
+				}
+			}
+		},
 		{
 			"includes": ["**/*.astro"],
 			"linter": {

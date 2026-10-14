@@ -1,0 +1,167 @@
+.ov {
+	border-radius: 10px;
+	cursor: ew-resize;
+	touch-action: pan-y;
+	-webkit-tap-highlight-color: transparent;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+.ov:focus-visible {
+	outline: 1px solid var(--anatomy-muted);
+	outline-offset: 6px;
+}
+
+.ov .iso-svg {
+	overflow: visible;
+}
+
+.ov-needle {
+	stroke-width: 1.1;
+	stroke-linecap: round;
+}
+
+.ov-needle-tail {
+	stroke-width: 1.1;
+	stroke-linecap: round;
+}
+
+.ov-shadow {
+	filter: blur(3px);
+	opacity: 0.7;
+}
+
+@media (max-width: 640px) {
+	.ov {
+		overflow: hidden;
+	}
+
+	.iso-plate .ov .iso-svg {
+		width: 106%;
+		margin: -2% -3% -1%;
+	}
+}
+
+.ov-pip[data-on] {
+	opacity: 0.9;
+}
+
+.ov-pip[data-on] {
+	fill: var(--anatomy-hi);
+}
+
+/* The payoff: the PR trays are the one accent, in the bird's yellow (brand light fill #F4C900).
+   They wait pale, and come to full yellow as land opens the pull requests (--ov-landed, set live). */
+.ov-tray {
+	--anatomy-lit-top: color-mix(
+		in srgb,
+		#ffd84a calc(var(--ov-landed, 0) * 100%),
+		#f6e9b4
+	);
+	--anatomy-lit-shade: color-mix(
+		in srgb,
+		#f4c900 calc(var(--ov-landed, 0) * 100%),
+		#ead889
+	);
+	--anatomy-face: color-mix(
+		in srgb,
+		#ffe27a calc(var(--ov-landed, 0) * 100%),
+		#f8eec6
+	);
+	--anatomy-lit: #3a2c00;
+}
+
+.ov-tray > .iso-edge {
+	stroke-width: 0.9px;
+}
+
+/* Punched holes: an agent fills a card's holes one by one as it works. */
+.ov-card .ov-hole {
+	opacity: 0.85;
+}
+
+.ov-card[data-holes="0"] .ov-hole:nth-child(n + 1) {
+	display: none;
+}
+
+.ov-card[data-holes="1"] .ov-hole:nth-child(n + 2) {
+	display: none;
+}
+
+.ov-card[data-holes="2"] .ov-hole:nth-child(n + 3) {
+	display: none;
+}
+
+.ov-card[data-holes="3"] .ov-hole:nth-child(n + 4) {
+	display: none;
+}
+
+.ov-card[data-holes="4"] .ov-hole:nth-child(n + 5) {
+	display: none;
+}
+
+.ov-card[data-holes="5"] .ov-hole:nth-child(n + 6) {
+	display: none;
+}
+
+.ov-card[data-holes="6"] .ov-hole:nth-child(n + 7) {
+	display: none;
+}
+
+.ov-card[data-holes="7"] .ov-hole:nth-child(n + 8) {
+	display: none;
+}
+
+/* Cards are paper: a little lighter than the machine in any light. */
+.ov-card .iso-top {
+	fill: color-mix(in srgb, var(--anatomy-top), #ffffff 45%);
+}
+
+.ov-card .iso-shade {
+	fill: color-mix(in srgb, var(--anatomy-shade-2), #ffffff 30%);
+}
+
+.iso-figure:has(.ov) .iso-swatch[data-mark="lit"] path:first-child {
+	fill: #ffd84a;
+}
+
+/* On a phone the morning readout is the longest line: let it wrap above the corner instead of running off it. */
+@media (max-width: 560px) {
+	.iso-figure:has(.ov) .iso-plate {
+		padding-bottom: 86px;
+	}
+
+	.iso-figure:has(.ov) .iso-plate-corner[data-corner="readout"] {
+		left: 0;
+		white-space: normal;
+		text-align: right;
+		line-height: 1.4;
+	}
+
+	.iso-figure:has(.ov) .iso-plate-corner[data-corner="hint"] {
+		bottom: 36px;
+	}
+}
+
+/* The morning palette as the static default, so the first paint (before the live code runs) is the rest pose. */
+.iso-figure:has(.ov) .iso-plate {
+	--anatomy-card: #fbfbfa;
+	--anatomy-paper: #fbfbfa;
+	--anatomy-face: #f8f8f6;
+	--anatomy-top: #f6f6f3;
+	--anatomy-shade-0: #dadad6;
+	--anatomy-shade-1: #e2e2de;
+	--anatomy-shade-2: #eaeae6;
+	--anatomy-shade-3: #f1f1ed;
+	--anatomy-hi: #26262a;
+	--anatomy-mid: #8a8a8f;
+	--anatomy-lo: #b4b4b8;
+	--anatomy-faint: #d4d4d6;
+	--anatomy-halo: #8a8a80;
+	--anatomy-dot: #3a3a3e;
+	--anatomy-text: #57575a;
+	--anatomy-muted: #8c8c90;
+	--anatomy-strong: #18181a;
+	--anatomy-halo-opacity: 0.32;
+	--ov-landed: 1;
+}
