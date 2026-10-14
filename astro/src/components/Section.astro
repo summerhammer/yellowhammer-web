@@ -1,0 +1,39 @@
+---
+/**
+ * The shared section wrapper: a ruled band with a mono section number and eyebrow in the left
+ * column, the heading and intro in the right, and the section's content below. A new section
+ * uses this and needs no new CSS.
+ */
+interface Props {
+	id: string;
+	number: string;
+	eyebrow: string;
+	title: string;
+	intro?: string;
+}
+
+const { id, number, eyebrow, title, intro } = Astro.props;
+const headingId = `${id}-heading`;
+---
+
+<section id={id} aria-labelledby={headingId} class="border-t border-rule">
+	<div class="grid gap-x-10 gap-y-3 px-4 pt-14 pb-10 sm:px-8 lg:grid-cols-12 lg:pt-20">
+		<p class="ledger-label flex items-baseline gap-3 lg:col-span-3">
+			<span aria-hidden="true">{number}</span>
+			<span class="h-px flex-1 translate-y-[-0.25em] bg-rule lg:hidden" aria-hidden="true"></span>
+			<span>{eyebrow}</span>
+		</p>
+		<div class="lg:col-span-9">
+			<h2
+				id={headingId}
+				class="max-w-[22ch] text-3xl leading-tight font-bold tracking-tight text-balance sm:text-4xl"
+			>
+				{title}
+			</h2>
+			{intro && <p class="mt-4 max-w-[62ch] text-lg leading-relaxed text-ink-muted">{intro}</p>}
+		</div>
+	</div>
+	<div class="px-4 pb-16 sm:px-8 lg:pb-24">
+		<slot />
+	</div>
+</section>

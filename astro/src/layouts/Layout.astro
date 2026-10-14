@@ -17,8 +17,19 @@ const { title, description } = Astro.props;
 		<title>{title}</title>
 		{description && <meta name="description" content={description} />}
 		<meta name="robots" content="noindex" />
+		<meta name="color-scheme" content="light dark" />
+		<link rel="icon" href="/favicon.ico" sizes="any" />
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+		<link rel="icon" href="/favicon-16.png" type="image/png" sizes="16x16" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 	</head>
-	<body class="bg-white text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100">
+	<body class="min-h-screen bg-paper font-sans text-ink">
+		<a
+			href="#main"
+			class="sr-only rounded-md bg-action px-4 py-2 font-semibold text-on-action focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50"
+			>Skip to content</a
+		>
 		<slot />
 	</body>
 </html>

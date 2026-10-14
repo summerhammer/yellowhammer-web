@@ -1,0 +1,77 @@
+---
+import { links, requirement, trustLine } from "../content/site";
+
+/** Tone examples from the brand's personality.md: how a Night's verdict reads. */
+const verdicts = [
+	"Night done. 2 pull requests open.",
+	"Night done. Nothing was ready.",
+	"Blocked: check failure. Answer it in Linear, not here.",
+];
+---
+
+<section aria-labelledby="hero-heading" class="hero-fade">
+	<div class="grid lg:grid-cols-12">
+		<div class="px-4 pt-14 pb-12 sm:px-8 sm:pt-20 lg:col-span-7 lg:pt-24 lg:pb-20">
+			<p class="flex items-center gap-3">
+				<img
+					src="/yellowhammer-mark.svg"
+					alt=""
+					width="40"
+					height="40"
+					class="size-10"
+				/>
+				<span class="text-xl font-bold tracking-tight">Yellowhammer</span>
+				<span class="ledger-label ml-1 border-l border-rule pl-3">For Mac</span>
+			</p>
+			<h1
+				id="hero-heading"
+				class="mt-8 text-[2.5rem] leading-[1.05] font-bold tracking-tight text-balance sm:text-6xl"
+			>
+				Wake up to <span class="highlight">pull requests</span>.
+			</h1>
+			<p class="mt-4 text-xl leading-snug font-medium text-balance text-ink sm:text-2xl">
+				Yellowhammer picked the work from your spec.
+			</p>
+			<p class="mt-6 max-w-[56ch] text-lg leading-relaxed text-ink-muted">
+				Yellowhammer runs an unattended engineering Shift on top of Orca ADE: one Night for
+				each of your Projects, all of them at once. It takes intent from your Linear board,
+				hands the work to your agent CLIs, and opens one pull request per repository by
+				morning.
+			</p>
+			<div class="mt-8 flex flex-wrap items-center gap-3">
+				<a href={links.download} class="button-primary h-11 px-5 text-base">Download for Mac</a>
+				<a href={links.repo} class="button-secondary h-11 px-5 text-base">View on GitHub</a>
+			</div>
+			<p class="mt-4 text-sm text-ink-muted">
+				<span class="font-semibold text-ink">{requirement}.</span>{" "}
+				{trustLine}
+			</p>
+		</div>
+		<aside
+			aria-labelledby="verdicts-heading"
+			class="border-t border-rule px-4 py-10 sm:px-8 lg:col-span-5 lg:border-t-0 lg:border-l lg:py-24"
+		>
+			<h2 id="verdicts-heading" class="ledger-label">Every Night ends with a verdict</h2>
+			<p class="mt-3 max-w-[40ch] text-ink-muted">
+				The Night Summary leads with the outcome, then the reason. These lines show the
+				tone; they are examples, not a record.
+			</p>
+			<ol class="mt-6 border-t border-rule">
+				{
+					verdicts.map((line, index) => (
+						<li class="flex gap-4 border-b border-rule py-4">
+							<span class="ledger-label pt-0.5" aria-hidden="true">
+								{String(index + 1).padStart(2, "0")}
+							</span>
+							<span class="font-mono text-[0.9375rem] leading-relaxed">{line}</span>
+						</li>
+					))
+				}
+			</ol>
+			<p class="mt-6 text-sm text-ink-muted">
+				An empty Night and a crashed Night each say what they were. You never open a
+				terminal to find out.
+			</p>
+		</aside>
+	</div>
+</section>

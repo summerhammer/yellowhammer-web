@@ -1,0 +1,65 @@
+---
+import { does, never } from "../content/ledger";
+import Section from "./Section.astro";
+
+const columns = [
+	{
+		id: "does",
+		label: "Does",
+		title: "Each Night, for each Project",
+		rows: does,
+	},
+	{
+		id: "never",
+		label: "Never does",
+		title:
+			"It never writes a line of code itself, and it never merges to main.",
+		rows: never,
+	},
+];
+---
+
+<Section
+	id="ledger"
+	number="02"
+	eyebrow="Does and never does"
+	title="One Night per Project. You read the result in the morning."
+	intro="Your agent CLIs write the code. Yellowhammer decides what they work on, checks what comes back and tells you what happened."
+>
+	<div class="grid border border-rule md:grid-cols-2">
+		{
+			columns.map((column, columnIndex) => (
+				<div
+					class:list={[
+						"min-w-0",
+						columnIndex > 0 && "border-t border-rule md:border-t-0 md:border-l",
+					]}
+				>
+					<h3
+						id={`${column.id}-heading`}
+						class="flex flex-col gap-2 border-b border-wing bg-surface px-5 py-4"
+					>
+						<span class="ledger-label">{column.label}</span>
+						<span class="text-lg leading-snug font-semibold text-balance">{column.title}</span>
+					</h3>
+					<ol aria-labelledby={`${column.id}-heading`}>
+						{column.rows.map((row, index) => (
+							<li class="grid grid-cols-[2.25rem_minmax(0,1fr)] border-b border-rule px-5 py-4 last:border-b-0">
+								<span class="ledger-label pt-1" aria-hidden="true">
+									{String(index + 1).padStart(2, "0")}
+								</span>
+								<p>
+									<span class="font-semibold">
+										{column.id === "never" && <span class="sr-only">Never: </span>}
+										{row.head}
+									</span>{" "}
+									<span class="text-ink-muted">{row.body}</span>
+								</p>
+							</li>
+						))}
+					</ol>
+				</div>
+			))
+		}
+	</div>
+</Section>

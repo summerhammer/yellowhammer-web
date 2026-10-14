@@ -1,0 +1,79 @@
+---
+import { steps } from "../content/steps";
+import key1 from "../figures/key-1.svg?raw";
+import key2 from "../figures/key-2.svg?raw";
+import nightEdition from "../figures/night-edition.svg?raw";
+import Section from "./Section.astro";
+
+const keys = [
+	{ svg: key1, label: "One issue you can follow, from the wire to its bundle" },
+	{
+		svg: key2,
+		label: "Story sheets, plates and papers: the other issues of the night",
+	},
+];
+
+const caption =
+	"Linear issues come off the wire in the evening as story sheets and wait on the spike. From 22:00 the typesetter, the agent in Orca, takes one Work Card at a time and composes it line by line. The plate goes to the press, which runs on the build tick every 15 minutes: the build and tests. Every print goes up to the proof desk for a Round of review and checks. A proof that fails is sent back down the return chute, reworked and printed again. One that passes is stamped and dropped to the dock, where the papers of each Repo Lane are tied into one bundle on the land tick, one pull request each. In this example, 8 issues go in at night, 3 come back once, and by morning 6 pull requests wait on the dock for your review.";
+---
+
+<Section
+	id="how-it-works"
+	number="04"
+	eyebrow="How it works"
+	title="Three Acts, then a report."
+	intro="A Night runs in three Acts, each fired on a schedule by macOS launchd. Nothing depends on an answer from you during the Night."
+>
+	<div class="grid gap-12 lg:grid-cols-12 lg:gap-10">
+		<ol class="border-t border-wing lg:col-span-5">
+			{
+				steps.map((step, index) => (
+					<li class="grid grid-cols-[2.75rem_minmax(0,1fr)] border-b border-rule py-5">
+						<span class="font-mono text-2xl leading-none text-olive" aria-hidden="true">
+							{String(index + 1).padStart(2, "0")}
+						</span>
+						<div>
+							<h3 class="flex flex-wrap items-baseline gap-x-3 text-lg font-semibold">
+								<span>{step.name}</span>
+								{step.act && (
+									<span class="ledger-label normal-case">
+										<span class="sr-only">Act: </span>
+										{step.act}
+									</span>
+								)}
+							</h3>
+							<p class="mt-2 leading-relaxed text-ink-muted">{step.body}</p>
+						</div>
+					</li>
+				))
+			}
+		</ol>
+		<div class="iso min-w-0 lg:col-span-7">
+			<figure class="iso-figure mt-0! mb-0!">
+				<div class="iso-plate">
+					<div class="iso-plate-corners" aria-hidden="true">
+						<span class="iso-plate-corner" data-corner="fig">Fig 1</span>
+						<span class="iso-plate-corner" data-corner="title">The night edition</span>
+						<span class="iso-plate-corner" data-corner="readout">07:00 · 6 PRs ready for review</span>
+					</div>
+					<div class="iso-stage pl-stage">
+						<Fragment set:html={nightEdition} />
+					</div>
+				</div>
+				<figcaption class="iso-legend">
+					<span class="iso-keys">
+						{
+							keys.map((key) => (
+								<span class="iso-key">
+									<Fragment set:html={key.svg} />
+									{key.label}
+								</span>
+							))
+						}
+					</span>
+					<span class="iso-caption">{caption}</span>
+				</figcaption>
+			</figure>
+		</div>
+	</div>
+</Section>

@@ -1,1 +1,301 @@
 @import "tailwindcss";
+@import "./vendor/anatomy-kit.css";
+@import "./plant.css";
+
+/*
+  Ledger palette. Every colour on the page comes from these tokens, so one scheme switch rethemes
+  the whole page, the figure included.
+
+  Three places set the scheme:
+  1. :root holds the light tokens (the default).
+  2. prefers-color-scheme: dark applies the dark tokens, unless the footer switcher says Light.
+  3. The footer switcher's Dark option applies the dark tokens regardless of the system.
+  The two dark blocks must stay identical.
+*/
+
+:root {
+	color-scheme: light;
+
+	--paper: #fbf7ea;
+	--paper-veil: rgb(251 247 234 / 0.78);
+	--surface: #f3efdf;
+	--ink: #1c1a10;
+	--ink-muted: #57543f;
+	--olive: #5e5f17;
+	--wing: #8e8f26;
+	--rule: #dcd6be;
+	--brand: #f6d916;
+	--action: #0066cc;
+	--action-hover: #00559e;
+	--on-action: #ffffff;
+	--focus: #0066cc;
+
+	--anatomy-page: var(--paper);
+	--anatomy-card: var(--paper);
+	--anatomy-text: var(--ink-muted);
+	--anatomy-strong: var(--ink);
+	--anatomy-muted: var(--ink-muted);
+	--anatomy-paper: var(--paper);
+	--anatomy-face: #ffffff;
+	--anatomy-top: #ffffff;
+	--anatomy-shade-0: #dcdcd9;
+	--anatomy-shade-1: #e5e5e2;
+	--anatomy-shade-2: #ededea;
+	--anatomy-shade-3: #f4f4f1;
+	--anatomy-lit-top: #ffffff;
+	--anatomy-lit-shade: #eeeeeb;
+	--anatomy-hi: #26262a;
+	--anatomy-mid: #8a8a8f;
+	--anatomy-lo: #b4b4b8;
+	--anatomy-faint: #d4d4d6;
+	--anatomy-lit: #000000;
+	--anatomy-halo: #8a8a80;
+	--anatomy-halo-opacity: 0.32;
+	--anatomy-dot: #3a3a3e;
+	--anatomy-red: #e5484d;
+	--anatomy-green: #30a46c;
+	--anatomy-blue: #3e63dd;
+	--anatomy-weight: 0.6px;
+	--anatomy-ease: cubic-bezier(0.32, 0.72, 0, 1);
+	--anatomy-mono: ui-monospace, Menlo, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not(:has(#scheme-light:checked)) {
+		color-scheme: dark;
+
+		--paper: #222211;
+		--paper-veil: rgb(34 34 17 / 0.78);
+		--surface: #2c2c1a;
+		--ink: #f3eedd;
+		--ink-muted: #c8c2ac;
+		--olive: #b4b556;
+		--wing: #8e8f26;
+		--rule: #45452b;
+		--brand: #f6d916;
+		--action: #0a84ff;
+		--action-hover: #409cff;
+		--on-action: #16120c;
+		--focus: #0a84ff;
+
+		--anatomy-face: #1b1b1b;
+		--anatomy-top: #1c1c1c;
+		--anatomy-shade-0: #0f0f0f;
+		--anatomy-shade-1: #121212;
+		--anatomy-shade-2: #151515;
+		--anatomy-shade-3: #181818;
+		--anatomy-lit-top: #262626;
+		--anatomy-lit-shade: #1d1d1d;
+		--anatomy-hi: #d4d4d4;
+		--anatomy-mid: #6a6a6a;
+		--anatomy-lo: #3e3e3e;
+		--anatomy-faint: #2a2a2a;
+		--anatomy-lit: #ffffff;
+		--anatomy-halo: #050505;
+		--anatomy-halo-opacity: 0.9;
+		--anatomy-dot: #e6e6e6;
+		--anatomy-red: #ff6b6b;
+		--anatomy-green: #6be0a0;
+		--anatomy-blue: #6b9bff;
+	}
+}
+
+:root:has(#scheme-dark:checked) {
+	color-scheme: dark;
+
+	--paper: #222211;
+	--paper-veil: rgb(34 34 17 / 0.78);
+	--surface: #2c2c1a;
+	--ink: #f3eedd;
+	--ink-muted: #c8c2ac;
+	--olive: #b4b556;
+	--wing: #8e8f26;
+	--rule: #45452b;
+	--brand: #f6d916;
+	--action: #0a84ff;
+	--action-hover: #409cff;
+	--on-action: #16120c;
+	--focus: #0a84ff;
+
+	--anatomy-face: #1b1b1b;
+	--anatomy-top: #1c1c1c;
+	--anatomy-shade-0: #0f0f0f;
+	--anatomy-shade-1: #121212;
+	--anatomy-shade-2: #151515;
+	--anatomy-shade-3: #181818;
+	--anatomy-lit-top: #262626;
+	--anatomy-lit-shade: #1d1d1d;
+	--anatomy-hi: #d4d4d4;
+	--anatomy-mid: #6a6a6a;
+	--anatomy-lo: #3e3e3e;
+	--anatomy-faint: #2a2a2a;
+	--anatomy-lit: #ffffff;
+	--anatomy-halo: #050505;
+	--anatomy-halo-opacity: 0.9;
+	--anatomy-dot: #e6e6e6;
+	--anatomy-red: #ff6b6b;
+	--anatomy-green: #6be0a0;
+	--anatomy-blue: #6b9bff;
+}
+
+@theme inline {
+	--font-sans: -apple-system, system-ui, sans-serif;
+	--font-mono: ui-monospace, Menlo, monospace;
+
+	--color-paper: var(--paper);
+	--color-paper-veil: var(--paper-veil);
+	--color-surface: var(--surface);
+	--color-ink: var(--ink);
+	--color-ink-muted: var(--ink-muted);
+	--color-olive: var(--olive);
+	--color-wing: var(--wing);
+	--color-rule: var(--rule);
+	--color-brand: var(--brand);
+	--color-action: var(--action);
+	--color-action-hover: var(--action-hover);
+	--color-on-action: var(--on-action);
+	--color-focus: var(--focus);
+}
+
+@layer base {
+	html {
+		background-color: var(--paper);
+		-webkit-text-size-adjust: 100%;
+	}
+
+	body {
+		background-color: var(--paper);
+		color: var(--ink);
+		font-family: var(--font-sans);
+		-webkit-font-smoothing: antialiased;
+		text-rendering: optimizeLegibility;
+	}
+
+	:focus-visible {
+		outline: 2px solid var(--focus);
+		outline-offset: 3px;
+		border-radius: 2px;
+	}
+
+	::selection {
+		background-color: var(--brand);
+		color: #1c1a10;
+	}
+}
+
+@layer components {
+	/* The ledger's mono label: section numbers, small caps-like eyebrows, CLI names. */
+	.ledger-label {
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		line-height: 1rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--olive);
+	}
+
+	/* The page's one gradient: a faint vertical fade from the surface into the paper. */
+	.hero-fade {
+		background-image: linear-gradient(
+			to bottom,
+			var(--surface),
+			var(--paper) 75%
+		);
+	}
+
+	/* A highlighter bar under one key phrase: a brand fill beneath the text, never behind it. */
+	.highlight {
+		text-decoration-line: underline;
+		text-decoration-color: var(--brand);
+		text-decoration-thickness: 0.14em;
+		text-underline-offset: 0.12em;
+		text-decoration-skip-ink: none;
+	}
+
+	.button-primary {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		border-radius: 0.5rem;
+		background-color: var(--action);
+		color: var(--on-action);
+		font-weight: 600;
+		white-space: nowrap;
+		transition: background-color 150ms ease;
+	}
+
+	.button-primary:hover {
+		background-color: var(--action-hover);
+	}
+
+	.button-secondary {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		border-radius: 0.5rem;
+		border: 1px solid var(--wing);
+		color: var(--ink);
+		font-weight: 600;
+		white-space: nowrap;
+		transition: background-color 150ms ease;
+	}
+
+	.button-secondary:hover {
+		background-color: var(--surface);
+	}
+
+	.text-link {
+		color: var(--ink);
+		text-decoration-line: underline;
+		text-decoration-color: var(--wing);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 0.2em;
+	}
+
+	.text-link:hover {
+		text-decoration-color: var(--ink);
+	}
+
+	/*
+	  Screenshot crops. The frame keeps the screenshot's own aspect ratio, so scale(1) shows the
+	  whole image; a crop zooms in around its transform-origin. Add a class here for a new crop.
+	*/
+	.crop-full {
+		transform: none;
+	}
+
+	.crop-tiles {
+		transform: scale(2.05);
+		transform-origin: 47% 29%;
+	}
+
+	.crop-feature-night {
+		transform: scale(2.05);
+		transform-origin: 47% 93%;
+	}
+
+	.crop-inspector {
+		transform: scale(3.6);
+		transform-origin: 100% 12%;
+	}
+}
+
+/* The figure's frame on the ledger: its plate edge is a wing-olive rule, its legend page ink. */
+.iso .iso-plate {
+	box-shadow: 0 0 0 1px var(--wing);
+}
+
+.iso .iso-legend {
+	color: var(--ink-muted);
+}
+
+/* The page's only motion is these colour transitions; the figure kit stops its own animations. */
+@media (prefers-reduced-motion: reduce) {
+	.button-primary,
+	.button-secondary,
+	.pl-twine {
+		transition: none;
+	}
+}

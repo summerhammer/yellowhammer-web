@@ -1,0 +1,38 @@
+---
+import { toolGroups } from "../content/tools";
+import Section from "./Section.astro";
+---
+
+<Section
+	id="tools"
+	number="03"
+	eyebrow="What you need"
+	title="It sits on the tools you already use, and replaces none of them."
+	intro="A Mac on macOS 26, Orca ADE, a Linear workspace, GitHub, and at least one supported agent CLI."
+>
+	<div class="grid gap-10">
+		{
+			toolGroups.map((group) => (
+				<div>
+					<h3 class="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-wing pb-3">
+						<span class="text-lg font-semibold">{group.title}</span>
+						<span class="text-sm text-ink-muted">{group.note}</span>
+					</h3>
+					<ul class="grid border-l border-rule sm:grid-cols-2 lg:grid-cols-4">
+						{group.tools.map((tool) => (
+							<li class="flex min-w-0 flex-col gap-2 border-r border-b border-rule px-5 py-5">
+								<p class="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+									<span class="text-[1.0625rem] font-semibold">{tool.name}</span>
+									{tool.command && (
+										<code class="font-mono text-sm text-olive">{tool.command}</code>
+									)}
+								</p>
+								<p class="text-sm leading-relaxed text-ink-muted">{tool.use}</p>
+							</li>
+						))}
+					</ul>
+				</div>
+			))
+		}
+	</div>
+</Section>

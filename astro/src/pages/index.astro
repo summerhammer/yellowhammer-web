@@ -1,10 +1,27 @@
 ---
+import DoesNever from "../components/DoesNever.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import HowItWorks from "../components/HowItWorks.astro";
+import Showcase from "../components/Showcase.astro";
+import Tools from "../components/Tools.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout title="Yellowhammer">
-	<main class="flex min-h-screen flex-col items-center justify-center text-center">
-		<h1 class="text-4xl font-semibold">Yellowhammer</h1>
-		<p class="mt-2">Coming soon.</p>
-	</main>
+<Layout
+	title="Yellowhammer: wake up to pull requests"
+	description="Yellowhammer is a Mac app that runs an unattended engineering Shift every Night, on top of Orca ADE, Linear and the agent CLIs you already use."
+>
+	<Header />
+	<div class="mx-auto max-w-6xl border-x border-rule">
+		<main id="main">
+			<Hero />
+			<Showcase />
+			<DoesNever />
+			<Tools />
+			<HowItWorks />
+		</main>
+		<Footer />
+	</div>
 </Layout>

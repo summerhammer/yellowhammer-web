@@ -1,0 +1,60 @@
+/*
+  The night edition figure: the static rules from figures/plant/plant.css. The interactive
+  .pl-stage cursor, touch and focus rules are dropped, because the figure here is a still frame.
+*/
+
+.pl-hand {
+	stroke-width: 1.1;
+	stroke-linecap: round;
+}
+
+/* The plate the typesetter is setting for the lit issue: the tray and its lines take the lit tones. */
+.pl-tray[data-on] .iso-solid > .iso-top {
+	fill: var(--anatomy-lit-top);
+}
+
+.pl-tray[data-on] .iso-solid > .iso-shade {
+	fill: var(--anatomy-lit-shade);
+}
+
+.pl-tray[data-on] .iso-solid > .iso-edge {
+	stroke: var(--anatomy-lit);
+}
+
+.pl-twine {
+	transition: opacity 400ms linear;
+}
+
+.iso-figure:has(.pl-stage) .iso-plate {
+	--anatomy-page: transparent;
+}
+.iso-figure:has(.pl-stage) .iso-plate-corner[data-corner="readout"] {
+	max-width: 56%;
+	white-space: normal;
+	text-align: right;
+	line-height: 1.4;
+}
+
+@media (max-width: 640px) {
+	.pl-stage {
+		overflow: hidden;
+	}
+
+	.iso-plate .pl-stage .iso-svg {
+		width: 108%;
+		margin: -2% -4% -1%;
+	}
+}
+
+@media (max-width: 560px) {
+	.iso-figure:has(.pl-stage) .iso-plate {
+		padding-bottom: 58px;
+	}
+
+	.iso-figure:has(.pl-stage) .iso-plate-corner[data-corner="readout"] {
+		left: 0;
+		max-width: none;
+		white-space: nowrap;
+		font-size: 10px;
+	}
+}

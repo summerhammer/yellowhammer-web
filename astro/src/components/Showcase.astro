@@ -1,0 +1,81 @@
+---
+/**
+ * The screenshot showcase. Tabs without JavaScript: each tab is a <label> wrapping a visually
+ * hidden radio input, so arrow keys move between tabs natively. A panel shows when the
+ * showcase :has() its tab's radio checked; that selector comes from the data entry, so the CSS
+ * never counts tabs.
+ */
+import { Image } from "astro:assets";
+import { shots } from "../content/showcase";
+import Section from "./Section.astro";
+---
+
+<Section
+	id="pulse"
+	number="01"
+	eyebrow="The app"
+	title="One screen per Project, read at a glance."
+	intro="The Pulse shows one Project, top to bottom in a fixed order: what needs you, what runs now, the Feature in flight, the last Night, and health. Every decision is still made in Linear."
+>
+	<div class="showcase grid grid-cols-[minmax(0,1fr)] border border-rule lg:grid-cols-[17rem_minmax(0,1fr)]">
+		<div
+			role="radiogroup"
+			aria-label="Screenshot views"
+			class="flex min-w-0 overflow-x-auto border-b border-rule lg:flex-col lg:overflow-visible lg:border-r lg:border-b-0"
+		>
+			{
+				shots.map((shot, index) => (
+					<label class="group relative flex shrink-0 cursor-pointer flex-col gap-1 border-r border-rule px-4 py-3 text-ink-muted hover:bg-surface has-checked:bg-surface has-checked:text-ink has-focus-visible:outline-2 has-focus-visible:outline-offset-[-4px] has-focus-visible:outline-focus lg:border-r-0 lg:border-b lg:py-5 lg:pl-6">
+						<input
+							type="radio"
+							name="showcase"
+							id={shot.id}
+							value={shot.id}
+							checked={index === 0}
+							class="sr-only"
+						/>
+						<span
+							aria-hidden="true"
+							class="absolute inset-x-0 bottom-0 hidden h-1 bg-brand shadow-[0_0_0_1px_var(--wing)] group-has-checked:block lg:inset-x-auto lg:inset-y-0 lg:left-0 lg:h-auto lg:w-1"
+						/>
+						<span class="flex items-baseline gap-3">
+							<span class="ledger-label" aria-hidden="true">
+								{String(index + 1).padStart(2, "0")}
+							</span>
+							<span class="text-[0.9375rem] whitespace-nowrap group-has-checked:font-semibold">
+								{shot.label}
+							</span>
+						</span>
+						<span class="hidden text-sm leading-snug text-ink-muted lg:block lg:pl-8">
+							{shot.description}
+						</span>
+					</label>
+				))
+			}
+		</div>
+		<div class="min-w-0">
+			{
+				shots.map((shot, index) => (
+					<figure class={`hidden ${shot.panelClass}`}>
+						<div class="relative aspect-[2584/2004] overflow-hidden bg-surface">
+							<Image
+								src={shot.image}
+								alt={shot.alt}
+								widths={[640, 960, 1280, 1920, 2584]}
+								sizes={`(min-width: 1152px) ${Math.round(830 * (shot.zoom ?? 1))}px, ${Math.round(100 * (shot.zoom ?? 1))}vw`}
+								format="webp"
+								loading={index === 0 ? "eager" : "lazy"}
+								fetchpriority={index === 0 ? "high" : "auto"}
+								class={`absolute inset-0 size-full object-contain ${shot.cropClass}`}
+							/>
+						</div>
+						<figcaption class="flex gap-3 border-t border-rule px-4 py-3 text-sm text-ink-muted sm:px-5">
+							<span class="ledger-label pt-0.5">Screenshot</span>
+							<span>{shot.caption}</span>
+						</figcaption>
+					</figure>
+				))
+			}
+		</div>
+	</div>
+</Section>
