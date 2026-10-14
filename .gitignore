@@ -5,3 +5,7 @@ dist
 relay/public/styles.css
 .DS_Store
 *.log
+
+# Built anatomy figure pages and their screenshots
+figures/plant/*.html
+figures/plant/shots/

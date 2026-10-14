@@ -1,0 +1,76 @@
+.pl-stage {
+	cursor: ew-resize;
+	touch-action: pan-y;
+	-webkit-tap-highlight-color: transparent;
+	-webkit-user-select: none;
+	user-select: none;
+	outline: none;
+}
+
+.pl-stage:focus-visible {
+	outline: 1px solid var(--anatomy-muted);
+	outline-offset: 6px;
+}
+
+.pl-hand {
+	stroke-width: 1.1;
+	stroke-linecap: round;
+}
+
+/* The plate the typesetter is setting for the lit issue: the tray and its lines take the lit tones. */
+.pl-tray[data-on] .iso-solid > .iso-top {
+	fill: var(--anatomy-lit-top);
+}
+
+.pl-tray[data-on] .iso-solid > .iso-shade {
+	fill: var(--anatomy-lit-shade);
+}
+
+.pl-tray[data-on] .iso-solid > .iso-edge {
+	stroke: var(--anatomy-lit);
+}
+
+/* Twine appears as a bundle is tied; the plate's tokens change with the light, so no transition on fills. */
+.pl-twine {
+	transition: opacity 400ms linear;
+}
+
+/* The light changes over a whole night, so tokens may transition briefly without a visible step. */
+.iso-figure:has(.pl-stage) .iso-plate {
+	--anatomy-page: transparent;
+}
+
+.iso-figure:has(.pl-stage) .iso-plate-corner[data-corner="readout"] {
+	max-width: 56%;
+	white-space: normal;
+	text-align: right;
+	line-height: 1.4;
+}
+
+@media (max-width: 640px) {
+	.pl-stage {
+		overflow: hidden;
+	}
+
+	.iso-plate .pl-stage .iso-svg {
+		width: 108%;
+		margin: -2% -4% -1%;
+	}
+}
+
+@media (max-width: 560px) {
+	.iso-figure:has(.pl-stage) .iso-plate {
+		padding-bottom: 58px;
+	}
+
+	.iso-figure:has(.pl-stage) .iso-plate-corner[data-corner="readout"] {
+		left: 0;
+		max-width: none;
+		white-space: nowrap;
+		font-size: 10px;
+	}
+
+	.iso-figure:has(.pl-stage) .iso-plate-corner[data-corner="hint"] {
+		bottom: 34px;
+	}
+}

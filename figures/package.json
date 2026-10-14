@@ -6,7 +6,9 @@
 		"dev": "vite",
 		"build": "tsc --noEmit && vite build",
 		"preview": "vite preview",
-		"typecheck": "tsc --noEmit"
+		"typecheck": "tsc --noEmit",
+		"plant": "node plant/build.mjs --light && node plant/build.mjs",
+		"plant:audit": "node plant/build.mjs --light --audit"
 	},
 	"dependencies": {
 		"react": "19.3.0",

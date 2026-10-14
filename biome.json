@@ -7,7 +7,14 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"includes": ["**", "!.claude", "!figures/src/iso"]
+		"includes": [
+			"**",
+			"!.claude",
+			"!.agents",
+			"!figures/src/iso",
+			"!figures/plant/shots",
+			"!figures/plant/*.html"
+		]
 	},
 	"formatter": {
 		"enabled": true,
