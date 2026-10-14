@@ -11,6 +11,7 @@
 			"**",
 			"!.claude",
 			"!.agents",
+			"!skills-lock.json",
 			"!figures/src/iso",
 			"!figures/plant/shots",
 			"!figures/plant/*.html"
