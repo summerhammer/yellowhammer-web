@@ -25,17 +25,17 @@ export const shots: Shot[] = [
 		id: "pulse",
 		label: "Pulse",
 		image: pulse,
-		alt: "The Yellowhammer window showing the Pulse for one Project, idle between Nights. A sidebar lists the Project and its repository, the middle column shows five tiles and their cards, and an inspector on the right shows the repository's Repo Lane.",
+		alt: "The Yellowhammer window showing the Pulse for one Project, idle between Nights. A sidebar lists the Project and its repository, the middle column shows five tiles and their cards, and an inspector on the right shows the repository's Work Cards.",
 		crop: "crop-pulse",
 		scale: 1.095,
 		caption:
-			"The Pulse, the main window's status view, for one Project between Nights.",
+			"The Pulse, the main window's status view, for one Project—one product: its repos, its Linear project and its specification—between Nights.",
 	},
 	{
 		id: "tiles",
 		label: "Tiles",
 		image: pulse,
-		alt: "Close-up of the Pulse: the tiles Needs you, Now, Feature, Night and Health, above the Needs you card, which reads Nothing needs you, and the Now card, which shows no Attempt running.",
+		alt: "Close-up of the Pulse: the tiles Needs you, Now, Feature, Night and Health, above the Needs you card, which reads Nothing needs you, and the Now card, which shows no work running.",
 		crop: "crop-tiles",
 		scale: 2,
 		caption:
@@ -53,12 +53,12 @@ export const shots: Shot[] = [
 	},
 	{
 		id: "lane",
-		label: "Repo Lane",
+		label: "Work Cards",
 		image: pulse,
-		alt: "Close-up of the inspector for one repository: its Repo Lane with 3 of 3 cards done, its pull request, and the three Work Cards, each marked Done.",
+		alt: "Close-up of the inspector for one repository: 3 of 3 cards done, its pull request, and the three Work Cards, each marked Done.",
 		crop: "crop-lane",
 		scale: 2.871,
 		caption:
-			"The inspector for one repository: its Repo Lane, its Work Cards and its pull request.",
+			"The inspector for one repository: its Work Cards and its pull request.",
 	},
 ];

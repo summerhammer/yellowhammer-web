@@ -24,7 +24,7 @@ export const tools: Tool[] = [
 	{
 		name: "GitHub",
 		role: "Pull requests",
-		body: "Receives each Feature Branch and one pull request per repository. Yellowhammer writes to it and never merges.",
+		body: "Receives each Feature Branch and one pull request per touched repository. Yellowhammer writes to it and never merges.",
 	},
 ];
 

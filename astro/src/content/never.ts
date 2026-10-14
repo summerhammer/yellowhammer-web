@@ -13,7 +13,7 @@ export const nevers: Never[] = [
 	},
 	{
 		title: "No merge to main",
-		body: "It hands off at the pull request, one per repository. The merge is yours.",
+		body: "It hands off at the pull request, one per touched repository. The merge is yours.",
 	},
 	{
 		title: "No cloud execution",
