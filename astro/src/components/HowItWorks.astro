@@ -6,14 +6,14 @@ import Section from "./Section.astro";
 <Section
 	id="how-it-works"
 	eyebrow="How it works"
-	title="One Night, in three Acts"
-	intro="A Night is one overnight run for one Project. It runs in three Acts, author, build and land, each started on a schedule by macOS. You read the result in the morning."
+	title="How a Night runs"
+	intro="A Night is one overnight run for one of your products, from the first step to the morning report. Yellowhammer selects work from your specification, runs your coding agents, and leaves an honest verdict on your board by morning."
 >
 	<ol class="steps">
 		{
 			steps.map((step) => (
 				<li class="step">
-					<p class="step-act">{step.act}</p>
+					<p class="step-act">{step.label}</p>
 					<h3>{step.title}</h3>
 					<p>{step.body}</p>
 				</li>
