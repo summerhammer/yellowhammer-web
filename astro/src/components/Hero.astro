@@ -1,0 +1,29 @@
+---
+import { site } from "../content/site";
+import DownloadButton from "./DownloadButton.astro";
+---
+
+<section class="hero" aria-labelledby="hero-title">
+	<div class="wrap">
+		<img class="hero-mark" src="/yellowhammer-mark.svg" alt="" width="72" height="72" />
+		<h1 id="hero-title" class="hero-name">{site.name}</h1>
+		<p class="hero-lede">
+			An unattended engineering Shift on top of the Orca ADE: one Night for each of your Projects, all
+			of them at once.
+		</p>
+		<p class="hero-body">
+			It takes intent from your Linear board, and writes the work itself when the board is empty.
+			Your agent CLIs build it. By morning there is one pull request per repository and an honest
+			report on the board.
+		</p>
+		<div class="hero-actions">
+			<DownloadButton />
+			<a class="btn btn-secondary" href={site.repo}>View on GitHub</a>
+		</div>
+		<ul class="hero-meta">
+			<li>{site.requires}</li>
+			<li>Open source, {site.licence}</li>
+		</ul>
+		<p class="hero-meta">{site.trust}</p>
+	</div>
+</section>

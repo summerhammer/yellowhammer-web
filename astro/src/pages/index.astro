@@ -1,10 +1,27 @@
 ---
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import HowItWorks from "../components/HowItWorks.astro";
+import NeverBand from "../components/NeverBand.astro";
+import Showcase from "../components/Showcase.astro";
+import Tools from "../components/Tools.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout title="Yellowhammer">
-	<main class="flex min-h-screen flex-col items-center justify-center text-center">
-		<h1 class="text-4xl font-semibold">Yellowhammer</h1>
-		<p class="mt-2">Coming soon.</p>
+<Layout
+	title="Yellowhammer: an unattended engineering Shift for your Mac"
+	description="Yellowhammer runs an unattended engineering Shift on top of the Orca ADE: one Night per Project. It never writes a line of code itself, and it never merges to main."
+>
+	<Header />
+	<main id="main">
+		<div class="mesh mesh-hero">
+			<Hero />
+			<Showcase />
+		</div>
+		<NeverBand />
+		<Tools />
+		<HowItWorks />
 	</main>
+	<Footer />
 </Layout>

@@ -1,0 +1,28 @@
+---
+import { steps } from "../content/steps";
+import NightFigure from "./NightFigure.astro";
+import Section from "./Section.astro";
+---
+
+<Section
+	id="how-it-works"
+	eyebrow="How it works"
+	title="One Night, in three Acts"
+	intro="A Night is one overnight run for one Project. It runs in three Acts, author, build and land, each started on a schedule by macOS. You read the result in the morning."
+>
+	<div class="figure-card">
+		<NightFigure />
+	</div>
+
+	<ol class="steps">
+		{
+			steps.map((step) => (
+				<li class="step">
+					<p class="step-act">{step.act}</p>
+					<h3>{step.title}</h3>
+					<p>{step.body}</p>
+				</li>
+			))
+		}
+	</ol>
+</Section>

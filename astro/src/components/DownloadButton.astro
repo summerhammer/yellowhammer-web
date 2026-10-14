@@ -1,0 +1,17 @@
+---
+import { site } from "../content/site";
+
+interface Props {
+	size?: "sm" | "md";
+	label?: string;
+}
+
+const { size = "md", label = "Download for Mac" } = Astro.props;
+---
+
+<a class:list={["btn btn-primary", { "btn-sm": size === "sm" }]} href={site.download}>
+	<svg class="btn-glyph" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+		<path d="M8 2.5v8M4.5 7 8 10.5 11.5 7M3 13.5h10"></path>
+	</svg>
+	{label}
+</a>

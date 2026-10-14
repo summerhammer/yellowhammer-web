@@ -1,0 +1,58 @@
+---
+import { Image } from "astro:assets";
+import { shots } from "../content/showcase";
+
+/*
+ * Tabs without JavaScript: each radio is followed by its label and its panel, so
+ * `:checked + label + panel` shows the right panel for any number of tabs. Flex `order` lifts all
+ * the labels into one row above the panels. Arrow keys move between the radios natively.
+ */
+const frameMax = 1024; // .shot-frame max-width (64rem)
+const gutter = 32; // .wrap side padding on a phone, both sides
+const sizesFor = (scale: number) =>
+	`(min-width: ${frameMax + 48}px) ${Math.round(frameMax * scale)}px, calc(${Math.round(scale * 100)}vw - ${Math.round(gutter * scale)}px)`;
+---
+
+<section class="showcase" aria-labelledby="showcase-title">
+	<div class="wrap">
+		<h2 id="showcase-title" class="sr-only">The app</h2>
+		<div class="segmented">
+			{
+				shots.map((shot, index) => (
+					<>
+						<input
+							class="seg-input"
+							type="radio"
+							name="showcase"
+							id={`shot-${shot.id}`}
+							checked={index === 0}
+						/>
+						<label class="seg-label" for={`shot-${shot.id}`}>
+							<span class="seg-text">{shot.label}</span>
+						</label>
+						<div class="tab-panel">
+							<figure class="shot">
+								<div class="shot-frame">
+									<Image
+										class:list={["shot-img", shot.crop]}
+										src={shot.image}
+										alt={shot.alt}
+										widths={[1280, 1920, shot.image.width]}
+										sizes={sizesFor(shot.scale)}
+										format="webp"
+										quality={82}
+										loading={index === 0 ? "eager" : "lazy"}
+										fetchpriority={index === 0 ? "high" : "auto"}
+									/>
+								</div>
+								<figcaption class="shot-caption">
+									{shot.caption} Screenshot of the app as it is today.
+								</figcaption>
+							</figure>
+						</div>
+					</>
+				))
+			}
+		</div>
+	</div>
+</section>
