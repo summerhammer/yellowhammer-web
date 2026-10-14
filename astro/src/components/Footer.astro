@@ -9,7 +9,7 @@ const schemes = [
 ];
 ---
 
-<footer class="mesh mesh-soft">
+<footer>
 	<div class="wrap closing">
 		<p class="eyebrow">In the morning</p>
 		<p class="closing-line">Night done. 2 pull requests open.</p>
@@ -35,7 +35,7 @@ const schemes = [
 			</div>
 			<fieldset class="scheme">
 				<legend>Appearance</legend>
-				<div class="segmented">
+				<div class="scheme-options">
 					{
 						schemes.map((scheme) => (
 							<>
@@ -46,8 +46,8 @@ const schemes = [
 									id={scheme.id}
 									checked={scheme.checked}
 								/>
-								<label class="seg-label" for={scheme.id}>
-									<span class="seg-text">{scheme.label}</span>
+								<label class="scheme-option" for={scheme.id}>
+									{scheme.label}
 								</label>
 							</>
 						))

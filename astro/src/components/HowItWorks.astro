@@ -1,6 +1,5 @@
 ---
 import { steps } from "../content/steps";
-import NightFigure from "./NightFigure.astro";
 import Section from "./Section.astro";
 ---
 
@@ -10,10 +9,6 @@ import Section from "./Section.astro";
 	title="One Night, in three Acts"
 	intro="A Night is one overnight run for one Project. It runs in three Acts, author, build and land, each started on a schedule by macOS. You read the result in the morning."
 >
-	<div class="figure-card">
-		<NightFigure />
-	</div>
-
 	<ol class="steps">
 		{
 			steps.map((step) => (

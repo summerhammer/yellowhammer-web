@@ -1,30 +1,33 @@
 @import "tailwindcss";
-@import "./vendor/anatomy-kit.css";
-@import "./vendor/plant.css";
-@import "./figure-theme.css";
 
 /*
  * Design tokens.
  *
  * Every colour is a light-dark() pair, so one property, `color-scheme` on :root, rethemes the whole
- * page, the figure included. The footer's System / Light / Dark radios set it:
+ * page. The footer's System / Light / Dark radios set it:
  *   System (default) -> `light dark`, which follows prefers-color-scheme
  *   Light            -> :root:has(#scheme-light:checked)
  *   Dark             -> :root:has(#scheme-dark:checked)
  * There is no JavaScript, so the choice is not remembered after a reload.
  *
  * Brand rules (docs/brand/colors.md, draft): `brand` yellow is a fill, glow and logo colour only,
- * never text. `wing` olive draws lines, never body text. System blue owns the primary action.
+ * never text. `wing` olive draws lines, never body text. System blue is for links and focus.
  */
 @theme {
 	--font-sans: -apple-system, system-ui, sans-serif;
 	--font-mono: ui-monospace, Menlo, monospace;
 
-	/* Canvas and surfaces */
-	--color-bg: light-dark(#fbf7ea, #222211);
-	--color-raised: light-dark(#fffdf7, #313120);
+	/* Canvas and surfaces. The light canvas is lighter than the brand `background` (#FBF7EA), on
+	 * request; dark keeps the brand value. */
+	--color-bg: light-dark(#fdfbf5, #222211);
+	--color-raised: light-dark(#ffffff, #313120);
 	--color-surface: light-dark(#f1ede0, #2b2b1a);
-	--color-header: light-dark(rgb(251 247 234 / 0.72), rgb(34 34 17 / 0.72));
+	--color-header: light-dark(rgb(253 251 245 / 0.72), rgb(34 34 17 / 0.72));
+	/* Always shown, and quieter than --color-line so the header edge stays a hint. */
+	--color-header-line: light-dark(
+		rgb(31 29 20 / 0.06),
+		rgb(243 239 223 / 0.07)
+	);
 
 	/* Text */
 	--color-ink: light-dark(#1f1d14, #f3efdf);
@@ -32,31 +35,21 @@
 
 	/* Lines */
 	--color-line: light-dark(rgb(31 29 20 / 0.1), rgb(243 239 223 / 0.1));
+	--color-line-strong: light-dark(
+		rgb(31 29 20 / 0.22),
+		rgb(243 239 223 / 0.24)
+	);
 	--color-wing: #8e8f26;
 
 	/* Brand fill: never text, never behind text */
 	--color-brand: light-dark(#f4c900, #ffd426);
 
-	/* Action (Apple system blue family) */
-	--color-action: light-dark(#0066cc, #0071e3);
-	--color-action-hover: light-dark(#0058b0, #0062c4);
-	--color-on-action: #ffffff;
+	/* Action. The Download button is black on light and white on dark; blue stays for links. */
+	--color-download: light-dark(#000000, #ffffff);
+	--color-download-hover: light-dark(#2b2b2b, #e4e4e4);
+	--color-on-download: light-dark(#ffffff, #000000);
 	--color-link: light-dark(#0066cc, #409cff);
 	--color-focus: light-dark(#0066cc, #409cff);
-
-	/* Mesh blooms (low alpha, fills only) */
-	--color-bloom-yellow: light-dark(
-		rgb(244 201 0 / 0.26),
-		rgb(255 212 38 / 0.12)
-	);
-	--color-bloom-apricot: light-dark(
-		rgb(246 178 120 / 0.26),
-		rgb(200 110 40 / 0.12)
-	);
-	--color-bloom-olive: light-dark(
-		rgb(142 143 38 / 0.14),
-		rgb(110 112 30 / 0.24)
-	);
 
 	/* Shadow colours */
 	--color-shadow: light-dark(rgb(74 56 10 / 0.18), rgb(0 0 0 / 0.5));
@@ -64,6 +57,7 @@
 
 	--radius-card: 1.25rem;
 	--radius-pill: 999px;
+	--radius-button: 0.75rem;
 	--shadow-float:
 		0 1px 2px var(--color-shadow-soft), 0 24px 64px -24px var(--color-shadow),
 		0 48px 120px -48px var(--color-shadow);
@@ -119,8 +113,7 @@
 	}
 }
 
-/* Components. Unlayered on purpose: the vendored figure kit is unlayered too, and these rules
- * must be able to override it. */
+/* Components */
 /* Layout */
 .wrap {
 	width: 100%;
@@ -151,89 +144,6 @@
 	top: 0.75rem;
 }
 
-/* Mesh gradients. Blooms sit at the edges and corners so no two peak under the copy column. */
-.mesh {
-	position: relative;
-	isolation: isolate;
-	overflow: clip;
-}
-
-.mesh::before {
-	content: "";
-	position: absolute;
-	inset: -12%;
-	z-index: -1;
-	pointer-events: none;
-	background:
-		radial-gradient(
-			38% 42% at 12% 18%,
-			var(--color-bloom-yellow),
-			transparent 70%
-		),
-		radial-gradient(
-			34% 40% at 90% 12%,
-			var(--color-bloom-apricot),
-			transparent 72%
-		),
-		radial-gradient(
-			40% 36% at 84% 64%,
-			var(--color-bloom-olive),
-			transparent 70%
-		),
-		radial-gradient(
-			36% 34% at 8% 78%,
-			var(--color-bloom-apricot),
-			transparent 70%
-		),
-		radial-gradient(
-			30% 26% at 50% 100%,
-			var(--color-bloom-yellow),
-			transparent 72%
-		);
-	animation: mesh-drift 48s ease-in-out infinite alternate;
-}
-
-.mesh-soft::before {
-	opacity: 0.6;
-	/* Fade in from the top so the band has no hard edge against the calm section above. */
-	-webkit-mask-image: linear-gradient(to bottom, transparent 8%, #000 40%);
-	mask-image: linear-gradient(to bottom, transparent 8%, #000 40%);
-	background:
-		radial-gradient(
-			40% 60% at 10% 40%,
-			var(--color-bloom-apricot),
-			transparent 70%
-		),
-		radial-gradient(
-			38% 70% at 88% 30%,
-			var(--color-bloom-yellow),
-			transparent 70%
-		),
-		radial-gradient(
-			44% 60% at 60% 110%,
-			var(--color-bloom-olive),
-			transparent 70%
-		);
-}
-
-@keyframes mesh-drift {
-	0% {
-		transform: translate3d(0, 0, 0) scale(1);
-	}
-	50% {
-		transform: translate3d(2%, -1.5%, 0) scale(1.03);
-	}
-	100% {
-		transform: translate3d(-2%, 1.5%, 0) scale(1.01);
-	}
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.mesh::before {
-		animation: none;
-	}
-}
-
 /* Header */
 .site-header {
 	position: sticky;
@@ -243,25 +153,7 @@
 	background: var(--color-header);
 	-webkit-backdrop-filter: blur(18px) saturate(1.6);
 	backdrop-filter: blur(18px) saturate(1.6);
-	border-bottom: 1px solid var(--color-line);
-}
-
-/* Where scroll-driven animations exist, the hairline fades in once content scrolls under the header. */
-@supports (animation-timeline: scroll()) {
-	.site-header {
-		animation: header-hairline linear both;
-		animation-timeline: scroll(root);
-		animation-range: 0 5rem;
-	}
-
-	@keyframes header-hairline {
-		from {
-			border-bottom-color: transparent;
-		}
-		to {
-			border-bottom-color: var(--color-line);
-		}
-	}
+	border-bottom: 1px solid var(--color-header-line);
 }
 
 .site-header-inner {
@@ -322,7 +214,7 @@
 	gap: 0.5rem;
 	min-height: 2.75rem;
 	padding: 0.625rem 1.25rem;
-	border-radius: var(--radius-pill);
+	border-radius: var(--radius-button);
 	font-weight: 600;
 	font-size: 1rem;
 	line-height: 1.2;
@@ -337,28 +229,28 @@
 	min-height: 2.25rem;
 	padding: 0.4375rem 0.9375rem;
 	font-size: 0.9375rem;
+	border-radius: 0.625rem;
 }
 
-.btn-primary {
-	background: var(--color-action);
-	color: var(--color-on-action);
+.btn-download {
+	background: var(--color-download);
+	color: var(--color-on-download);
 	box-shadow: 0 1px 2px var(--color-shadow-soft);
 }
 
-.btn-primary:hover {
-	background: var(--color-action-hover);
+.btn-download:hover {
+	background: var(--color-download-hover);
 }
 
+/* Transparent on the page colour; the outline alone marks the edge. */
 .btn-secondary {
-	background: var(--color-raised);
+	background: transparent;
 	color: var(--color-ink);
-	box-shadow:
-		inset 0 0 0 1px var(--color-line),
-		0 1px 2px var(--color-shadow-soft);
+	box-shadow: inset 0 0 0 1px var(--color-line-strong);
 }
 
 .btn-secondary:hover {
-	background: var(--color-surface);
+	background: var(--color-line);
 }
 
 .btn-glyph {
@@ -368,32 +260,22 @@
 }
 
 /* Hero */
-/* The hero mesh starts under the translucent header, so the blur has something to show. */
-.mesh-hero {
-	margin-top: calc(-1 * var(--header-h));
-}
-
 .hero {
-	padding-top: calc(var(--header-h) + 4.5rem);
+	padding-top: 4.5rem;
 	padding-bottom: 3rem;
 	text-align: center;
 }
 
 @media (min-width: 48rem) {
 	.hero {
-		padding-top: calc(var(--header-h) + 6.5rem);
+		padding-top: 6.5rem;
 	}
 }
 
-.hero-mark {
-	width: 4.5rem;
-	height: 4.5rem;
-	margin-inline: auto;
-}
-
-.hero-name {
-	margin: 1.25rem 0 0;
-	font-size: clamp(2.75rem, 7vw, 4.5rem);
+.hero-title {
+	text-wrap: balance;
+	margin: 0;
+	font-size: clamp(2.5rem, 7vw, 4.5rem);
 	font-weight: 750;
 	letter-spacing: -0.035em;
 	line-height: 1.02;
@@ -401,19 +283,12 @@
 
 .hero-lede {
 	text-wrap: balance;
-	max-width: 40rem;
+	max-width: 36rem;
 	margin: 1.25rem auto 0;
 	font-size: clamp(1.25rem, 2.6vw, 1.5rem);
 	line-height: 1.35;
 	letter-spacing: -0.012em;
 	font-weight: 500;
-}
-
-.hero-body {
-	max-width: 38rem;
-	margin: 1rem auto 0;
-	color: var(--color-ink-muted);
-	font-size: 1.0625rem;
 }
 
 .hero-actions {
@@ -434,6 +309,7 @@
 	list-style: none;
 	color: var(--color-ink-muted);
 	font-size: 0.9375rem;
+	text-wrap: balance;
 }
 
 /* Segmented control. Each <input type="radio"> is followed by its <label>; the pair scales to
@@ -504,6 +380,14 @@
 
 .seg-label:hover .seg-text {
 	color: var(--color-ink);
+}
+
+/* The ring and focus outline overhang the label; lift it so the next label's background, painted
+ * later, does not cover their right edge. */
+.seg-input:checked + .seg-label,
+.seg-input:focus-visible + .seg-label {
+	position: relative;
+	z-index: 1;
 }
 
 .seg-input:checked + .seg-label .seg-text {
@@ -829,51 +713,6 @@
 }
 
 /* How it works */
-.figure-card {
-	padding: 0.75rem;
-	border-radius: calc(var(--radius-card) + 0.5rem);
-	background: var(--color-raised);
-	box-shadow:
-		0 0 0 1px var(--color-line),
-		var(--shadow-card);
-}
-
-@media (min-width: 48rem) {
-	.figure-card {
-		padding: 1.25rem 1.25rem 1.5rem;
-	}
-}
-
-.figure-card .iso-figure {
-	margin: 0;
-}
-
-.figure-card .iso-plate {
-	border-radius: var(--radius-card);
-	box-shadow: inset 0 0 0 1px var(--color-line);
-}
-
-.figure-card .iso-plate .iso-svg {
-	max-width: 60rem;
-}
-
-.figure-card .iso-legend {
-	gap: 0.625rem;
-	margin-top: 1rem;
-	padding-inline: 0.5rem;
-	color: var(--color-ink-muted);
-	font-size: 0.9375rem;
-}
-
-.iso-caption {
-	max-width: 70ch;
-}
-
-.iso-note {
-	color: var(--color-ink-muted);
-	font-style: italic;
-}
-
 .steps {
 	display: grid;
 	gap: 1rem;
@@ -1001,7 +840,7 @@
 	list-style: none;
 }
 
-/* Footer links sit over the soft mesh, so they use ink with an underline rather than blue. */
+/* Footer links use ink with an underline rather than blue, to stay quiet. */
 .footer-links a {
 	color: var(--color-ink);
 	text-decoration: underline;
@@ -1040,6 +879,35 @@
 	font-size: 0.9375rem;
 }
 
-.scheme .segmented {
-	justify-content: flex-start;
+/* Appearance: radios drawn as text links, styled like .footer-links. The current choice is muted
+ * and not underlined, so the weight never changes and the row does not shift. */
+.scheme-options {
+	display: flex;
+	gap: 1rem;
+}
+
+.scheme-option {
+	color: var(--color-ink);
+	font-size: 0.9375rem;
+	text-decoration: underline;
+	text-decoration-color: var(--color-line);
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.18em;
+	cursor: pointer;
+}
+
+.scheme-option:hover {
+	text-decoration-color: currentColor;
+}
+
+.seg-input:checked + .scheme-option {
+	color: var(--color-ink-muted);
+	text-decoration: none;
+	cursor: default;
+}
+
+.seg-input:focus-visible + .scheme-option {
+	outline: 2px solid var(--color-focus);
+	outline-offset: 3px;
+	border-radius: 4px;
 }
