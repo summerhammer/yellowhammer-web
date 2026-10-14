@@ -1,0 +1,37 @@
+---
+import { links, requires, trustLine } from "../content/site";
+import DownloadIcon from "./DownloadIcon.astro";
+---
+
+<section aria-labelledby="hero-heading" class="pt-14 pb-12 sm:pt-20 sm:pb-16">
+	<div class="page-inner">
+		<p class="flex items-center gap-3 text-[1.0625rem] font-semibold tracking-tight">
+			<img src="/yellowhammer-mark.svg" alt="" width="40" height="40" class="size-10" />
+			<span>Yellowhammer</span>
+		</p>
+		<h1
+			id="hero-heading"
+			class="mt-6 max-w-[16ch] text-[2.75rem] leading-[1.02] font-bold tracking-[-0.03em] text-balance sm:text-6xl lg:text-7xl"
+		>
+			Wake up to pull requests.
+		</h1>
+		<p class="mt-6 max-w-[40rem] text-lg leading-relaxed text-ink-muted sm:text-xl">
+			An unattended engineering Shift on top of the Orca ADE, one for each of your Projects. Yellowhammer takes
+			intent from your Linear board, authors the work itself when the board is empty, and leaves one pull request
+			per repository and an honest report by morning.
+		</p>
+		<div class="mt-9">
+			<div class="flex flex-wrap items-center gap-3">
+				<a href={links.download} class="btn btn-primary">
+					<DownloadIcon />
+					Download for Mac
+				</a>
+				<a href={links.repo} class="btn btn-ghost">View on GitHub</a>
+			</div>
+			<p class="mt-3 text-sm text-ink-muted">
+				{requires}<span aria-hidden="true"> · </span><span class="sr-only">. </span>Open source, MIT licence
+			</p>
+			<p class="mt-1 text-sm text-ink-muted">{trustLine}</p>
+		</div>
+	</div>
+</section>

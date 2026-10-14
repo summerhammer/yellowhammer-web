@@ -1,0 +1,55 @@
+---
+import { agentClis, needs, required } from "../content/tools";
+import Section from "./Section.astro";
+---
+
+<Section
+	id="tools"
+	eyebrow="What you need"
+	heading="It sits on the tools you already use."
+	intro="Yellowhammer replaces none of them. It runs on your Mac, on your own subscriptions."
+>
+	<ul class="grid gap-4 md:grid-cols-3" aria-label="Required tools">
+		{
+			required.map((tool) => (
+				<li class="card flex flex-col gap-3 md:min-h-56">
+					<p class="term">Required</p>
+					<h3 class="text-2xl font-bold tracking-tight">{tool.name}</h3>
+					<p class="leading-relaxed text-ink-muted">{tool.use}</p>
+				</li>
+			))
+		}
+	</ul>
+
+	<div class="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+		<h3 class="text-base font-semibold">Supported agent CLIs</h3>
+		<ul class="flex flex-wrap gap-2">
+			{
+				agentClis.map((cli) => (
+					<li class="chip">
+						{cli.name}{" "}
+						<code class="text-[0.8125rem] font-normal text-ink-muted">{cli.command}</code>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+	<p class="mt-3 max-w-[70ch] text-sm leading-relaxed text-ink-muted">
+		Yellowhammer dispatches each Work Card to an agent CLI as a black box. Adding another agent CLI is a code change,
+		never a configuration edit.
+	</p>
+
+	<div class="card card-quiet mt-10">
+		<h3 class="text-lg font-semibold tracking-tight">Before your first Night</h3>
+		<ul class="mt-4 grid gap-x-8 gap-y-2 sm:grid-cols-2">
+			{
+				needs.map((need) => (
+					<li class="flex gap-3 leading-relaxed">
+						<span aria-hidden="true" class="mt-[0.6em] size-1.5 flex-none rounded-full bg-wing" />
+						<span>{need}</span>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</Section>

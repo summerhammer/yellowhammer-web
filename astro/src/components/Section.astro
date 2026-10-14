@@ -1,0 +1,37 @@
+---
+/**
+ * The shared section wrapper: eyebrow, heading, intro, then the section's own content in the slot.
+ * A new section uses this and needs no new CSS.
+ */
+interface Props {
+	id: string;
+	eyebrow?: string;
+	heading: string;
+	intro?: string;
+	/** "mesh" puts the section on the cool mesh band. */
+	band?: "plain" | "mesh";
+	/** Centre the heading block (for sections built around one centred figure). */
+	centered?: boolean;
+}
+
+const {
+	id,
+	eyebrow,
+	heading,
+	intro,
+	band = "plain",
+	centered = false,
+} = Astro.props;
+const headingId = `${id}-heading`;
+---
+
+<section id={id} aria-labelledby={headingId} class:list={["section", { "band-mesh": band === "mesh" }]}>
+	<div class="page-inner">
+		<header class:list={["section-head", { "mx-auto text-center": centered }]}>
+			{eyebrow && <p class="eyebrow">{eyebrow}</p>}
+			<h2 id={headingId} class="section-title">{heading}</h2>
+			{intro && <p class:list={["section-intro", { "mx-auto": centered }]}>{intro}</p>}
+		</header>
+		<slot />
+	</div>
+</section>

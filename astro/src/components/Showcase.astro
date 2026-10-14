@@ -1,0 +1,57 @@
+---
+import { Image } from "astro:assets";
+import { showcase } from "../content/showcase";
+
+/*
+ * The screenshot showcase: one frame under the halo, with underlined text tabs below it.
+ * The tabs are radios + labels + CSS (no JavaScript); arrow keys move between them natively.
+ * Markup order per tab is radio, label, panel, caption, which the CSS in global.css relies on.
+ */
+const widths = [800, 1280, 1920, 2584];
+---
+
+<section aria-labelledby="showcase-heading" class="pb-[clamp(4rem,9vw,7rem)]">
+	<h2 id="showcase-heading" class="sr-only">The Pulse</h2>
+	<div class="page-inner halo-stage">
+		<fieldset class="tabs">
+			<legend class="sr-only">Choose a view of the Pulse</legend>
+			{
+				showcase.map((tab, index) => (
+					<>
+						<input
+							class="tab-input sr-only"
+							type="radio"
+							name="showcase"
+							id={`shot-${tab.id}`}
+							aria-describedby={`shot-${tab.id}-caption`}
+							checked={index === 0}
+						/>
+						<label class="tab-label" for={`shot-${tab.id}`}>
+							{tab.label}
+						</label>
+						<div class="tab-panel">
+							<div class="shot-frame">
+								<div class="shot-window">
+									<Image
+										src={tab.image}
+										alt={tab.alt}
+										widths={widths}
+										sizes={tab.sizes}
+										format="webp"
+										quality={82}
+										loading={index === 0 ? "eager" : "lazy"}
+										fetchpriority={index === 0 ? "high" : "auto"}
+										class:list={["shot-img", tab.crop]}
+									/>
+								</div>
+							</div>
+						</div>
+						<p class="tab-caption" id={`shot-${tab.id}-caption`}>
+							{tab.caption}
+						</p>
+					</>
+				))
+			}
+		</fieldset>
+	</div>
+</section>

@@ -1,0 +1,25 @@
+---
+import { links } from "../content/site";
+import DownloadIcon from "./DownloadIcon.astro";
+---
+
+<header class="site-header">
+	<nav class="page-inner flex h-16 items-center justify-between gap-3" aria-label="Main">
+		<div class="flex min-w-0 items-center gap-5">
+			<a href="/" class="flex items-center gap-2.5 font-semibold text-ink no-underline">
+				<img src="/yellowhammer-mark.svg" alt="" width="28" height="28" class="size-7" />
+				<span class="text-[1.0625rem] tracking-tight">Yellowhammer</span>
+			</a>
+			<a href={links.docs} class="hidden text-[0.9375rem] text-ink-muted no-underline hover:text-ink sm:inline">
+				Docs
+			</a>
+		</div>
+		<div class="flex items-center gap-2">
+			<a href={links.repo} class="btn btn-ghost btn-sm max-sm:hidden">GitHub</a>
+			<a href={links.download} class="btn btn-primary btn-sm">
+				<DownloadIcon />
+				<span>Download<span class="max-[25rem]:sr-only"> for Mac</span></span>
+			</a>
+		</div>
+	</nav>
+</header>

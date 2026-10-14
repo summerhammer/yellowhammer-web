@@ -175,6 +175,9 @@ importers:
       astro:
         specifier: 7.3.8
         version: 7.3.8(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1)
+      sharp:
+        specifier: 0.35.4
+        version: 0.35.4
     devDependencies:
       '@astrojs/check':
         specifier: 0.9.10

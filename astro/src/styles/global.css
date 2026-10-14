@@ -1,1 +1,653 @@
 @import "tailwindcss";
+@import "./vendor/anatomy-kit.css";
+@import "./vendor/plant.css";
+
+/*
+ * Design tokens. Every colour is a light-dark() pair, so the page follows its color-scheme:
+ * prefers-color-scheme by default, or the footer's scheme switcher (see "Colour scheme" below).
+ * One switch rethemes the whole page, the figure included.
+ */
+@theme {
+	--font-sans: -apple-system, system-ui, sans-serif;
+	--font-mono: ui-monospace, Menlo, monospace;
+
+	/* Canvas and surfaces */
+	--color-canvas: light-dark(#fbf7ea, #222211);
+	--color-surface: light-dark(#f2eedf, #2d2d1d);
+	--color-raised: light-dark(#fffdf6, #33331f);
+	--color-hairline: light-dark(#e2dcc8, #3e3e28);
+
+	/* Text */
+	--color-ink: light-dark(#1d1b12, #f3f0e2);
+	--color-ink-muted: light-dark(#5b5848, #b9b6a3);
+
+	/* Brand: yellow is a fill and the logo only, never text. Wing is the brand line colour. */
+	--color-brand: light-dark(#f4c900, #ffd426);
+	--color-wing: #8e8f26;
+
+	/* System blue owns the primary action. The filled button is a darker system-family blue so
+	   white text reaches 4.5:1; links and the focus ring use a blue that reaches 4.5:1 on canvas. */
+	--color-action: light-dark(#0066cc, #0071e3);
+	--color-action-hover: light-dark(#0057b0, #0062c4);
+	--color-on-action: #ffffff;
+	--color-link: light-dark(#0066cc, #4da3ff);
+	--color-focus: light-dark(#0066cc, #4da3ff);
+
+	/* Light: the halo behind the screenshot, and the cool mesh behind the figure */
+	--color-halo: light-dark(#f4c90047, #ffd4266b);
+	--color-halo-edge: light-dark(#f4c90000, #ffd42600);
+	--color-mesh-blue: light-dark(#0066cc17, #0a84ff2e);
+	--color-mesh-blue-soft: light-dark(#0066cc0d, #0a84ff1a);
+	--color-mesh-yellow: light-dark(#f4c9001f, #ffd4261a);
+	--color-header: light-dark(#fbf7eacc, #222211c7);
+
+	--radius-card: 1.25rem;
+	--width-page: 76rem;
+}
+
+/* Colour scheme: System (default) follows prefers-color-scheme; Light or Dark overrides it. */
+:root {
+	color-scheme: light dark;
+}
+
+:root:has(#scheme-light:checked) {
+	color-scheme: light;
+}
+
+:root:has(#scheme-dark:checked) {
+	color-scheme: dark;
+}
+
+@layer base {
+	html {
+		background-color: var(--color-canvas);
+		scroll-padding-top: 5rem;
+		-webkit-text-size-adjust: 100%;
+	}
+
+	body {
+		background-color: var(--color-canvas);
+		color: var(--color-ink);
+		font-family: var(--font-sans);
+		-webkit-font-smoothing: antialiased;
+		overflow-x: clip;
+	}
+
+	:focus-visible {
+		outline: 2px solid var(--color-focus);
+		outline-offset: 3px;
+		border-radius: 0.375rem;
+	}
+
+	a {
+		color: var(--color-link);
+		text-underline-offset: 0.2em;
+	}
+
+	code,
+	kbd {
+		font-family: var(--font-mono);
+	}
+}
+
+@layer components {
+	/* Layout */
+	.page-inner {
+		margin-inline: auto;
+		width: min(var(--width-page), 100% - 2rem);
+	}
+
+	.skip-link {
+		position: absolute;
+		left: 1rem;
+		top: -4rem;
+		z-index: 60;
+		padding: 0.5rem 0.875rem;
+		border-radius: 0.5rem;
+		background: var(--color-raised);
+		color: var(--color-ink);
+	}
+
+	.skip-link:focus-visible {
+		top: 0.75rem;
+	}
+
+	/* Header: translucent with a strong backdrop blur */
+	.site-header {
+		position: sticky;
+		top: 0;
+		z-index: 50;
+		background-color: var(--color-header);
+		border-bottom: 1px solid var(--color-hairline);
+		-webkit-backdrop-filter: saturate(1.6) blur(20px);
+		backdrop-filter: saturate(1.6) blur(20px);
+	}
+
+	/* Buttons */
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		min-height: 2.75rem;
+		padding: 0.625rem 1.125rem;
+		border-radius: 999px;
+		font-weight: 600;
+		font-size: 0.9375rem;
+		line-height: 1.2;
+		text-decoration: none;
+		white-space: nowrap;
+		transition:
+			background-color 150ms ease,
+			border-color 150ms ease;
+	}
+
+	.btn-sm {
+		min-height: 2.25rem;
+		padding: 0.4375rem 0.9375rem;
+		font-size: 0.875rem;
+	}
+
+	.btn-primary {
+		background-color: var(--color-action);
+		color: var(--color-on-action);
+		border: 1px solid transparent;
+	}
+
+	.btn-primary:hover {
+		background-color: var(--color-action-hover);
+	}
+
+	.btn-ghost {
+		color: var(--color-ink);
+		border: 1px solid var(--color-wing);
+		background-color: transparent;
+	}
+
+	.btn-ghost:hover {
+		background-color: var(--color-surface);
+	}
+
+	.btn-icon {
+		width: 1.125rem;
+		height: 1.125rem;
+		flex: none;
+	}
+
+	/* Section wrapper */
+	.section {
+		padding-block: clamp(4rem, 9vw, 7rem);
+	}
+
+	.section-head {
+		max-width: 44rem;
+		margin-bottom: clamp(2rem, 5vw, 3.5rem);
+	}
+
+	.eyebrow {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 0.8125rem;
+		font-weight: 600;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--color-ink-muted);
+	}
+
+	/* A small brand-yellow fill before each eyebrow, outlined in wing so it shows on the light canvas */
+	.eyebrow::before {
+		content: "";
+		width: 0.5rem;
+		height: 0.5rem;
+		border-radius: 999px;
+		background: var(--color-brand);
+		box-shadow: 0 0 0 1px var(--color-wing);
+	}
+
+	.section-title {
+		margin-top: 0.75rem;
+		font-size: clamp(1.875rem, 4.2vw, 2.75rem);
+		line-height: 1.1;
+		font-weight: 700;
+		letter-spacing: -0.02em;
+		text-wrap: balance;
+	}
+
+	.section-intro {
+		margin-top: 1rem;
+		font-size: 1.125rem;
+		line-height: 1.55;
+		color: var(--color-ink-muted);
+		max-width: 70ch;
+		text-wrap: pretty;
+	}
+
+	/* Cards */
+	.card {
+		border-radius: var(--radius-card);
+		background-color: var(--color-raised);
+		border: 1px solid var(--color-hairline);
+		padding: clamp(1.25rem, 2.5vw, 1.75rem);
+	}
+
+	.card-quiet {
+		background-color: var(--color-surface);
+	}
+
+	.term {
+		font-family: var(--font-mono);
+		font-size: 0.8125rem;
+		color: var(--color-ink-muted);
+	}
+
+	/* Halo: one lamp behind the screenshot */
+	.halo-stage {
+		position: relative;
+		isolation: isolate;
+	}
+
+	.halo-stage::before {
+		content: "";
+		position: absolute;
+		z-index: -1;
+		inset: -16% -10% 0%;
+		background: radial-gradient(
+			ellipse 56% 50% at 50% 46%,
+			var(--color-halo) 0%,
+			var(--color-halo) 18%,
+			var(--color-halo-edge) 100%
+		);
+		filter: blur(24px);
+		pointer-events: none;
+		animation: halo-breathe 9s ease-in-out infinite;
+	}
+
+	@keyframes halo-breathe {
+		0%,
+		100% {
+			opacity: 0.85;
+		}
+		50% {
+			opacity: 1;
+		}
+	}
+
+	/* The frame: a thin gradient border, yellow to olive to transparent */
+	.shot-frame {
+		padding: 1px;
+		border-radius: calc(var(--radius-card) + 1px);
+		background: linear-gradient(
+			150deg,
+			var(--color-brand) 0%,
+			var(--color-wing) 38%,
+			var(--color-halo-edge) 78%
+		);
+		box-shadow: 0 30px 80px -40px light-dark(#3a2f0059, #00000099);
+	}
+
+	/* A 16:10 window onto the screenshot. The image keeps its own aspect and is pinned top-left,
+	   so a crop is a zoom about a point given in percentages of the whole image. */
+	.shot-window {
+		position: relative;
+		overflow: hidden;
+		border-radius: var(--radius-card);
+		background: var(--color-surface);
+		aspect-ratio: 16 / 10;
+	}
+
+	.shot-img {
+		position: absolute;
+		top: 0;
+		left: 0;
+		display: block;
+		width: 100%;
+		height: auto;
+		max-width: none;
+		transform: scale(var(--crop-zoom, 1));
+		transform-origin: var(--crop-x, 50%) var(--crop-y, 0%);
+	}
+
+	/* Crops of pulse-001.png (2584x2004). Visible region: x in [X - X/z, X + (1 - X)/z],
+	   y in [Y - Y/z, Y + (0.806 - Y)/z], where 0.806 is the window's height in image heights. */
+	.crop-none {
+		--crop-zoom: 1;
+	}
+
+	/* The whole window from its title bar to the Night card: x 4.5-95.5%, y 4-77% */
+	.crop-pulse {
+		--crop-zoom: 1.1;
+		--crop-x: 50%;
+		--crop-y: 44%;
+	}
+
+	/* Title and the five tiles, with Needs you and Now below: x 23.5-73.5%, y 9-49% */
+	.crop-tiles {
+		--crop-zoom: 2;
+		--crop-x: 47%;
+		--crop-y: 18%;
+	}
+
+	/* Feature, Tonight / last Night, and the top of Health: x 23.5-73.5%, y 48.5-89% */
+	.crop-feature-night {
+		--crop-zoom: 2;
+		--crop-x: 47%;
+		--crop-y: 97%;
+	}
+
+	/* The inspector and its Repo Lane: x 55-95%, y 9.5-41.7% */
+	.crop-repo-lane {
+		--crop-zoom: 2.5;
+		--crop-x: 92%;
+		--crop-y: 15.8%;
+	}
+
+	/*
+	 * Tabs without JavaScript. Each tab is a run of four siblings: radio, label, panel, caption.
+	 * The rules key off sibling order only, so any number of tabs works without new CSS.
+	 * Panels are moved above the labels with `order`; captions below them.
+	 */
+	.tabs {
+		position: relative;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		column-gap: clamp(0.75rem, 3vw, 2.25rem);
+		row-gap: 0.25rem;
+		border: 0;
+		margin: 0;
+		padding: 0;
+		min-width: 0;
+	}
+
+	.tab-panel {
+		order: -1;
+		flex-basis: 100%;
+		display: none;
+		margin-bottom: 1.75rem;
+	}
+
+	.tab-caption {
+		order: 1;
+		flex-basis: 100%;
+		display: none;
+		margin-top: 1rem;
+		text-align: center;
+		color: var(--color-ink-muted);
+		font-size: 0.9375rem;
+		line-height: 1.5;
+		min-height: 3em;
+	}
+
+	.tab-input:checked + .tab-label + .tab-panel,
+	.tab-input:checked + .tab-label + .tab-panel + .tab-caption {
+		display: block;
+	}
+
+	.tab-label {
+		position: relative;
+		cursor: pointer;
+		padding: 0.5rem 0.125rem 0.75rem;
+		font-size: 0.9375rem;
+		font-weight: 450;
+		color: var(--color-ink-muted);
+		border-radius: 0.375rem;
+	}
+
+	.tab-label:hover {
+		color: var(--color-ink);
+	}
+
+	/* The active tab: a heavier weight, ink colour, and a short yellow fill bar under it */
+	.tab-input:checked + .tab-label {
+		color: var(--color-ink);
+		font-weight: 650;
+	}
+
+	.tab-input:checked + .tab-label::after {
+		content: "";
+		position: absolute;
+		left: 50%;
+		bottom: 0.125rem;
+		width: 1.75rem;
+		height: 0.25rem;
+		translate: -50% 0;
+		border-radius: 999px;
+		background: var(--color-brand);
+		box-shadow: 0 0 0 1px light-dark(var(--color-wing), transparent);
+	}
+
+	.tab-input:focus-visible + .tab-label {
+		outline: 2px solid var(--color-focus);
+		outline-offset: 2px;
+	}
+
+	/* Bento */
+	.bento {
+		display: grid;
+		gap: 1rem;
+		grid-template-columns: repeat(1, minmax(0, 1fr));
+	}
+
+	@media (min-width: 40rem) {
+		.bento {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.bento-large {
+			grid-column: span 2;
+		}
+	}
+
+	@media (min-width: 64rem) {
+		.bento {
+			grid-template-columns: repeat(6, minmax(0, 1fr));
+		}
+
+		.bento-large {
+			grid-column: span 4;
+			grid-row: span 2;
+		}
+
+		.bento-small {
+			grid-column: span 2;
+		}
+
+		.bento-medium {
+			grid-column: span 2;
+		}
+
+		.bento-medium:nth-last-child(-n + 2) {
+			grid-column: span 3;
+		}
+	}
+
+	/* A soft corner glow for a feature card. The text stays on the card's solid surface. */
+	.glow-corner {
+		position: relative;
+		overflow: hidden;
+		isolation: isolate;
+	}
+
+	.glow-corner::before {
+		content: "";
+		position: absolute;
+		z-index: -1;
+		width: 22rem;
+		height: 22rem;
+		right: -7rem;
+		top: -9rem;
+		background: radial-gradient(
+			circle,
+			var(--color-halo) 0%,
+			var(--color-halo-edge) 70%
+		);
+		pointer-events: none;
+	}
+
+	/* On narrow cards the glow shrinks into the corner so it never sits under the text */
+	@media (max-width: 40rem) {
+		.glow-corner::before {
+			width: 11rem;
+			height: 11rem;
+			right: -5.5rem;
+			top: -5.5rem;
+		}
+	}
+
+	.step-number {
+		font-family: var(--font-mono);
+		font-size: 0.8125rem;
+		font-variant-numeric: tabular-nums;
+		color: var(--color-ink-muted);
+	}
+
+	/* Tool tiles and chips */
+	.chip {
+		display: inline-flex;
+		align-items: baseline;
+		gap: 0.5rem;
+		padding: 0.5rem 0.875rem;
+		border-radius: 999px;
+		border: 1px solid var(--color-wing);
+		background-color: var(--color-raised);
+		font-weight: 600;
+		font-size: 0.9375rem;
+	}
+
+	/* The cool mesh: the night sky behind the figure */
+	.band-mesh {
+		background-color: var(--color-canvas);
+		background-image:
+			radial-gradient(
+				ellipse 60% 50% at 18% 12%,
+				var(--color-mesh-blue) 0%,
+				transparent 70%
+			),
+			radial-gradient(
+				ellipse 50% 45% at 85% 30%,
+				var(--color-mesh-blue-soft) 0%,
+				transparent 70%
+			),
+			radial-gradient(
+				ellipse 40% 35% at 70% 88%,
+				var(--color-mesh-yellow) 0%,
+				transparent 70%
+			),
+			radial-gradient(
+				ellipse 55% 40% at 10% 80%,
+				var(--color-mesh-blue-soft) 0%,
+				transparent 70%
+			);
+		border-block: 1px solid var(--color-hairline);
+	}
+
+	/* Steps */
+	.steps {
+		counter-reset: step;
+		display: grid;
+		gap: 1rem;
+		grid-template-columns: repeat(1, minmax(0, 1fr));
+	}
+
+	@media (min-width: 40rem) {
+		.steps {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 64rem) {
+		.steps {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+	}
+
+	/* Scheme switcher: a segmented control of three radios */
+	.scheme {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.25rem;
+		padding: 0.25rem;
+		margin: 0;
+		border-radius: 999px;
+		border: 1px solid var(--color-wing);
+		background: var(--color-surface);
+		min-width: 0;
+	}
+
+	.scheme-label {
+		cursor: pointer;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.375rem;
+		padding: 0.375rem 0.875rem;
+		border-radius: 999px;
+		font-size: 0.875rem;
+		color: var(--color-ink-muted);
+	}
+
+	.scheme-label:hover {
+		color: var(--color-ink);
+	}
+
+	.scheme-input:checked + .scheme-label {
+		background: var(--color-raised);
+		color: var(--color-ink);
+		font-weight: 650;
+		box-shadow: 0 0 0 1px var(--color-hairline);
+	}
+
+	/* The checked option also carries a dot, so colour is not the only signal */
+	.scheme-input:checked + .scheme-label::before {
+		content: "";
+		width: 0.4375rem;
+		height: 0.4375rem;
+		border-radius: 999px;
+		background: var(--color-ink);
+	}
+
+	.scheme-input:focus-visible + .scheme-label {
+		outline: 2px solid var(--color-focus);
+		outline-offset: 2px;
+	}
+}
+
+/*
+ * The figure plate, adapted to the page. Unlayered on purpose: the vendored kit is unlayered, and
+ * layered rules would lose to it whatever their specificity.
+ */
+.night-figure .iso-figure {
+	margin: 0 auto;
+	max-width: 56rem;
+}
+
+.night-figure .iso-plate {
+	border-radius: var(--radius-card);
+	box-shadow: 0 0 0 1px var(--anatomy-mid);
+}
+
+.night-figure .iso-legend {
+	margin-top: 1rem;
+	color: var(--color-ink-muted);
+	font-size: 0.875rem;
+}
+
+.night-figure .iso-caption {
+	display: block;
+	max-width: 70ch;
+	line-height: 1.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.halo-stage::before {
+		animation: none;
+	}
+
+	.btn {
+		transition: none;
+	}
+
+	.pl-twine {
+		transition: none;
+	}
+}

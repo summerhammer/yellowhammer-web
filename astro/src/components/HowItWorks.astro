@@ -1,0 +1,81 @@
+---
+import { steps } from "../content/steps";
+import key1 from "../figures/key-1.svg?raw";
+import key2 from "../figures/key-2.svg?raw";
+import nightEdition from "../figures/night-edition.svg?raw";
+import Section from "./Section.astro";
+
+/*
+ * "The night edition": a static frame (07:00, the end of the Night) of the anatomy figure in
+ * figures/plant. It is inlined at build time so the page's tokens theme it. Its numbers are the
+ * figure's own example, not product metrics.
+ */
+const keys = [
+	{ svg: key1, label: "One issue you can follow, from the wire to its bundle" },
+	{
+		svg: key2,
+		label: "Story sheets, plates and papers: the other issues of the night",
+	},
+];
+---
+
+<Section
+	id="how-it-works"
+	eyebrow="How it works"
+	heading="One Night, from the board to the pull requests."
+	intro="A Night is one overnight run for one of your products, from the first step to the morning report. Every Night runs the same way."
+	band="mesh"
+	centered
+>
+	<div class="night-figure iso">
+		<figure class="iso-figure">
+			<div class="iso-plate">
+				<div class="iso-plate-corners" aria-hidden="true">
+					<span class="iso-plate-corner" data-corner="fig">Fig 1</span>
+					<span class="iso-plate-corner" data-corner="title">The night edition</span>
+					<span class="iso-plate-corner" data-corner="readout">07:00 · 6 PRs ready for review</span>
+				</div>
+				<div class="pl-static">
+					<Fragment set:html={nightEdition} />
+				</div>
+			</div>
+			<figcaption class="iso-legend">
+				<span class="iso-keys">
+					{
+						keys.map((key) => (
+							<span class="iso-key">
+								<Fragment set:html={key.svg} />
+								{key.label}
+							</span>
+						))
+					}
+				</span>
+				<span class="iso-caption">
+					The figure's own example, drawn as an overnight newspaper plant. Linear issues come off the wire in the
+					evening as story sheets and wait on the spike. From 22:00 the typesetter, the agent in Orca, takes one
+					Work Card at a time and composes it line by line. The plate goes to the press, which runs the build and
+					tests on the build tick every 15 minutes. Every print goes up to the proof desk for a Round of review and
+					checks. A proof that fails goes back down the return chute, is reworked and printed again. One that passes
+					is stamped and dropped to the dock, where the papers of each Repo Lane are tied into one bundle on the
+					land tick, one pull request each. In this example, 8 issues go in at night, 3 come back once, and by
+					morning 6 pull requests wait on the dock for your review.
+				</span>
+			</figcaption>
+		</figure>
+	</div>
+
+	<ol class="steps mt-14" aria-label="The steps of a Night">
+		{
+			steps.map((step, index) => (
+				<li class="card">
+					<p class="step-number">
+						<span class="sr-only">Step </span>
+						{String(index + 1).padStart(2, "0")}
+					</p>
+					<h3 class="mt-3 text-xl font-semibold tracking-tight">{step.name}</h3>
+					<p class="mt-2 leading-relaxed text-ink-muted">{step.body}</p>
+				</li>
+			))
+		}
+	</ol>
+</Section>

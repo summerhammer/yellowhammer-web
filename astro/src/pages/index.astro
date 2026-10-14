@@ -1,10 +1,25 @@
 ---
+import Bento from "../components/Bento.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import HowItWorks from "../components/HowItWorks.astro";
+import Showcase from "../components/Showcase.astro";
+import Tools from "../components/Tools.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout title="Yellowhammer">
-	<main class="flex min-h-screen flex-col items-center justify-center text-center">
-		<h1 class="text-4xl font-semibold">Yellowhammer</h1>
-		<p class="mt-2">Coming soon.</p>
+<Layout
+	title="Yellowhammer: wake up to pull requests"
+	description="Yellowhammer runs an unattended Night for each of your Projects on top of the Orca ADE, Linear and your agent CLIs, and leaves one pull request per repository by morning."
+>
+	<Header />
+	<main id="main">
+		<Hero />
+		<Showcase />
+		<Bento />
+		<Tools />
+		<HowItWorks />
 	</main>
+	<Footer />
 </Layout>

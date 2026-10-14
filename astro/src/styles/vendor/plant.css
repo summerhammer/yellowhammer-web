@@ -1,0 +1,36 @@
+/* The night edition (figures/plant), static rules only. The interactive .pl-stage cursor and
+   slider rules are dropped: this page shows one frame (07:00) and has no script. The responsive
+   sizing that targeted .pl-stage targets the static wrapper .pl-static instead. */
+
+.pl-hand {
+	stroke-width: 1.1;
+	stroke-linecap: round;
+}
+
+/* The plate the typesetter is setting for the lit issue: the tray and its lines take the lit tones. */
+.pl-tray[data-on] .iso-solid > .iso-top {
+	fill: var(--anatomy-lit-top);
+}
+
+.pl-tray[data-on] .iso-solid > .iso-shade {
+	fill: var(--anatomy-lit-shade);
+}
+
+.pl-tray[data-on] .iso-solid > .iso-edge {
+	stroke: var(--anatomy-lit);
+}
+
+.pl-twine {
+	transition: opacity 400ms linear;
+}
+
+@media (max-width: 640px) {
+	.pl-static {
+		overflow: hidden;
+	}
+
+	.iso-plate .pl-static .iso-svg {
+		width: 108%;
+		margin: -2% -4% -1%;
+	}
+}
