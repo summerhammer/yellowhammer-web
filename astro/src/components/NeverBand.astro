@@ -1,0 +1,34 @@
+---
+import { nevers } from "../content/never";
+---
+
+<section id="never" class="section band" aria-labelledby="never-title">
+	<div class="wrap">
+		<header class="section-head" data-align="center">
+			<p class="eyebrow">What it never does</p>
+		</header>
+		<h2 id="never-title" class="never-statement">
+			It never writes a line of code itself, and it never merges to main.
+		</h2>
+		<p class="never-body">
+			The agent CLIs write the code. Yellowhammer judges between them: it routes each Work Card, runs the
+			checks, and verifies the result against your specification.
+		</p>
+		<ul class="never-list">
+			{
+				nevers.map((item) => (
+					<li class="never-item">
+						<h3>
+							<svg class="never-glyph" viewBox="0 0 18 18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+								<circle cx="9" cy="9" r="7" />
+								<path d="M4.1 13.9 13.9 4.1" />
+							</svg>
+							{item.title}
+						</h3>
+						<p>{item.body}</p>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</section>

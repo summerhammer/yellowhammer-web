@@ -1,0 +1,43 @@
+---
+import { agentClis, tools } from "../content/tools";
+import Section from "./Section.astro";
+---
+
+<Section
+	id="tools"
+	eyebrow="What you need"
+	title="It sits on top of the tools you already use"
+	intro="Yellowhammer replaces none of them. You need a Mac on macOS 26 that stays awake through the Night, the Orca ADE, a Linear workspace, GitHub, and at least one supported agent CLI."
+>
+	<ul class="card-grid" data-cols="3">
+		{
+			tools.map((tool) => (
+				<li class="card">
+					<p class="card-tag">{tool.role}</p>
+					<h3 class="card-title">{tool.name}</h3>
+					<p class="card-body">{tool.body}</p>
+				</li>
+			))
+		}
+	</ul>
+
+	<h3 class="subhead">Agent CLIs</h3>
+	<p class="subhead-intro">
+		The coding agents you already use in the terminal. They write the code. Each Work Card runs on a
+		route: one agent CLI, one model and one effort level.
+	</p>
+	<ul class="card-grid" data-cols="2">
+		{
+			agentClis.map((cli) => (
+				<li class="card cli-card">
+					<p class="cli-name">{cli.name}</p>{" "}
+					<code class="cli-command">{cli.command}</code>
+					<p class="card-body">Probed for unattended runs.</p>
+				</li>
+			))
+		}
+	</ul>
+	<p class="fine-print">
+		Adding another agent CLI takes an adapter and a probe, not a configuration edit.
+	</p>
+</Section>

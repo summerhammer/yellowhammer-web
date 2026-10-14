@@ -1,0 +1,22 @@
+---
+import { site } from "../content/site";
+import DownloadButton from "./DownloadButton.astro";
+---
+
+<section class="hero" aria-labelledby="hero-title">
+	<div class="wrap">
+		<h1 id="hero-title" class="hero-title">Wake up to pull requests.</h1>
+		<p class="hero-lede">
+			Each Night, Yellowhammer picks the next Feature from your spec and runs your own agent CLIs on
+			it.
+		</p>
+		<div class="hero-actions">
+			<DownloadButton />
+			<a class="btn btn-secondary" href={site.repo}>View on GitHub</a>
+		</div>
+		<ul class="hero-meta">
+			<li>{site.requires}</li>
+			<li>{site.trust}</li>
+		</ul>
+	</div>
+</section>

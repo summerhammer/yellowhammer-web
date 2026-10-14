@@ -1,0 +1,20 @@
+---
+import { site } from "../content/site";
+import DownloadButton from "./DownloadButton.astro";
+---
+
+<header class="site-header">
+	<div class="wrap site-header-inner">
+		<nav class="header-group" aria-label="Primary">
+			<a class="brand-link" href="/">
+				<img src="/yellowhammer-mark.svg" alt="" width="28" height="28" />
+				<span>{site.name}</span>
+			</a>
+			<a class="nav-link hide-narrow" href={site.docs}>Docs</a>
+		</nav>
+		<div class="header-group">
+			<a class="nav-link hide-narrow" href={site.repo}>GitHub</a>
+			<DownloadButton size="sm" label="Download" />
+		</div>
+	</div>
+</header>

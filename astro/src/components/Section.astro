@@ -1,0 +1,41 @@
+---
+/**
+ * Shared section wrapper: an eyebrow, a heading, an optional intro, then the slot.
+ * A new section built on it matches the others without new CSS.
+ */
+interface Props {
+	id: string;
+	eyebrow?: string;
+	title: string;
+	intro?: string;
+	/** "plain" sits on the canvas; "band" sits on the calm surface band. */
+	tone?: "plain" | "band";
+	align?: "start" | "center";
+}
+
+const {
+	id,
+	eyebrow,
+	title,
+	intro,
+	tone = "plain",
+	align = "start",
+} = Astro.props;
+const headingId = `${id}-title`;
+---
+
+<section
+	id={id}
+	class:list={["section", { band: tone === "band" }]}
+	aria-labelledby={headingId}
+>
+	<div class="wrap">
+		<header class="section-head" data-align={align}>
+			{eyebrow && <p class="eyebrow">{eyebrow}</p>}
+			<h2 id={headingId} class="section-title">{title}</h2>
+			{intro && <p class="section-intro">{intro}</p>}
+			<slot name="intro" />
+		</header>
+		<slot />
+	</div>
+</section>

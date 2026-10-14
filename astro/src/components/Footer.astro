@@ -1,0 +1,59 @@
+---
+import { site } from "../content/site";
+import DownloadButton from "./DownloadButton.astro";
+
+const schemes = [
+	{ id: "scheme-system", label: "System", checked: true },
+	{ id: "scheme-light", label: "Light", checked: false },
+	{ id: "scheme-dark", label: "Dark", checked: false },
+];
+---
+
+<footer>
+	<div class="wrap closing">
+		<p class="eyebrow">In the morning</p>
+		<p class="closing-line">Night done. 2 pull requests open.</p>
+		<p class="closing-note">An example of the verdict a Night Summary leads with.</p>
+		<p class="closing-body">Go to bed with a specification. Wake up with pull requests.</p>
+		<div class="hero-actions">
+			<DownloadButton />
+			<a class="btn btn-secondary" href={site.repo}>View on GitHub</a>
+		</div>
+		<p class="hero-meta">{site.requires}</p>
+
+		<div class="footer-meta">
+			<div>
+				<ul class="footer-links">
+					<li><a href={site.repo}>GitHub</a></li>
+					<li><a href={site.docs}>Docs</a></li>
+					<li><a href={site.download}>Download</a></li>
+				</ul>
+				<p class="footer-legal">
+					Yellowhammer is open source under the{" "}
+					<a class="footer-inline" href={site.repo}>{site.licence}</a>. {site.copyright}
+				</p>
+			</div>
+			<fieldset class="scheme">
+				<legend>Appearance</legend>
+				<div class="scheme-options">
+					{
+						schemes.map((scheme) => (
+							<>
+								<input
+									class="seg-input"
+									type="radio"
+									name="scheme"
+									id={scheme.id}
+									checked={scheme.checked}
+								/>
+								<label class="scheme-option" for={scheme.id}>
+									{scheme.label}
+								</label>
+							</>
+						))
+					}
+				</div>
+			</fieldset>
+		</div>
+	</div>
+</footer>

@@ -1,1 +1,913 @@
 @import "tailwindcss";
+
+/*
+ * Design tokens.
+ *
+ * Every colour is a light-dark() pair, so one property, `color-scheme` on :root, rethemes the whole
+ * page. The footer's System / Light / Dark radios set it:
+ *   System (default) -> `light dark`, which follows prefers-color-scheme
+ *   Light            -> :root:has(#scheme-light:checked)
+ *   Dark             -> :root:has(#scheme-dark:checked)
+ * There is no JavaScript, so the choice is not remembered after a reload.
+ *
+ * Brand rules (docs/brand/colors.md, draft): `brand` yellow is a fill, glow and logo colour only,
+ * never text. `wing` olive draws lines, never body text. System blue is for links and focus.
+ */
+@theme {
+	--font-sans: -apple-system, system-ui, sans-serif;
+	--font-mono: ui-monospace, Menlo, monospace;
+
+	/* Canvas and surfaces. The light canvas is lighter than the brand `background` (#FBF7EA), on
+	 * request; dark keeps the brand value. */
+	--color-bg: light-dark(#fdfbf5, #222211);
+	--color-raised: light-dark(#ffffff, #313120);
+	--color-surface: light-dark(#f1ede0, #2b2b1a);
+	--color-header: light-dark(rgb(253 251 245 / 0.72), rgb(34 34 17 / 0.72));
+	/* Always shown, and quieter than --color-line so the header edge stays a hint. */
+	--color-header-line: light-dark(
+		rgb(31 29 20 / 0.06),
+		rgb(243 239 223 / 0.07)
+	);
+
+	/* Text */
+	--color-ink: light-dark(#1f1d14, #f3efdf);
+	--color-ink-muted: light-dark(#5c5847, #bdb8a2);
+
+	/* Lines */
+	--color-line: light-dark(rgb(31 29 20 / 0.1), rgb(243 239 223 / 0.1));
+	--color-line-strong: light-dark(
+		rgb(31 29 20 / 0.22),
+		rgb(243 239 223 / 0.24)
+	);
+	--color-wing: #8e8f26;
+
+	/* Brand fill: never text, never behind text */
+	--color-brand: light-dark(#f4c900, #ffd426);
+
+	/* Action. The Download button is black on light and white on dark; blue stays for links. */
+	--color-download: light-dark(#000000, #ffffff);
+	--color-download-hover: light-dark(#2b2b2b, #e4e4e4);
+	--color-on-download: light-dark(#ffffff, #000000);
+	--color-link: light-dark(#0066cc, #409cff);
+	--color-focus: light-dark(#0066cc, #409cff);
+
+	/* Shadow colours */
+	--color-shadow: light-dark(rgb(74 56 10 / 0.18), rgb(0 0 0 / 0.5));
+	--color-shadow-soft: light-dark(rgb(74 56 10 / 0.08), rgb(0 0 0 / 0.3));
+
+	--radius-card: 1.25rem;
+	--radius-pill: 999px;
+	--radius-button: 0.75rem;
+	--shadow-float:
+		0 1px 2px var(--color-shadow-soft), 0 24px 64px -24px var(--color-shadow),
+		0 48px 120px -48px var(--color-shadow);
+	--shadow-card:
+		0 1px 2px var(--color-shadow-soft), 0 12px 32px -20px var(--color-shadow);
+}
+
+:root {
+	--header-h: 4rem;
+	color-scheme: light dark;
+}
+
+:root:has(#scheme-light:checked) {
+	color-scheme: light;
+}
+
+:root:has(#scheme-dark:checked) {
+	color-scheme: dark;
+}
+
+@layer base {
+	html {
+		background: var(--color-bg);
+		scroll-padding-top: calc(var(--header-h) + 1rem);
+	}
+
+	body {
+		margin: 0;
+		background: var(--color-bg);
+		color: var(--color-ink);
+		font-family: var(--font-sans);
+		font-size: 1rem;
+		line-height: 1.55;
+		-webkit-font-smoothing: antialiased;
+		overflow-x: clip;
+	}
+
+	a {
+		color: var(--color-link);
+		text-underline-offset: 0.18em;
+	}
+
+	:focus-visible {
+		outline: 2px solid var(--color-focus);
+		outline-offset: 3px;
+		border-radius: 4px;
+	}
+
+	code,
+	kbd {
+		font-family: var(--font-mono);
+		font-size: 0.92em;
+	}
+}
+
+/* Components */
+/* Layout */
+.wrap {
+	width: 100%;
+	max-width: 72rem;
+	margin-inline: auto;
+	padding-inline: 1rem;
+}
+
+@media (min-width: 40rem) {
+	.wrap {
+		padding-inline: 1.5rem;
+	}
+}
+
+.skip-link {
+	position: absolute;
+	left: 1rem;
+	top: -3rem;
+	z-index: 100;
+	padding: 0.5rem 0.875rem;
+	border-radius: var(--radius-pill);
+	background: var(--color-raised);
+	color: var(--color-ink);
+	box-shadow: var(--shadow-card);
+}
+
+.skip-link:focus-visible {
+	top: 0.75rem;
+}
+
+/* Header */
+.site-header {
+	position: sticky;
+	top: 0;
+	z-index: 50;
+	height: var(--header-h);
+	background: var(--color-header);
+	-webkit-backdrop-filter: blur(18px) saturate(1.6);
+	backdrop-filter: blur(18px) saturate(1.6);
+	border-bottom: 1px solid var(--color-header-line);
+}
+
+.site-header-inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	height: 100%;
+}
+
+.header-group {
+	display: flex;
+	align-items: center;
+	gap: 1.25rem;
+}
+
+.brand-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: var(--color-ink);
+	font-weight: 650;
+	font-size: 1.0625rem;
+	letter-spacing: -0.01em;
+	text-decoration: none;
+}
+
+.brand-link img {
+	width: 1.75rem;
+	height: 1.75rem;
+}
+
+.nav-link {
+	color: var(--color-ink-muted);
+	font-size: 0.9375rem;
+	text-decoration: none;
+}
+
+.nav-link:hover {
+	color: var(--color-ink);
+}
+
+.hide-narrow {
+	display: none;
+}
+
+@media (min-width: 40rem) {
+	.hide-narrow {
+		display: inline-flex;
+	}
+}
+
+/* Buttons */
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	min-height: 2.75rem;
+	padding: 0.625rem 1.25rem;
+	border-radius: var(--radius-button);
+	font-weight: 600;
+	font-size: 1rem;
+	line-height: 1.2;
+	text-decoration: none;
+	white-space: nowrap;
+	transition:
+		background-color 150ms ease,
+		box-shadow 150ms ease;
+}
+
+.btn-sm {
+	min-height: 2.25rem;
+	padding: 0.4375rem 0.9375rem;
+	font-size: 0.9375rem;
+	border-radius: 0.625rem;
+}
+
+.btn-download {
+	background: var(--color-download);
+	color: var(--color-on-download);
+	box-shadow: 0 1px 2px var(--color-shadow-soft);
+}
+
+.btn-download:hover {
+	background: var(--color-download-hover);
+}
+
+/* Transparent on the page colour; the outline alone marks the edge. */
+.btn-secondary {
+	background: transparent;
+	color: var(--color-ink);
+	box-shadow: inset 0 0 0 1px var(--color-line-strong);
+}
+
+.btn-secondary:hover {
+	background: var(--color-line);
+}
+
+.btn-glyph {
+	width: 1rem;
+	height: 1rem;
+	flex: none;
+}
+
+/* Hero */
+.hero {
+	padding-top: 4.5rem;
+	padding-bottom: 3rem;
+	text-align: center;
+}
+
+@media (min-width: 48rem) {
+	.hero {
+		padding-top: 6.5rem;
+	}
+}
+
+.hero-title {
+	text-wrap: balance;
+	margin: 0;
+	font-size: clamp(2.5rem, 7vw, 4.5rem);
+	font-weight: 750;
+	letter-spacing: -0.035em;
+	line-height: 1.02;
+}
+
+.hero-lede {
+	text-wrap: balance;
+	max-width: 36rem;
+	margin: 1.25rem auto 0;
+	font-size: clamp(1.25rem, 2.6vw, 1.5rem);
+	line-height: 1.35;
+	letter-spacing: -0.012em;
+	font-weight: 500;
+}
+
+.hero-actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.75rem;
+	margin-top: 2rem;
+}
+
+.hero-meta {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.25rem 1.5rem;
+	margin: 1rem 0 0;
+	padding: 0;
+	list-style: none;
+	color: var(--color-ink-muted);
+	font-size: 0.9375rem;
+	text-wrap: balance;
+}
+
+/* Segmented control. Each <input type="radio"> is followed by its <label>; the pair scales to
+ * any number of options with no per-option selector. */
+.segmented {
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.25rem 0;
+}
+
+.seg-input {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: 0;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.seg-label {
+	order: 0;
+	display: inline-flex;
+	align-items: center;
+	padding: 0.25rem 0;
+	background: var(--color-surface);
+	box-shadow:
+		inset 0 1px 0 var(--color-line),
+		inset 0 -1px 0 var(--color-line);
+	cursor: pointer;
+}
+
+.seg-label:first-of-type {
+	padding-left: 0.25rem;
+	border-radius: var(--radius-pill) 0 0 var(--radius-pill);
+	box-shadow:
+		inset 1px 0 0 var(--color-line),
+		inset 0 1px 0 var(--color-line),
+		inset 0 -1px 0 var(--color-line);
+}
+
+.seg-label:last-of-type {
+	padding-right: 0.25rem;
+	border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
+	box-shadow:
+		inset -1px 0 0 var(--color-line),
+		inset 0 1px 0 var(--color-line),
+		inset 0 -1px 0 var(--color-line);
+}
+
+.seg-label:first-of-type:last-of-type {
+	border-radius: var(--radius-pill);
+}
+
+.seg-text {
+	display: inline-block;
+	padding: 0.375rem 0.875rem;
+	border-radius: var(--radius-pill);
+	color: var(--color-ink-muted);
+	font-size: 0.9375rem;
+	font-weight: 550;
+	white-space: nowrap;
+	transition:
+		background-color 150ms ease,
+		color 150ms ease;
+}
+
+.seg-label:hover .seg-text {
+	color: var(--color-ink);
+}
+
+/* The ring and focus outline overhang the label; lift it so the next label's background, painted
+ * later, does not cover their right edge. */
+.seg-input:checked + .seg-label,
+.seg-input:focus-visible + .seg-label {
+	position: relative;
+	z-index: 1;
+}
+
+.seg-input:checked + .seg-label .seg-text {
+	background: var(--color-raised);
+	color: var(--color-ink);
+	box-shadow:
+		0 1px 2px var(--color-shadow-soft),
+		0 0 0 1px var(--color-line);
+}
+
+.seg-input:focus-visible + .seg-label .seg-text {
+	outline: 2px solid var(--color-focus);
+	outline-offset: 2px;
+}
+
+@media (max-width: 26rem) {
+	.seg-text {
+		padding-inline: 0.5rem;
+		font-size: 0.8125rem;
+	}
+}
+
+/* Screenshot showcase */
+.showcase {
+	padding-bottom: 5rem;
+}
+
+.tab-panel {
+	order: 1;
+	display: none;
+	flex-basis: 100%;
+	margin-top: 1.5rem;
+}
+
+.seg-input:checked + .seg-label + .tab-panel {
+	display: block;
+}
+
+.shot {
+	margin: 0;
+}
+
+.shot-frame {
+	position: relative;
+	max-width: 64rem;
+	margin-inline: auto;
+	aspect-ratio: 2360 / 1780;
+	overflow: hidden;
+	/* The macOS window's own corner radius, measured on the screenshot (50 px of 2360 x 1780). */
+	border-radius: 2.12% / 2.81%;
+	background: var(--color-raised);
+	box-shadow:
+		0 0 0 1px var(--color-line),
+		var(--shadow-float);
+}
+
+.shot-img {
+	display: block;
+	max-width: none;
+	height: auto;
+}
+
+/* Crops of pulse-001.png (2584 x 2004). Each keeps the window's aspect ratio:
+ * width = 2584 / crop width, margin-left = -x / crop width, margin-top = -y / crop width
+ * (vertical margins resolve against the frame's width). */
+.crop-pulse {
+	width: 109.4915%;
+	margin-left: -4.7458%;
+	margin-top: -3.2203%;
+}
+
+.crop-tiles {
+	width: 200%;
+	margin-left: -46.8266%;
+	margin-top: -13.5449%;
+}
+
+.crop-feature {
+	width: 200%;
+	margin-left: -46.8266%;
+	margin-top: -68.1889%;
+}
+
+.crop-lane {
+	width: 287.1111%;
+	margin-left: -174.6667%;
+	margin-top: -8.4444%;
+}
+
+.shot-caption {
+	max-width: 40rem;
+	margin: 1.25rem auto 0;
+	color: var(--color-ink-muted);
+	font-size: 0.9375rem;
+	text-align: center;
+}
+
+/* Sections */
+.section {
+	padding-block: 5rem;
+}
+
+@media (min-width: 48rem) {
+	.section {
+		padding-block: 6.5rem;
+	}
+}
+
+.section-head {
+	max-width: 44rem;
+	margin-bottom: 2.75rem;
+}
+
+.section-head[data-align="center"] {
+	margin-inline: auto;
+	text-align: center;
+}
+
+.eyebrow {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin: 0;
+	color: var(--color-ink-muted);
+	font-size: 0.8125rem;
+	font-weight: 650;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+/* A brand-yellow dot: a fill, outlined in wing so it shows on the light canvas. */
+.eyebrow::before {
+	content: "";
+	width: 0.5rem;
+	height: 0.5rem;
+	border-radius: 50%;
+	background: var(--color-brand);
+	box-shadow: 0 0 0 1px var(--color-wing);
+}
+
+.section-title {
+	text-wrap: balance;
+	margin: 0.75rem 0 0;
+	font-size: clamp(1.875rem, 4vw, 2.5rem);
+	font-weight: 700;
+	letter-spacing: -0.025em;
+	line-height: 1.12;
+}
+
+.section-intro {
+	margin: 1rem 0 0;
+	color: var(--color-ink-muted);
+	font-size: 1.125rem;
+}
+
+.section-head[data-align="center"] .section-intro {
+	margin-inline: auto;
+}
+
+/* "What it never does" band */
+.band {
+	background: var(--color-surface);
+	border-block: 1px solid var(--color-line);
+}
+
+.never-statement {
+	text-wrap: balance;
+	max-width: 46rem;
+	margin: 0 auto;
+	font-size: clamp(1.75rem, 4.2vw, 2.75rem);
+	font-weight: 700;
+	letter-spacing: -0.028em;
+	line-height: 1.14;
+	text-align: center;
+}
+
+.never-body {
+	max-width: 38rem;
+	margin: 1.25rem auto 0;
+	color: var(--color-ink-muted);
+	font-size: 1.125rem;
+	text-align: center;
+}
+
+.never-list {
+	display: grid;
+	gap: 1rem;
+	max-width: 60rem;
+	margin: 3rem auto 0;
+	padding: 0;
+	list-style: none;
+}
+
+@media (min-width: 48rem) {
+	.never-list {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+
+.never-item {
+	padding: 1.25rem 1.375rem;
+	border-radius: var(--radius-card);
+	background: var(--color-raised);
+	box-shadow: 0 0 0 1px var(--color-line);
+}
+
+.never-item h3 {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin: 0;
+	font-size: 1.0625rem;
+	font-weight: 650;
+}
+
+/* A struck-through circle drawn in wing: the "never" symbol, always next to its label. */
+.never-glyph {
+	width: 1.125rem;
+	height: 1.125rem;
+	flex: none;
+	color: var(--color-wing);
+}
+
+.never-item p {
+	margin: 0.375rem 0 0;
+	color: var(--color-ink-muted);
+}
+
+/* Cards (tools) */
+.card-grid {
+	display: grid;
+	gap: 1rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+@media (min-width: 48rem) {
+	.card-grid[data-cols="3"] {
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+	.card-grid[data-cols="2"] {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+.card {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 1.5rem;
+	border-radius: var(--radius-card);
+	background: var(--color-raised);
+	box-shadow:
+		0 0 0 1px var(--color-line),
+		var(--shadow-card);
+}
+
+.card-tag {
+	align-self: flex-start;
+	margin: 0;
+	padding: 0.125rem 0.625rem;
+	border-radius: var(--radius-pill);
+	background: var(--color-surface);
+	box-shadow: inset 0 0 0 1px var(--color-line);
+	color: var(--color-ink-muted);
+	font-size: 0.8125rem;
+	font-weight: 600;
+}
+
+.card-title {
+	margin: 0.5rem 0 0;
+	font-size: 1.375rem;
+	font-weight: 700;
+	letter-spacing: -0.015em;
+}
+
+.card-body {
+	margin: 0;
+	color: var(--color-ink-muted);
+}
+
+.subhead {
+	margin: 3rem 0 0;
+	font-size: 1.25rem;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+}
+
+.subhead-intro {
+	max-width: 44rem;
+	margin: 0.5rem 0 1.25rem;
+	color: var(--color-ink-muted);
+}
+
+.cli-card {
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 0.25rem 0.75rem;
+	box-shadow: 0 0 0 1px var(--color-line);
+}
+
+.cli-name {
+	margin: 0;
+	font-size: 1.125rem;
+	font-weight: 650;
+}
+
+.cli-command {
+	color: var(--color-ink-muted);
+}
+
+.cli-card .card-body {
+	flex-basis: 100%;
+}
+
+.fine-print {
+	margin: 1.25rem 0 0;
+	color: var(--color-ink-muted);
+	font-size: 0.9375rem;
+}
+
+/* How it works */
+.steps {
+	display: grid;
+	gap: 1rem;
+	margin: 2rem 0 0;
+	padding: 0;
+	list-style: none;
+	counter-reset: step;
+}
+
+@media (min-width: 40rem) {
+	.steps {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (min-width: 64rem) {
+	.steps {
+		grid-template-columns: repeat(4, 1fr);
+	}
+}
+
+.step {
+	counter-increment: step;
+	padding: 1.25rem 1.375rem 1.5rem;
+	border-radius: var(--radius-card);
+	background: var(--color-raised);
+	box-shadow: 0 0 0 1px var(--color-line);
+}
+
+.step-act {
+	display: flex;
+	align-items: center;
+	gap: 0.625rem;
+	margin: 0;
+	color: var(--color-ink-muted);
+	font-family: var(--font-mono);
+	font-size: 0.875rem;
+}
+
+.step-act::before {
+	content: counter(step);
+	display: inline-grid;
+	place-items: center;
+	width: 1.75rem;
+	height: 1.75rem;
+	border-radius: 50%;
+	box-shadow: inset 0 0 0 1.5px var(--color-wing);
+	color: var(--color-ink);
+	font-family: var(--font-sans);
+	font-size: 0.875rem;
+	font-weight: 700;
+}
+
+.step h3 {
+	margin: 0.875rem 0 0;
+	font-size: 1.1875rem;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+}
+
+.step p {
+	margin: 0.5rem 0 0;
+	color: var(--color-ink-muted);
+}
+
+/* Footer */
+.closing {
+	padding-block: 6rem 4rem;
+	text-align: center;
+}
+
+@media (min-width: 48rem) {
+	.closing {
+		padding-block: 8rem 5rem;
+	}
+}
+
+.closing-line {
+	text-wrap: balance;
+	max-width: 52rem;
+	margin: 1rem auto 0;
+	font-size: clamp(2.25rem, 6.5vw, 4.25rem);
+	font-weight: 750;
+	letter-spacing: -0.035em;
+	line-height: 1.04;
+}
+
+.closing-note {
+	margin: 1rem 0 0;
+	color: var(--color-ink-muted);
+	font-size: 0.9375rem;
+}
+
+.closing-body {
+	max-width: 36rem;
+	margin: 1.5rem auto 0;
+	font-size: 1.1875rem;
+	font-weight: 500;
+}
+
+.footer-meta {
+	display: grid;
+	gap: 1.5rem;
+	margin-top: 4.5rem;
+	padding-top: 2rem;
+	border-top: 1px solid var(--color-line);
+	color: var(--color-ink-muted);
+	font-size: 0.9375rem;
+	text-align: left;
+}
+
+@media (min-width: 48rem) {
+	.footer-meta {
+		grid-template-columns: 1fr auto;
+		align-items: center;
+	}
+}
+
+.footer-links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 1.25rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+/* Footer links use ink with an underline rather than blue, to stay quiet. */
+.footer-links a {
+	color: var(--color-ink);
+	text-decoration: underline;
+	text-decoration-color: var(--color-line);
+	text-decoration-thickness: 1px;
+}
+
+.footer-links a:hover {
+	text-decoration-color: currentColor;
+}
+
+.footer-legal {
+	margin: 0.75rem 0 0;
+}
+
+.footer-legal a {
+	color: var(--color-ink);
+	text-decoration-color: var(--color-line);
+}
+
+.scheme {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	min-inline-size: 0;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.5rem 0.75rem;
+}
+
+.scheme legend {
+	float: left;
+	padding: 0;
+	color: var(--color-ink-muted);
+	font-size: 0.9375rem;
+}
+
+/* Appearance: radios drawn as text links, styled like .footer-links. The current choice is muted
+ * and not underlined, so the weight never changes and the row does not shift. */
+.scheme-options {
+	display: flex;
+	gap: 1rem;
+}
+
+.scheme-option {
+	color: var(--color-ink);
+	font-size: 0.9375rem;
+	text-decoration: underline;
+	text-decoration-color: var(--color-line);
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.18em;
+	cursor: pointer;
+}
+
+.scheme-option:hover {
+	text-decoration-color: currentColor;
+}
+
+.seg-input:checked + .scheme-option {
+	color: var(--color-ink-muted);
+	text-decoration: none;
+	cursor: default;
+}
+
+.seg-input:focus-visible + .scheme-option {
+	outline: 2px solid var(--color-focus);
+	outline-offset: 3px;
+	border-radius: 4px;
+}
