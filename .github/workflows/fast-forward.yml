@@ -1,0 +1,19 @@
+name: Fast-forward merge
+
+on:
+  issue_comment:
+    types: [created, edited]
+
+jobs:
+  fast-forward:
+    if: contains(github.event.comment.body, '/fast-forward') && github.event.issue.pull_request
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: sequoia-pgp/fast-forward@ea7628bedcb0b0b96e94383ada458d812fca4979 # v1.0.0
+        with:
+          merge: true
+          comment: always
