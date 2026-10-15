@@ -1,0 +1,24 @@
+{
+	"$schema": "https://mintlify.com/docs.json",
+	"theme": "mint",
+	"name": "Yellowhammer",
+	"colors": {
+		"primary": "#f4c900",
+		"light": "#ffd426",
+		"dark": "#996b00"
+	},
+	"logo": {
+		"light": "/logo/light.svg",
+		"dark": "/logo/dark.svg",
+		"href": "https://yellowhammer.dev"
+	},
+	"favicon": "/favicon.svg",
+	"navigation": {
+		"groups": [
+			{
+				"group": "Get Started",
+				"pages": ["index", "quickstart"]
+			}
+		]
+	}
+}

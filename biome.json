@@ -14,7 +14,8 @@
 			"!skills-lock.json",
 			"!figures/src/iso",
 			"!figures/plant/shots",
-			"!figures/plant/*.html"
+			"!figures/plant/*.html",
+			"!docs/**/*.svg"
 		]
 	},
 	"formatter": {

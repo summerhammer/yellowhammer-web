@@ -4,7 +4,8 @@
 	"scripts": {
 		"test": "pnpm --filter relay test",
 		"lint": "biome check .",
-		"format": "biome check --write ."
+		"format": "biome check --write .",
+		"docs:dev": "cd docs && npx mintlify dev"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.14"
