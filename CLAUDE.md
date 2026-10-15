@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-Part of the Yellowhammer multi-repo product (siblings under `../`). It hosts two Cloudflare apps:
+Part of the Yellowhammer multi-repo product (siblings of the main checkout). It hosts two Cloudflare apps:
 
 - **Relay** (`relay/`): Cloudflare Workers + Static Assets + Workers KV, built with Hono (TypeScript + JSX, server-rendered) + Tailwind. It is the "Code Relay" for issue-tracker auth, and only Linear is supported. Served at `app.yellowhammer.dev`.
 - **Landing** (`astro/`): the marketing site, built with Astro + Tailwind and deployed to Cloudflare Pages. It contains no auth logic. Served at `yellowhammer.dev`.
@@ -13,13 +13,41 @@ Stay on the Cloudflare **Free Tier**. KV allows 1,000 writes/day, so be careful 
 
 ## Spec is authoritative
 
-- The spec lives in `../yellowhammer-spec`. Read it there, using the spec's `spec-lookup` / `spec-implement` skills or the `spec` MCP server. Never copy spec content into this repo and never edit the spec from here.
+The authoritative product spec is the `yellowhammer-spec` repo, a sibling of this repo's
+**main checkout** — not of the directory you are in. From an Orca ADE Worktree (or any
+`git worktree`), `..` is the Worktree's parent, so `../yellowhammer-spec` does not
+resolve there. Resolve it the way `.mcp.json` does, honoring `$SPEC_DIR` when it is set:
+
+```sh
+SPEC_DIR="${SPEC_DIR:-$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/../yellowhammer-spec}"
+```
+
+Paths written `$SPEC_DIR/...` in this file are in that checkout. Read `$SPEC_DIR/skill.md`
+before working on spec'd behavior — it explains how to find, read, and correctly apply
+it. Prefer the `spec` MCP server (`spec_search`, `spec_read`, `spec_grep`, `spec_list`,
+`spec_glossary`): it already resolves the spec this way, from a Worktree too.
+
+**Never search the filesystem for the spec** — no `find ~`, no `find /`, no walking
+`~/orca` or any other directory outside the Worktree. Under a Night, the worker runs
+with `yh` as its responsible process, so a touch of a macOS-protected folder (Music,
+Photos, Desktop, Documents, Downloads) is charged to Yellowhammer.app and blocks on a
+privacy prompt nobody answers; the pass times out and the Attempt is spent (issue #482).
+If `$SPEC_DIR` does not resolve, stop: leave the `Spec:` trailer out rather than guess a
+sha, and say the spec could not be resolved in your summary or reply. When it does
+resolve — it does from an Orca ADE Worktree — write the trailer as usual. A worker never
+needs the spec itself to do its Card: what the Card needs from the spec is in its
+Architectural Brief and its Definition of Done's citations.
+
+**Do not copy spec content into this repo.** Anything pasted here stops tracking the
+spec the moment it lands, and nothing detects the drift. Read it from the spec repo at
+commit HEAD; never edit the spec from here.
+
 - ADR status matters. An `accepted` ADR is binding. **`proposed` is not binding**, so flag it before building on one.
-  - Relay design: ADR-006, `docs/tech/decisions/006-remote-admin-approval-code-relay.md`. It is accepted: probes L9 and L10 passed, and L8 and L11 were ruled non-blocking.
-  - Protocol detail: `docs/tech/investigations/2026-09-27-linear-remote-auth-relay.md`.
+  - Relay design: ADR-006, `$SPEC_DIR/docs/tech/decisions/006-remote-admin-approval-code-relay.md`. It is accepted: probes L9 and L10 passed, and L8 and L11 were ruled non-blocking.
+  - Protocol detail: `$SPEC_DIR/docs/tech/investigations/2026-09-27-linear-remote-auth-relay.md`.
   - Linear auth basis: ADR-005. It is accepted: a shared public OAuth app, PKCE, `actor=app`, and no client secret.
-- Use glossary terms verbatim (`docs/glossary.md`), e.g. "Code Relay".
-- Brand (`docs/brand/*`: colours, typography, personality and tone of voice) is a **draft**. Follow it as direction, not a contract. Don't invent colours, fonts or tone beyond it.
+- Use glossary terms verbatim (`$SPEC_DIR/docs/glossary.md`), e.g. "Code Relay".
+- Brand (`$SPEC_DIR/docs/brand/*`: colours, typography, personality and tone of voice) is a **draft**. Follow it as direction, not a contract. Don't invent colours, fonts or tone beyond it.
 
 ## Artwork
 
