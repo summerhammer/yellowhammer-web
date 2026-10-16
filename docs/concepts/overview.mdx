@@ -1,0 +1,31 @@
+---
+title: "Understand Yellowhammer"
+description: "Build a mental model of Projects, Nights, Features, and Work Cards."
+---
+
+import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+
+Yellowhammer is a local coordinator for unattended engineering work. These concepts explain how intent in a specification becomes reviewable pull requests and a morning report.
+
+<DocumentationOutline />
+
+## Recommended reading order
+
+Follow the pages below in order. Each page is a focused brief until its product details have been verified.
+
+<CardGroup cols={2}>
+  <Card title="Projects, Features, and Work Cards" href="/concepts/projects-features-and-work-cards">Understand how product scope and pieces of work relate in Linear.</Card>
+  <Card title="The lifecycle of a Night" href="/concepts/lifecycle-of-a-night">Follow a Feature from selection through execution, verification, and review.</Card>
+  <Card title="Verification and Definition of Done" href="/concepts/verification-and-definition-of-done">Understand how completion criteria connect to the specification and evidence.</Card>
+  <Card title="Local execution and credentials" href="/concepts/local-execution-and-credentials">Understand where code, tools, and credentials are used during a Night.</Card>
+</CardGroup>
+
+## The core objects
+
+A Project groups the product scope. A Night selects one Feature; its Work Cards represent repository-scoped work and its Night Summary records the result.
+
+<VisualPlaceholder id="concepts-overview-path" type="relationship diagram" title="Yellowhammer core objects" purpose="Show how Projects, Nights, Features, Work Cards, and Night Summaries relate." caption="Planned diagram: one Project scopes a Night and Feature; Work Cards and a Night Summary carry its work and result." />
+
+## Next steps
+
+[Projects, Features, and Work Cards](/concepts/projects-features-and-work-cards) · [Related concepts](/concepts/overview)

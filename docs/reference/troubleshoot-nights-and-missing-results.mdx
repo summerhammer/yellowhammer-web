@@ -1,0 +1,30 @@
+---
+title: "Troubleshoot Nights and missing results"
+description: "Investigate a Night that did not run or produced an unexpected result."
+---
+
+import { DocumentationOutline } from '/snippets/documentation.jsx';
+
+Use the Night Card and Night Summary as the first record of what happened. Follow linked Work Cards and pull requests, then verify schedule and local execution diagnostics for the current release.
+
+<DocumentationOutline />
+
+## No Night result appeared
+
+Check whether the Night Card exists for the Project. If it does not, inspect schedule installation and local scheduler diagnostics; if it does, follow the card’s recorded state.
+
+## Night stopped or blocked
+
+Read the Night Summary and the affected Work Card’s status and Block Reason. Distinguish a human question from a route, check, host, or configuration failure.
+
+## Pull request is missing
+
+Confirm whether work touched that repository and whether the Night Summary reports a pushed branch or landing exception. Check the GitHub connection and repository permissions using current diagnostics.
+
+## Gather diagnostic details
+
+Record the Project and Night, linked Linear issue identifiers, relevant GitHub repository, exact error, and app/CLI version. Remove credentials before sharing.
+
+## Next steps
+
+[Review the morning](/review/overview) · [Related reference](/reference/statuses-and-glossary)

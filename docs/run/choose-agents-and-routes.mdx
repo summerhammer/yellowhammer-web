@@ -1,0 +1,46 @@
+---
+title: "Choose agents and routes"
+description: "Understand how an agent CLI, model, and effort form a Route."
+---
+
+import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+
+A Route names the agent CLI, model, and effort used for a Work Card. The configured Routing Table determines which routes are available; verify current choices and fallback behavior in the app.
+
+<DocumentationOutline />
+
+## Goal
+
+Choose usable Routes and understand how the Routing Table assigns them to Work Cards.
+
+## Before you begin
+
+Connect and check at least one supported agent CLI. Gather the CLI, model, and effort combinations available to the local account; verify current compatibility.
+
+## Steps
+
+### Understand a Route
+
+A Route is the agent CLI, model, and effort combination. Explain how the user distinguishes these choices in the current settings.
+
+### Check route readiness
+
+Describe the shipped probe or pre-flight for a selected CLI/model/effort and what a passing check proves. Do not imply that it proves a task will succeed.
+
+<VisualPlaceholder id="routes-routing-table" type="table" title="Routes and routing entries" purpose="Compare example CLI, model, and effort combinations with verified work kinds and fallback routes." caption="Planned table: each Route triple and the Routing Table entry that selects it, with examples verified for the shipped release." />
+
+### Review routing and fallback
+
+Explain how a Routing Table entry selects a Route and where ordered fallbacks apply. Include how retries move to another eligible route only after verifying shipped rules.
+
+## Confirm it worked
+
+Show the readiness evidence for each intended Route and the Routing Table entry that would select it for representative work.
+
+## Common problems
+
+Distinguish a missing CLI, unsupported model or effort, and an entry with no usable fallback. Link to the current probe and configuration diagnostics.
+
+## Next steps
+
+[Set limits and protected paths](/run/set-limits-and-protected-paths) · [Route glossary](/reference/statuses-and-glossary#route)

@@ -1,0 +1,46 @@
+---
+title: "Add a Project and repositories"
+description: "Define the product scope and repositories that a Night may touch."
+---
+
+import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+
+A Project groups the product, its repositories, one Linear project, and its specification. Add only repositories that belong to this product and verify their relationships before execution.
+
+<DocumentationOutline />
+
+## Goal
+
+Create one product scope with its repositories, Linear project, and specification.
+
+## Before you begin
+
+Gather the product name, repository paths, Linear project, and specification source. Where repositories depend on shared contracts, identify the relationships the setup flow asks you to confirm.
+
+## Steps
+
+### Define Project scope
+
+Explain which product and Linear project belong together. Use Acme Checkout as an illustrative example, not a required name or configuration.
+
+### Add repositories
+
+Describe how the current release records repository locations and roles. Explain how a user reviews any proposed repository dependencies before finishing setup.
+
+<VisualPlaceholder id="setup-project-components" type="relationship diagram" title="What belongs to one Project" purpose="Show one product grouped with its repositories, Linear project, and specification." caption="Planned diagram: the Project links these inputs and the Night works within this scope." />
+
+### Review the resulting configuration
+
+Name the visible Project details to inspect and how to catch a repository or Linear project attached to the wrong product.
+
+## Confirm it worked
+
+State the evidence that the Project and all intended repositories are available in the app, with the intended Linear project and specification source shown.
+
+## Common problems
+
+Cover missing repository paths, duplicate or unrelated repositories, and an unavailable Linear project. Point to current diagnostics without inventing control labels.
+
+## Next steps
+
+[Prepare your specification](/setup/prepare-specification) · [Projects, Features, and Work Cards](/concepts/projects-features-and-work-cards)

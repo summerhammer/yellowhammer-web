@@ -1,25 +1,29 @@
 ---
-title: Introduction
-description: Welcome to the Yellowhammer documentation
+title: "Introduction"
+description: "Understand what Yellowhammer does and where to begin."
 ---
 
-# Yellowhammer
+import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
 
-Yellowhammer is a fast, keyboard-first macOS menu bar application designed to seamlessly bridge your desktop development workflow with issue trackers like [Linear](https://linear.app).
+Yellowhammer runs local, unattended engineering Nights on your Mac. A [Night](/reference/statuses-and-glossary#night) selects one [Feature](/reference/statuses-and-glossary#feature) for a [Project](/reference/statuses-and-glossary#project), coordinates work through Linear, and leaves pull requests for you to review and merge.
 
-## Architecture
+<DocumentationOutline />
 
-Yellowhammer consists of two main pieces:
-- **Mac Application:** Native client for macOS menu bar.
-- **Code Relay:** A privacy-first Cloudflare Worker that relays short-lived OAuth authorization codes securely without storing user tokens.
-
-## Next Steps
+## Start here
 
 <CardGroup cols={2}>
-  <Card title="Quickstart" icon="bolt" href="/quickstart">
-    Set up Yellowhammer on your Mac in under two minutes.
-  </Card>
-  <Card title="Linear Integration" icon="link" href="https://yellowhammer.dev">
-    Learn how OAuth authorization codes are securely relayed.
-  </Card>
+  <Card title="Requirements" icon="list-check" href="/start/requirements">Check what you need before setting up a Project.</Card>
+  <Card title="Your first Night" icon="moon" href="/quickstart">Follow the path from setup to morning review.</Card>
 </CardGroup>
+
+## How it fits together
+
+<VisualPlaceholder id="intro-product-map" type="relationship diagram" title="Yellowhammer product map" purpose="Show how a Project connects its specification, Linear, repositories, local agent CLIs, and the Night Summary." caption="Planned visual: one Project feeds a local Night; its results return to Linear and GitHub for your review." />
+
+## Continue learning
+
+Start with the [setup overview](/setup/overview), then learn how to [run Nights](/run/overview) and [review the morning](/review/overview).
+
+## Next steps
+
+[Set up your Project](/setup/overview) · [Projects, Features, and Work Cards](/concepts/projects-features-and-work-cards)

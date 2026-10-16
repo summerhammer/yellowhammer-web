@@ -1,0 +1,46 @@
+---
+title: "Prepare your specification"
+description: "Make product intent and completion criteria clear enough for a Night."
+---
+
+import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+
+The specification is the source Yellowhammer uses to select a Feature and cite its Definition of Done. Acme Checkout is a useful example: describe a customer outcome, boundaries, and observable completion evidence.
+
+<DocumentationOutline />
+
+## Goal
+
+Describe a customer outcome and completion evidence clearly enough for a Night to select and verify work.
+
+## Before you begin
+
+Confirm the Project points to the intended specification source and that the specification reflects current product behavior. Acme Checkout is illustrative.
+
+## Steps
+
+### Describe one Feature
+
+Start from a user-visible outcome, boundaries, and the repositories it may touch. Avoid prescribing implementation unless a constraint matters.
+
+### Make completion verifiable
+
+Write observable criteria before code exists. Each Definition of Done clause should point to a specific place in the specification so a reviewer can trace the claim.
+
+<VisualPlaceholder id="spec-feature-dod-example" type="example" title="Acme Checkout specification example" purpose="Show how one customer outcome can map to a Feature and observable Definition of Done clauses." caption="Planned example: checkout behavior, its repository scope, and verifiable completion evidence." />
+
+### Review the example
+
+Use a checkout outcome to show how intent becomes a Feature and citable clauses. Label invented product details as illustrative and verify any expected behavior before publishing.
+
+## Confirm it worked
+
+The Feature has a bounded outcome, the Project scope is clear, and each completion clause has a traceable specification citation. Explain where the user can inspect those details.
+
+## Common problems
+
+Address broad or ambiguous outcomes, criteria that cannot be observed, and citations that do not identify a specific specification location. Explain how to revise the source.
+
+## Next steps
+
+[Run Nights](/run/overview) · [Verification and Definition of Done](/concepts/verification-and-definition-of-done)

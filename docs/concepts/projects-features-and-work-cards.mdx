@@ -1,0 +1,32 @@
+---
+title: "Projects, Features, and Work Cards"
+description: "Understand how product scope and pieces of work relate in Linear."
+---
+
+import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+
+A Project represents one product and its repositories, Linear project, and specification. A Feature describes a unit selected for a Night; Work Cards represent its pieces of work in Linear.
+
+<DocumentationOutline />
+
+## Definitions
+
+Define Project as product scope, Feature as the unit of intent selected for a Night, and Work Card as one repository-scoped dispatchable unit. Link each first-use term to the glossary.
+
+## How they relate
+
+A Project contains its repositories, Linear project, and specification. One Feature is in flight per Project; it may produce several Work Cards, each tied to one repository.
+
+<VisualPlaceholder id="project-feature-card-map" type="relationship diagram" title="Project to Feature to Work Cards" purpose="Show Project scope, one in-flight Feature, and its repository-scoped Work Cards." caption="Planned diagram: Acme Checkout Project contains a Feature represented by its Feature Card and related Work Cards in Linear." />
+
+## Acme Checkout example
+
+For Acme Checkout, use a concrete customer outcome and identify which repositories change. Keep the example illustrative until its steps and expected result are verified.
+
+## What this means for triage
+
+Use the Project to scope the Night, the Feature to understand the intended outcome, and individual Work Cards to inspect execution or answer a request.
+
+## Next steps
+
+[The lifecycle of a Night](/concepts/lifecycle-of-a-night) · [Related reference](/reference/statuses-and-glossary)

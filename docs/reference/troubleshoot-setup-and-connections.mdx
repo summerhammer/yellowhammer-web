@@ -1,0 +1,30 @@
+---
+title: "Troubleshoot setup and connections"
+description: "Diagnose common problems while preparing a Project and its integrations."
+---
+
+import { DocumentationOutline } from '/snippets/documentation.jsx';
+
+Start with the failed connection or readiness check, identify which Project and service it names, and consult current diagnostics before changing configuration.
+
+<DocumentationOutline />
+
+## Connection will not complete
+
+Check which service and Project are named, whether the user has the required workspace/repository access, and whether the app reports a refusal or a network failure. Verify remedies against current diagnostics.
+
+## Repository or Project is unavailable
+
+Compare configured paths with the local checkout and inspect the named repository or Project validation error. Avoid guessing a path or configuration key.
+
+## Agent CLI is not ready
+
+Check whether the CLI is installed for the scheduled macOS account, authenticated, and accepted by the current readiness probe. Then verify selected model and effort support.
+
+## Gather details for support
+
+Collect the Project identifier, service involved, exact visible diagnostic, app/CLI version, and time of the attempt. Remove tokens and other secrets.
+
+## Next steps
+
+[Troubleshoot Nights and missing results](/reference/troubleshoot-nights-and-missing-results) · [Related reference](/reference/statuses-and-glossary)

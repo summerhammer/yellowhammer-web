@@ -1,0 +1,46 @@
+---
+title: "Review pull requests and Partial Landings"
+description: "Assess the pull requests a Night opens and decide whether to merge them."
+---
+
+import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+
+Yellowhammer opens a pull request per touched repository and never merges for you. A Partial Landing names the work or Definition of Done clauses that remain incomplete.
+
+<DocumentationOutline />
+
+## Goal
+
+Review repository pull requests and decide whether to merge, hold, or request changes.
+
+## Before you begin
+
+Open the Night Summary and identify the Feature and repositories involved. Review each linked pull request and its Work Cards; Yellowhammer does not merge for you.
+
+## Steps
+
+### Review each repository
+
+Compare the pull request summary, changed repository, and completed Work Cards with the intended Feature. Follow the project's review process and check any required CI evidence.
+
+### Recognize a Partial Landing
+
+<VisualPlaceholder id="partial-landing-anatomy" type="screenshot" title="A Partial Landing pull request" purpose="Point out where a pull request identifies incomplete Work Cards and unmet clauses." caption="Planned screenshot: verified Partial Landing summary and links to the affected Work Cards." />
+
+Identify the named missing Work Cards and unmet Definition of Done clauses. Explain what information lets a human judge the pull request without treating it as complete work.
+
+### Make the merge decision
+
+Describe the human choices and their implications. Keep merge authority with the user and avoid suggesting that a Partial Landing is automatically safe to merge.
+
+## Confirm it worked
+
+After a human decision, identify the repository's pull request state and the corresponding Linear record to revisit. State only verified status transitions.
+
+## Common problems
+
+Cover a missing repository pull request, a Partial Landing with unclear missing work, and a pull request whose diff does not match its summary. Direct the reader to the relevant Night and Work Card records.
+
+## Next steps
+
+[The lifecycle of a Night](/concepts/lifecycle-of-a-night) · [Statuses and glossary](/reference/statuses-and-glossary)

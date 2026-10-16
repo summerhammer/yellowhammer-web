@@ -1,0 +1,118 @@
+---
+title: "Statuses and glossary"
+description: "Look up authoritative Yellowhammer terms and Work Card statuses."
+---
+
+import { DocumentationOutline } from '/snippets/documentation.jsx';
+
+Use these summaries to read Linear records consistently. These summaries use Yellowhammer's canonical product terms. Verify shipped labels and behavior before publishing status instructions.
+
+<DocumentationOutline />
+
+## Statuses
+
+### Blocked
+
+Work stopped for the Night, with a reason recorded for the human to review. Read the Block Reason on the relevant Feature or Work Card to find where attention is needed.
+
+### Waiting on You
+
+A Work Card or Feature needs a human decision. The record carries what is needed; determine whether the requested action is an answer, an edit, or another configuration change before responding.
+
+### Partial Landing
+
+A repository lane opened a pull request while one or more Work Cards did not complete. The pull request should identify the missing work and why it did not happen.
+
+## Canonical terms
+
+### Project
+
+One product scope containing its repositories, Linear project, and specification. Each Project has independent Nights.
+
+### Night
+
+One run for one Project, from its first scheduled work through the Night Card being completed. A Night that produced no work still has a result.
+
+### Feature
+
+One product feature selected for work. The product glossary defines it as the unit of intent; exactly one Feature is in flight per Project at a time.
+
+### Work Card
+
+A dispatchable unit of work represented by a Linear issue and local execution record. One Work Card is scoped to one repository.
+
+### Night Summary
+
+The account of a Night carried on its Night Card, including completed work and exceptions.
+
+### Night Card
+
+A Linear card created for a Night and completed with its Night Summary, including when no work happened.
+
+### Definition of Done
+
+The set of clauses describing what must be true for a Feature or Work Card to be finished. Clauses cite locations in the specification.
+
+### Verification
+
+A clause-by-clause report against a Definition of Done and its specification citations. It supports an auditable judgment; it does not guarantee correctness.
+
+### Spec Citation
+
+A reference from a Definition of Done clause to a specific location in the specification.
+
+### Route
+
+The combination of agent CLI, model, and effort used for a Work Card.
+
+### Agent CLI
+
+A coding agent command-line interface that Yellowhammer invokes locally to perform code work.
+
+### Repo
+
+A repository configured as part of a Project.
+
+### Repo Dependency
+
+A declared relationship between repositories that matters when a Feature spans repositories.
+
+### Orca
+
+The local development environment that provides isolated worktrees for Night execution.
+
+### Worktree
+
+A Git working tree allocated for execution of a unit of work.
+
+### Bound
+
+A configured limit that stops repeated work, such as attempt or review-round limits. See [Set limits and protected paths](/run/set-limits-and-protected-paths).
+
+### Protected Paths
+
+Repository paths declared as out of scope for a Work Card. Yellowhammer checks for overlap before dispatch; this is not a sandbox or a post-edit fence.
+
+### Rehearsal Night
+
+A deliberate rehearsal mode of a Night with its own configured board project and Journal. It is not a separate execution environment.
+
+### Pulse
+
+The main window surface that presents a selected Project's current and recent activity.
+
+### Inspector
+
+The main window's detail pane for the current selection. It provides read-only inspection and navigation to Linear for actions that belong there.
+
+### Pull Request
+
+A GitHub review request opened for a repository touched by a Feature. A human decides whether and when to merge it.
+
+## Related pages
+
+See [Projects, Features, and Work Cards](/concepts/projects-features-and-work-cards), [the lifecycle of a Night](/concepts/lifecycle-of-a-night), and [review the morning](/review/overview).
+
+## Next steps
+
+[Diagnose setup and connections](/reference/troubleshoot-setup-and-connections) · [Review the morning](/review/overview)

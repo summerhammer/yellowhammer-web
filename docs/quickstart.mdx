@@ -1,25 +1,42 @@
 ---
-title: Quickstart
-description: Get up and running with Yellowhammer in under 2 minutes
+title: "Your first Night"
+description: "Follow the learning path from prerequisites to reviewing a Night result."
 ---
 
-# Quickstart
+import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
 
-Follow these steps to install and configure Yellowhammer on your Mac.
+Get a [Project](/reference/statuses-and-glossary#project) ready, prepare its specification and integrations, then run or schedule its first [Night](/reference/statuses-and-glossary#night). Setup details vary by release; verify exact controls and requirements against the current app. Begin with [Requirements](/start/requirements).
 
-## 1. Download Yellowhammer
+<DocumentationOutline />
 
-Download the latest version of the application:
-- [Download for macOS (Apple Silicon & Intel)](https://github.com/summerhammer/yellowhammer/releases/latest/download/Yellowhammer.dmg)
+## What you will do
 
-## 2. Installation
+Use this path to understand the prerequisites, prepare one Project, then follow a Night through to its morning result. Acme Checkout is the illustrative product used in examples.
 
-1. Open the downloaded `Yellowhammer.dmg` disk image.
-2. Drag **Yellowhammer** into your `/Applications` folder.
-3. Launch Yellowhammer from `/Applications` or Spotlight (`Cmd + Space`).
+<VisualPlaceholder id="quickstart-first-night" type="workflow" title="Your first Night learning path" purpose="Show the progression from requirements through Project setup and specification preparation to Night review." caption="Planned visual: prepare a Project, let a local Night work on one Feature, then review its Linear records and pull requests." />
 
-## 3. Connect Linear
+## Before you begin
 
-1. Click the Yellowhammer icon in your macOS menu bar.
-2. Select **Connect Issue Tracker** and authenticate with Linear.
-3. The browser will relay the authorization code back to your Mac app automatically.
+Review [Requirements](/start/requirements) first. This page is a learning path; the linked setup pages hold topic-specific briefs until product procedures are verified.
+
+## Steps
+
+### 1. Prepare one Project
+
+Follow the [setup overview](/setup/overview): connect [Linear](/setup/connect-linear), [GitHub](/setup/connect-github), [Orca and agent CLIs](/setup/connect-orca-and-agent-clis), and [add a Project and repositories](/setup/add-project-and-repositories). Prepare a [specification](/setup/prepare-specification) with an observable Definition of Done.
+
+### 2. Rehearse and prepare to schedule
+
+Read about [rehearsing](/run/rehearse-before-scheduling), [scheduling](/run/configure-the-schedule), [Routes](/run/choose-agents-and-routes), and [limits](/run/set-limits-and-protected-paths) before unattended execution. Verify exact controls and prerequisites against the current app.
+
+### 3. Review the morning
+
+Read the [Night Summary](/review/read-the-night-summary), find the selected Feature and Work Cards in Linear, then inspect any repository pull requests before deciding whether to merge.
+
+## Confirm it worked
+
+You can identify the selected Feature, find its Work Cards and Night Summary in Linear, and review any pull request before deciding whether to merge. The exact success indicators in the app need release verification.
+
+## Next steps
+
+[Review the morning](/review/overview) · [Understand the lifecycle of a Night](/concepts/lifecycle-of-a-night)

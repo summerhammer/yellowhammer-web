@@ -1,0 +1,46 @@
+---
+title: "Connect Orca and agent CLIs"
+description: "Prepare local worktree execution and the coding agents you already use."
+---
+
+import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+
+Yellowhammer coordinates Orca worktrees while your own agent CLIs perform the coding work locally. Exact supported versions, probes, and connection steps need release verification.
+
+<DocumentationOutline />
+
+## Goal
+
+Prepare local worktree execution and the agent CLIs that perform code work.
+
+## Before you begin
+
+Confirm Orca ADE and at least one supported agent CLI are installed and available to the macOS account that will run Nights. Check current compatibility and access requirements.
+
+## Steps
+
+### Check Orca readiness
+
+Describe the verified integration check and what it says about local repository access. Distinguish Orca worktrees from a security sandbox.
+
+### Check each agent CLI
+
+List supported CLI names and versions only after release verification. Explain the current probe or readiness evidence and which account/environment it checks.
+
+### Understand the local execution path
+
+<VisualPlaceholder id="connect-orca-agent-flow" type="sequence diagram" title="Local execution path" purpose="Show Yellowhammer coordinating Orca worktrees while an installed agent CLI performs code work on the Mac." caption="Planned sequence: Yellowhammer dispatches through Orca; the local agent CLI works in a Project repository; results return for review." />
+
+Show Yellowhammer coordinating Orca while the user's agent CLI performs code work locally; identify which credentials the current integration can access.
+
+## Confirm it worked
+
+Name the verified readiness result for Orca and each configured CLI. Note where an unavailable model or effort combination is reported.
+
+## Common problems
+
+Separate an unavailable Orca integration, an undiscoverable CLI, and a CLI that cannot use the selected model or effort. Link the supported diagnostic for each.
+
+## Next steps
+
+[Add a Project and repositories](/setup/add-project-and-repositories) · [Local execution and credentials](/concepts/local-execution-and-credentials)

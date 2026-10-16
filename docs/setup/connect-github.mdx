@@ -1,0 +1,46 @@
+---
+title: "Connect GitHub"
+description: "Prepare GitHub access for pull requests across a Project’s repositories."
+---
+
+import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+
+Yellowhammer opens a pull request for each touched repository. Confirm repository access and the current GitHub connection flow before enabling Nights.
+
+<DocumentationOutline />
+
+## Goal
+
+Prepare GitHub access for every repository that a Project may touch.
+
+## Before you begin
+
+List the Project repositories and identify the account or installation that should open pull requests. Confirm current GitHub permission requirements before giving setup instructions.
+
+## Steps
+
+### Check repository scope
+
+Explain how to compare the configured repositories with the intended product. Include access to each repository that may receive a pull request.
+
+### Connect code hosting
+
+Describe the shipped connection path and permissions to verify. Do not assume a button label or installation scope until checked in the app.
+
+### Check pull request access
+
+State how to verify that the connection can create a review pull request in each configured repository without merging it.
+
+<VisualPlaceholder id="connect-github-repositories" type="screenshot" title="GitHub repository access" purpose="Show where a user confirms which configured repositories can receive pull requests." caption="Planned screenshot: verified repository access and connection status in the current app." />
+
+## Confirm it worked
+
+Show the evidence that the connection covers each intended repository and that review pull requests can be opened. Make clear that merging stays with the human.
+
+## Common problems
+
+Distinguish missing repository access, a repository absent from Project configuration, and a connection that targets the wrong GitHub identity. Verify remedies against current diagnostics.
+
+## Next steps
+
+[Connect Orca and agent CLIs](/setup/connect-orca-and-agent-clis) · [Statuses and glossary](/reference/statuses-and-glossary)

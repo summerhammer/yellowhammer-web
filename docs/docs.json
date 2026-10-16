@@ -22,8 +22,60 @@
 	"navigation": {
 		"groups": [
 			{
-				"group": "Get Started",
-				"pages": ["index", "quickstart"]
+				"group": "Start here",
+				"pages": ["index", "start/requirements", "quickstart"]
+			},
+			{
+				"group": "Set up your Project",
+				"pages": [
+					"setup/overview",
+					"setup/connect-linear",
+					"setup/connect-github",
+					"setup/connect-orca-and-agent-clis",
+					"setup/add-project-and-repositories",
+					"setup/prepare-specification"
+				]
+			},
+			{
+				"group": "Run Nights",
+				"pages": [
+					"run/overview",
+					"run/rehearse-before-scheduling",
+					"run/configure-the-schedule",
+					"run/choose-agents-and-routes",
+					"run/set-limits-and-protected-paths"
+				]
+			},
+			{
+				"group": "Review the morning",
+				"pages": [
+					"review/overview",
+					"review/read-the-night-summary",
+					"review/understand-pulse-and-inspector",
+					"review/answer-questions-and-unblock-work",
+					"review/pull-requests-and-partial-landings"
+				]
+			},
+			{
+				"group": "Understand Yellowhammer",
+				"pages": [
+					"concepts/overview",
+					"concepts/projects-features-and-work-cards",
+					"concepts/lifecycle-of-a-night",
+					"concepts/verification-and-definition-of-done",
+					"concepts/local-execution-and-credentials"
+				]
+			},
+			{
+				"group": "Reference and troubleshooting",
+				"pages": [
+					"reference/overview",
+					"reference/settings",
+					"reference/yh-command-line",
+					"reference/statuses-and-glossary",
+					"reference/troubleshoot-setup-and-connections",
+					"reference/troubleshoot-nights-and-missing-results"
+				]
 			}
 		]
 	}

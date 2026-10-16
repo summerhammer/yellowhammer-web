@@ -1,0 +1,44 @@
+---
+title: "Configure the schedule"
+description: "Understand the scheduling choices for local unattended Nights."
+---
+
+import { DocumentationOutline } from '/snippets/documentation.jsx';
+
+Scheduled Nights run on the configured Mac, using local tools and credentials. Verify current scheduling controls, wake behavior, and timing semantics in the installed release.
+
+<DocumentationOutline />
+
+## Goal
+
+Choose when local unattended Nights run and confirm the Mac can support that schedule.
+
+## Before you begin
+
+Complete a rehearsal and review the result. Check the Mac's expected availability, the local account used for execution, and the schedule's timezone and overnight window as shown by the current release.
+
+## Steps
+
+### Choose a timing window
+
+Explain how the configured start, end, and firing interval relate. Document timezone handling and any Project offset only after checking current settings and behavior; do not invent defaults.
+
+### Check Mac availability
+
+Cover whether the Mac must be awake, logged in, connected to power or a network, and able to reach local repositories. Verify each condition against the shipped scheduler.
+
+### Enable and inspect the schedule
+
+Describe the verified control to save or enable a schedule and where the app reports its next or installed invocation. Include behavior on missed or delayed firings only when confirmed.
+
+## Confirm it worked
+
+Name the status or diagnostic that shows the schedule is installed and identify the expected next firing in the configured timezone. Confirm the Mac meets the stated availability conditions.
+
+## Common problems
+
+Separate a schedule that is not installed, a time or timezone mismatch, a sleeping Mac, and a local dependency that is unavailable. Link each symptom to a verified diagnostic.
+
+## Next steps
+
+[Choose agents and routes](/run/choose-agents-and-routes) · [Troubleshoot Nights and missing results](/reference/troubleshoot-nights-and-missing-results)

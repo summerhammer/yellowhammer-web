@@ -1,0 +1,46 @@
+---
+title: "Set limits and protected paths"
+description: "Review the Project limits and repository paths that constrain execution."
+---
+
+import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+
+Project limits bound attempts, review rounds, and unanswered Nights. Protected Paths are checked before dispatch; they are not a sandbox. Confirm available settings and effects for the current release.
+
+<DocumentationOutline />
+
+## Goal
+
+Set Project limits and review repository paths before dispatch can begin.
+
+## Before you begin
+
+Understand the work the Project may touch and who will review Night results. Confirm available limits and their current units in the installed release.
+
+## Steps
+
+### Set limits that stop repeated work
+
+Explain the configured limits for attempts per Work Card, review rounds, and unanswered Nights. Describe what each limit stops and where a stopped item appears; verify exact setting names and available values.
+
+### Review Protected Paths
+
+Explain that Protected Paths are checked for overlap before dispatch. They are a declaration and pre-dispatch check, not a sandbox or a post-edit fence. Show how a user checks configured paths against repository scope.
+
+<VisualPlaceholder id="limits-protected-path-review" type="screenshot" title="Project limits and Protected Paths" purpose="Show where verified per-Project limits and repository path declarations are reviewed." caption="Planned screenshot: current configuration locations, with any default or example value verified before publication." />
+
+### Review before scheduling
+
+Use a short checklist: limits reflect an acceptable retry boundary; protected paths name sensitive areas; the user understands what happens when work is refused or blocked.
+
+## Confirm it worked
+
+Name the configuration view that shows the saved Project limits and Protected Paths. Confirm an overlapping path is reported before a Work Card is dispatched.
+
+## Common problems
+
+Cover an overly broad protected path, a Work Card scope that overlaps a declared path, and a limit that causes work to stop sooner than expected. Explain which Project or Linear record to inspect.
+
+## Next steps
+
+[Review the morning](/review/overview) · [Statuses and glossary](/reference/statuses-and-glossary)

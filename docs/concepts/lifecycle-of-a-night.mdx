@@ -1,0 +1,32 @@
+---
+title: "The lifecycle of a Night"
+description: "Follow a Feature from selection through execution, verification, and review."
+---
+
+import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+
+A Night selects one Feature, dispatches its Work Cards to local agent routes, evaluates completion, and reports outcomes for human review. The exact internal phases can vary by product version.
+
+<DocumentationOutline />
+
+<VisualPlaceholder id="night-lifecycle-path" type="workflow" title="Night lifecycle" purpose="Trace specification selection through local execution, verification, reporting, and human review." caption="Planned workflow: one Feature moves through Work Cards and returns as a Night Summary and repository pull requests." />
+
+## From specification to selection
+
+The specification describes product intent and completion evidence. The Night selects one Feature for its Project; do not imply it selects several Features at once.
+
+## Local execution
+
+Work Cards are dispatched to configured agent Routes in Orca worktrees on the Mac. Agent CLIs perform code changes; Yellowhammer coordinates and records their results.
+
+## Verification and reporting
+
+Verification reports against Definition of Done clauses and specification citations. The Night Summary carries the result, including empty or interrupted Nights.
+
+## Human review
+
+The human reviews Linear records and GitHub pull requests, answers questions, and decides whether to merge. Yellowhammer never merges.
+
+## Next steps
+
+[Verification and Definition of Done](/concepts/verification-and-definition-of-done) · [Related reference](/reference/statuses-and-glossary)
