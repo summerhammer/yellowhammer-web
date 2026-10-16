@@ -1,0 +1,38 @@
+/* Match the app's native typography while retaining Mintlify's layout. */
+html:root {
+	--font-family-body-custom: -apple-system, system-ui, sans-serif;
+	--font-family-headings-custom: -apple-system, system-ui, sans-serif;
+	--font-family-mono-custom: ui-monospace, Menlo, monospace;
+	--font-paper-mono: ui-monospace, Menlo, monospace;
+	--default-mono-font-family: ui-monospace, Menlo, monospace;
+	--yh-ink: #1f1d14;
+	--yh-muted: #5c5847;
+}
+
+html.dark {
+	--yh-ink: #f3efdf;
+	--yh-muted: #bdb8a2;
+}
+
+body,
+#content,
+#header h1 {
+	color: var(--yh-ink);
+}
+
+#content {
+	font-size: 1rem;
+	line-height: 1.65;
+}
+
+#content
+	:where(h1, h2, h3, h4, strong, code):not(
+		:where(.not-prose, .not-prose *, pre *, a *)
+	) {
+	color: var(--yh-ink);
+}
+
+#content :where(blockquote):not(:where(.not-prose, .not-prose *)),
+#header .prose {
+	color: var(--yh-muted);
+}

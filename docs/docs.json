@@ -3,13 +3,19 @@
 	"theme": "mint",
 	"name": "Yellowhammer",
 	"colors": {
-		"primary": "#f4c900",
-		"light": "#ffd426",
-		"dark": "#996b00"
+		"primary": "#806000",
+		"light": "#F6D916",
+		"dark": "#6B5000"
+	},
+	"background": {
+		"color": {
+			"light": "#FDFCF6",
+			"dark": "#222211"
+		}
 	},
 	"logo": {
 		"light": "/logo/light.svg",
-		"dark": "/logo/dark.svg",
+		"dark": "/logo/light.svg",
 		"href": "https://yellowhammer.dev"
 	},
 	"favicon": "/favicon.svg",
