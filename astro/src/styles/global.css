@@ -451,20 +451,23 @@
 	height: auto;
 }
 
-/* An app window: the radius clips the desktop out of its corners. Percentages are relative to the
- * width and to the height, so each window size gets its own pair: 22pt over the window's points. */
+/* An app window: the radius clips the desktop out of its corners. A dark window draws its own light
+ * edge on a continuous corner, which a circular clip would cut into a stray arc. So the radius is a
+ * little larger than the window's, trimming that edge at the corners, and the inset outline paints
+ * one edge over the whole outline instead. Percentages are relative to the width and to the height,
+ * so each window size gets its own pair: 26pt over the window's points. */
 .shot-img-app {
-	box-shadow:
-		0 0 0 1px var(--color-line),
-		var(--shadow-float);
+	outline: 1px solid light-dark(var(--color-line), rgb(255 255 255 / 0.14));
+	outline-offset: -1px;
+	box-shadow: var(--shadow-float);
 }
 
 .shot-win-1280 {
-	border-radius: 1.72% / 2.53%;
+	border-radius: 2.03% / 2.99%;
 }
 
 .shot-win-960 {
-	border-radius: 2.29% / 3.24%;
+	border-radius: 2.71% / 3.82%;
 }
 
 .shot-window {
