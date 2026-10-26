@@ -195,7 +195,7 @@ importers:
         specifier: 4.142.0
         version: 4.142.0(@cloudflare/workers-types@5.20260927.1)
 
-  figures:
+  media:
     dependencies:
       react:
         specifier: 19.3.0

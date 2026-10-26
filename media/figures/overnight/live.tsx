@@ -1,9 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { translateAlong } from "../iso/iso-kit";
-import { IsoFigure } from "../iso/react/draw";
-import { asksForStillness, useReadout } from "../iso/react/live";
+import { translateAlong } from "../../kit/iso/iso-kit";
+import { IsoFigure } from "../../kit/iso/react/draw";
+import { asksForStillness, useReadout } from "../../kit/iso/react/live";
 import { needleOf } from "./geometry";
 import { lightAt, paletteAt } from "./palette";
 import {

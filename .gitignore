@@ -7,8 +7,8 @@ relay/public/styles.css
 *.log
 
 # Built anatomy figure pages and their screenshots
-figures/plant/*.html
-figures/plant/shots/
+media/figures/plant/*.html
+media/figures/plant/shots/
 
 # Claude Code agent worktrees (local only)
 .claude/worktrees/

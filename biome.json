@@ -12,9 +12,10 @@
 			"!.claude",
 			"!.agents",
 			"!skills-lock.json",
-			"!figures/src/iso",
-			"!figures/plant/shots",
-			"!figures/plant/*.html",
+			"!media/kit/iso",
+			"!media/figures/plant/shots",
+			"!media/figures/plant/*.html",
+			"!media/diagrams/night/index.html",
 			"!docs/**/*.svg"
 		]
 	},
@@ -30,7 +31,7 @@
 	},
 	"overrides": [
 		{
-			"includes": ["figures/src/**/*.tsx"],
+			"includes": ["media/**/*.tsx"],
 			"linter": {
 				"rules": {
 					"suspicious": {

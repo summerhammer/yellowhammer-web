@@ -1,4 +1,4 @@
-import { Dots, Line, Solid } from "../iso/react/draw";
+import { Dots, Line, Solid } from "../../kit/iso/react/draw";
 import {
 	BACKLOG_ART,
 	BASE_ART,

@@ -1,4 +1,4 @@
-import { OvernightFigure } from "./overnight/figure";
+import { OvernightFigure } from "../figures/overnight/figure";
 
 export function App() {
 	return (

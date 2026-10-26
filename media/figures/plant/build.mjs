@@ -3,14 +3,14 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import * as A from "../src/iso/audit.mjs";
-import * as k from "../src/iso/iso-kit.mjs";
-import * as G from "../src/iso/lathe.mjs";
+import * as A from "../../kit/iso/audit.mjs";
+import * as k from "../../kit/iso/iso-kit.mjs";
+import * as G from "../../kit/iso/lathe.mjs";
 import * as N from "./night.mjs";
 import { L, makeParts, RUN_SLOTS, UP_SLOTS } from "./parts.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const ISO = join(HERE, "..", "src", "iso");
+const ISO = join(HERE, "..", "..", "kit", "iso");
 const THEME = process.argv.includes("--light") ? "light" : "dark";
 const W = 600;
 const H = 332;

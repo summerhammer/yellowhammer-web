@@ -1,7 +1,7 @@
 packages:
   - relay
   - astro
-  - figures
+  - media
 allowBuilds:
   '@parcel/watcher': true
   esbuild: true

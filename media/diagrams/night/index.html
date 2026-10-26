@@ -1,0 +1,666 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Inside a Yellowhammer Night</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Martian+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: a night-shift control room. Header with the Night clock, one wide stage holding the
+   five-column system diagram, then the narration and a scrubber split by Act. Single dark look on purpose:
+   the whole story happens at night. */
+:root{
+  --night:#0c1222;
+  --panel:#131a2f;
+  --panel2:#19213b;
+  --line:#2a3455;
+  --fg:#ece8d9;
+  --fg2:#c9c6b8;
+  --muted:#8b92ad;
+  --dim:#566083;
+  --yellow:#f2c230;
+  --chestnut:#c8743d;
+  --ok:#6fc79d;
+  --bad:#e66b5d;
+  --wait:#95a9ff;
+  --display:'Familjen Grotesk','Avenir Next','Segoe UI',system-ui,sans-serif;
+  --mono:'Martian Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+html{background:var(--night)}
+body{background:var(--night);color:var(--fg);font-family:var(--display);font-size:15px}
+.wrap{max-width:1480px;margin:0 auto;padding-block:24px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:18px}
+
+header.top{display:flex;flex-wrap:wrap;gap:16px 40px;align-items:flex-end;justify-content:space-between}
+.top>div{min-width:0}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--yellow);text-transform:uppercase}
+h1{font-size:clamp(30px,4.2vw,46px);font-weight:600;line-height:1.05;margin:.25em 0 .3em;letter-spacing:-.015em;text-wrap:balance}
+.lead{max-width:64ch;color:var(--muted);font-size:15px;line-height:1.55;margin:0}
+.clockbox{display:grid;gap:6px;justify-items:end}
+.clocklbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+#clock{font-family:var(--mono);font-size:36px;font-weight:500;color:var(--yellow);font-variant-numeric:tabular-nums;line-height:1}
+.chip{font-family:var(--mono);font-size:11px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;color:var(--fg);white-space:nowrap}
+.chip b{color:var(--yellow);font-weight:500}
+
+.stage{overflow-x:auto;border:1px solid var(--line);border-radius:18px;
+  background:radial-gradient(900px 360px at 72% -12%,rgba(242,194,48,.07),transparent 62%),
+             radial-gradient(rgba(236,232,217,.035) 1px,transparent 1.2px) 0 0/22px 22px,var(--night)}
+#scene{display:block;width:100%;min-width:980px;height:auto}
+
+.below{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px 40px;align-items:start}
+@media (max-width:860px){.below{grid-template-columns:1fr}}
+.caption{min-width:0;min-height:132px}
+.capmeta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.06em}
+.caption h2{font-size:24px;font-weight:600;margin:.35em 0 .3em;text-wrap:balance;letter-spacing:-.005em}
+.caption p{margin:0;max-width:70ch;line-height:1.6;color:var(--fg2);font-size:15.5px}
+code{font-family:var(--mono);font-size:.84em;color:var(--yellow);background:rgba(242,194,48,.09);padding:1px 6px;border-radius:5px}
+
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end}
+button,select{font:inherit;font-size:13px;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:8px 12px;cursor:pointer}
+button:hover,select:hover{border-color:var(--yellow)}
+:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
+#play{min-width:88px;background:var(--yellow);color:var(--night);border-color:var(--yellow);font-weight:600}
+.spd{display:flex;gap:6px;align-items:center;color:var(--muted);font-size:13px}
+
+.timeline{display:flex;gap:12px;min-width:0}
+.tg{display:grid;gap:4px;min-width:0}
+.tg .lbl{font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.08em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tg.on .lbl{color:var(--yellow)}
+.segs{display:flex;gap:3px}
+.seg{position:relative;height:18px;background:transparent;border:0;border-radius:4px;padding:0;min-width:4px;cursor:pointer}
+.seg::before,.seg .fill{content:"";position:absolute;left:0;top:5px;height:8px;border-radius:4px}
+.seg::before{right:0;background:var(--line)}
+.seg .fill{width:0;background:var(--yellow)}
+.seg.past .fill{width:100%;background:var(--chestnut)}
+.seg:hover::before{background:var(--dim)}
+
+.foot{color:var(--muted);font-size:12.5px;line-height:1.55;max-width:90ch;margin:0}
+.exitrec{display:none}
+body.record .controls,body.record .timeline,body.record .foot{display:none}
+body.record .exitrec{display:block;position:fixed;top:calc(10px + env(safe-area-inset-top,0px));right:max(10px,env(safe-area-inset-right,0px));opacity:0;transition:opacity .2s}
+body.record .exitrec:hover,body.record .exitrec:focus-visible{opacity:1}
+
+/* --- SVG --- */
+#scene text{font-family:var(--display);fill:var(--fg)}
+#scene .mono{font-family:var(--mono)}
+#scene .port{font-family:var(--mono);font-size:11px;letter-spacing:.18em;fill:var(--yellow)}
+#scene .vendor{font-size:18px;font-weight:600}
+#scene .cap{font-family:var(--mono);font-size:10px;letter-spacing:.12em;fill:var(--muted)}
+#scene .s105{font-size:10.5px}#scene .s11{font-size:11px}#scene .s12{font-size:12px}#scene .s13{font-size:13px}#scene .s15{font-size:15px}#scene .s16{font-size:16px}
+#scene .w6{font-weight:600}
+#scene .muted,#scene tspan.muted{fill:var(--muted)}
+#scene .y{fill:var(--yellow)}#scene .g{fill:var(--ok)}
+#scene tspan.repo{fill:var(--dim)}
+#scene tspan.lc-id{fill:var(--yellow);font-family:var(--mono);font-size:11.5px}
+.panel{fill:var(--panel);stroke:var(--line);stroke-width:1}
+.item{fill:var(--panel2);stroke:var(--line);stroke-width:1}
+.item.feature{stroke:rgba(242,194,48,.35)}
+#scene g,#scene rect,#scene circle,#scene text{transition:opacity .5s ease,fill .35s ease,stroke .35s ease}
+#scene .ghost{opacity:0}
+
+.pill rect{fill:transparent;stroke-width:1.2}
+#scene .pill text{font-size:11px;font-weight:600;text-anchor:middle}
+.st-todo rect{stroke:var(--muted)}#scene .st-todo text{fill:var(--muted)}
+.st-prog rect{stroke:var(--yellow);fill:rgba(242,194,48,.14)}#scene .st-prog text{fill:var(--yellow)}
+.st-done rect{stroke:var(--ok);fill:rgba(111,199,157,.14)}#scene .st-done text{fill:var(--ok)}
+.st-blocked rect{stroke:var(--bad);fill:rgba(230,107,93,.12)}#scene .st-blocked text{fill:var(--bad)}
+.st-wait rect{stroke:var(--wait);fill:rgba(149,169,255,.12)}#scene .st-wait text{fill:var(--wait)}
+.qchip circle{fill:var(--muted)}
+.qchip.st-prog circle{fill:var(--yellow)}.qchip.st-done circle{fill:var(--ok)}
+#scene .qchip text{font-family:var(--mono);font-size:11px;fill:var(--fg2)}
+
+.row rect{fill:transparent;stroke:transparent}
+.row.on rect{fill:rgba(242,194,48,.14);stroke:var(--yellow)}
+#scene .row.on text{fill:var(--yellow)}
+
+.pi circle{fill:none;stroke:var(--dim);stroke-width:1.5}
+#scene .pi text{font-size:13px;fill:var(--muted)}
+.pi.active circle{fill:var(--yellow);stroke:var(--yellow);animation:throb 1.1s ease-in-out infinite}
+#scene .pi.active text{fill:var(--fg)}
+.pi.done circle{fill:var(--ok);stroke:var(--ok)}
+#plist.dim{opacity:.35}
+
+.node rect{fill:var(--panel2);stroke:var(--line);stroke-width:1.2}
+#scene .node text{font-size:12px;text-anchor:middle;fill:var(--muted)}
+.node.run rect{stroke:var(--yellow);fill:rgba(242,194,48,.16);animation:throb 1.1s ease-in-out infinite}
+#scene .node.run text{fill:var(--yellow)}
+.node.ok rect{stroke:var(--ok);fill:rgba(111,199,157,.14)}#scene .node.ok text{fill:var(--ok)}
+.node.bad rect{stroke:var(--bad);fill:rgba(230,107,93,.16)}#scene .node.bad text{fill:var(--bad)}
+.flow{stroke:var(--dim);stroke-width:1.2}
+.loop{fill:none;stroke:var(--line);stroke-width:1.4;stroke-dasharray:4 5}
+.loop.on{stroke:var(--bad);animation:dash .7s linear infinite}
+#scene .loopt{fill:var(--dim)}
+#scene .loop.on + .loopt{fill:var(--bad)}
+
+.wt rect{fill:rgba(242,194,48,.07);stroke:rgba(242,194,48,.5)}
+.wt.released rect{fill:transparent;stroke:var(--dim);stroke-dasharray:4 4}
+#scene .wt.released text,#scene .wt.released tspan{fill:var(--dim)}
+
+.cli rect{fill:var(--panel2);stroke:var(--line);stroke-width:1.2}
+.cli.active rect{stroke:var(--yellow);fill:rgba(242,194,48,.08)}
+.cli.fail rect{stroke:var(--bad);fill:rgba(230,107,93,.1)}
+#scene .cli .pass{fill:var(--dim)}
+#scene .cli.active .pass{fill:var(--yellow)}
+#scene .cli.fail .pass{fill:var(--bad)}
+
+#scene .lg .t{fill:var(--dim)}
+#scene .lg .k{fill:var(--yellow)}
+#scene .lg .k.ok{fill:var(--ok)}#scene .lg .k.bad{fill:var(--bad)}#scene .lg .k.act{fill:var(--fg)}#scene .lg .k.ch{fill:var(--chestnut)}
+#scene .lg .d{fill:var(--fg2)}
+#scene .lg .fresh{animation:fadein .5s ease}
+
+#scene #ghMain.hl text{fill:var(--yellow)}
+.win{fill:var(--night);stroke:var(--line)}
+.side{fill:rgba(255,255,255,.02)}
+.sel{fill:rgba(242,194,48,.12);stroke:rgba(242,194,48,.4)}
+.tile{fill:var(--panel2);stroke:var(--line)}
+.sep{stroke:var(--line)}
+.dot{fill:var(--dim)}
+#appWin{opacity:.3}
+#appWin.on{opacity:1}
+
+@keyframes throb{50%{opacity:.45}}
+@keyframes dash{to{stroke-dashoffset:-18}}
+@keyframes fadein{from{opacity:0}}
+@media (prefers-reduced-motion:reduce){
+  .pi.active circle,.node.run rect,.loop.on,#scene .lg .fresh{animation:none}
+  #scene g,#scene rect,#scene circle,#scene text{transition:none}
+}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">Yellowhammer · under the hood</div>
+      <h1>Inside a Night</h1>
+      <p class="lead">What happens between launchd firing <code>yh</code> at night and the pull requests you find in the morning. One example Project, two repositories, one Feature, three Acts.</p>
+    </div>
+    <div class="clockbox" aria-live="off">
+      <span class="clocklbl">Night clock</span>
+      <span id="clock">01:00</span>
+      <span class="chip" id="actChip"><b>yh author</b></span>
+    </div>
+  </header>
+
+  <div class="stage">
+    <svg id="scene" viewBox="0 0 1440 852" role="img" aria-label="Animated diagram of a Yellowhammer Night: launchd fires the author, build and land Acts; the engine moves Cards between the Linear board, Orca ADE Worktrees, agent CLIs and GitHub; the app reads the Journal."></svg>
+  </div>
+
+  <div class="below">
+    <section class="caption" aria-live="polite">
+      <div class="capmeta"><span class="chip" id="capAct">author</span><span id="capStep">Step 1 of 21</span></div>
+      <h2 id="capTitle"></h2>
+      <p id="capText"></p>
+    </section>
+    <div class="controls">
+      <button id="prev" aria-label="Previous step">‹ Prev</button>
+      <button id="play">Pause</button>
+      <button id="next" aria-label="Next step">Next ›</button>
+      <button id="restart">Restart</button>
+      <span class="spd"><label for="speed">Speed</label>
+        <select id="speed"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></span>
+      <button id="rec">Recording view</button>
+    </div>
+  </div>
+
+  <div class="timeline" id="timeline"></div>
+
+  <p class="foot">The Project (<code>orbit</code>), its repositories, Cards, PR numbers and schedule times are an example. The three Acts, the order of their steps and the vocabulary (Card, Cycle, Lease, Route, Attempt, Round, Repo Lane, Outbox, Journal) follow the Yellowhammer source. Space plays or pauses; the arrow keys step. Recording view hides the controls for a clean screen capture.</p>
+  <button class="exitrec" id="exitrec">Exit recording view</button>
+</div>
+
+<script>
+(() => {
+const $ = id => document.getElementById(id);
+const svg = $('scene');
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const fmt = s => esc(s).replace(/`([^`]+)`/g,'<code>$1</code>');
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const CARDS = [
+  {k:'213', id:'ORB-213', title:'SavedSearch model + migration', repo:'api'},
+  {k:'214', id:'ORB-214', title:'Saved-search endpoints',        repo:'api'},
+  {k:'215', id:'ORB-215', title:'Saved searches list screen',    repo:'ios'},
+  {k:'216', id:'ORB-216', title:'Pin a search from results',     repo:'ios'},
+];
+const BYK = Object.fromEntries(CARDS.map(c => [c.k, c]));
+const STATE_LABEL = {todo:'Todo', prog:'In Progress', done:'Done', blocked:'Blocked', wait:'Waiting on You'};
+const LEGEND = {todo:'authored, not started', prog:'a lane holds its Lease', done:'approved and committed', blocked:'budget spent, your call', wait:'a question for you'};
+const PROC = {
+  author:['Open the Night Card','Delta Read: board → Journal','Predecessor gate','Select the next Feature','Author the Cycle and Cards','Write back through the Outbox'],
+  build:['Sweep expired Leases','Reconcile Worktrees','Delta Read, repost board','Derive Repo Lanes','Run Cards, lane by lane','Write back through the Outbox'],
+  land:['Merge test per lane','Push Feature Branches','Verification of the DoD','Open pull requests','Release Worktrees','Archive the Cycle'],
+};
+const CLIS = [{k:'claude', name:'Claude Code', y:74},{k:'codex', name:'Codex', y:162},{k:'anti', name:'Antigravity', y:250}];
+const NODES = [['architect','architect'],['worker','worker'],['check','Check'],['reviewer','reviewer']];
+
+const T = (x,y,s,c='',a='') => `<text x="${x}" y="${y}"${c?` class="${c}"`:''}${a?` text-anchor="${a}"`:''}>${s}</text>`;
+const panel = (x,y,w,h,id) => `<rect${id?` id="${id}"`:''} class="panel" x="${x}" y="${y}" width="${w}" height="${h}" rx="14"/>`;
+const pill = (id,x,y,w,st) => `<g id="${id}" class="pill st-${st}"><rect x="${x}" y="${y}" width="${w}" height="22" rx="11"/><text x="${x+w/2}" y="${y+15}">${STATE_LABEL[st]}</text></g>`;
+
+function build(){
+  let m = `<defs>
+    <filter id="glow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#566083"/></marker>
+  </defs>`;
+  [[24,'BOARD','Linear'],[384,'ENGINE','yh, one Project per run'],[784,'WORKSPACE','Orca ADE Worktrees'],[1144,'DISPATCH','Agent CLIs']]
+    .forEach(([x,p,v]) => { m += T(x,24,p,'port') + T(x,49,v,'vendor'); });
+  m += T(1144,376,'PUBLICATION','port') + T(1144,400,'GitHub','vendor');
+
+  // Board
+  m += panel(24,62,320,586,'board');
+  m += `<g id="nightcard" class="ghost"><rect class="item" x="40" y="78" width="288" height="40" rx="9"/>${T(54,103,'Night Card','s13 w6')}${T(140,103,'2026-10-21','mono s105 muted')}<text id="nightNote" class="mono s105 y" x="314" y="103" text-anchor="end">open</text></g>`;
+  m += `<g id="feat" class="ghost"><rect class="item feature" x="40" y="128" width="288" height="64" rx="10"/>${T(54,149,'ORB-212 · FEATURE','mono s105 muted')}${pill('featpill',228,135,88,'todo')}${T(54,179,'Saved searches','s15 w6')}<text id="featDod" class="mono s105 g ghost" x="314" y="179" text-anchor="end">DoD 6/6 met</text></g>`;
+  m += `<text id="cycText" class="cap ghost" x="40" y="216">CYCLE · 4 CARDS</text>`;
+  CARDS.forEach((c,i) => {
+    const y = 226 + i*58;
+    m += `<g id="card-${c.k}" class="ghost"><rect class="item" x="40" y="${y}" width="288" height="50" rx="9"/>`
+      + T(54,y+19,`${c.id}<tspan class="repo" dx="7">orbit-${c.repo}</tspan>`,'mono s105 muted')
+      + pill('cardpill-'+c.k,232,y+6,84,'todo')
+      + T(54,y+40,esc(c.title),'s13') + `</g>`;
+  });
+  m += T(40,484,'CARD STATES','cap');
+  ['todo','prog','done','blocked','wait'].forEach((s,i) => { const y = 496 + i*29; m += pill('lg-'+s,40,y,104,s) + T(156,y+15,LEGEND[s],'s12 muted'); });
+
+  // Engine: launchd
+  m += panel(384,62,360,116,'launchd');
+  m += T(400,88,'launchd','s15 w6') + T(728,88,'FIRES EACH ACT','cap','end');
+  [['author','01:00'],['build','01:30'],['land','05:30']].forEach(([a,t],i) => {
+    const y = 100 + i*25;
+    m += `<g id="la-${a}" class="row"><rect x="396" y="${y}" width="336" height="22" rx="6"/>${T(408,y+15,'orbit.'+a,'mono s11')}${T(720,y+15,t,'mono s11 muted','end')}</g>`;
+  });
+  // Engine: process
+  m += panel(384,192,360,260,'proc');
+  m += T(400,216,'PROCESS','cap') + T(728,216,'SHORT-LIVED','cap','end');
+  m += `<text id="procCmd" class="mono s13 muted" x="400" y="244">no process running</text><g id="plist" class="dim">`;
+  for (let i=0;i<6;i++){ const y = 264 + i*29; m += `<g id="pi-${i}" class="pi"><circle cx="411" cy="${y+9}" r="5.5"/><text id="piT-${i}" x="426" y="${y+14}"></text></g>`; }
+  m += `</g>`;
+  // Engine: Journal
+  m += panel(384,466,360,182,'journal');
+  m += T(400,490,'Journal','s15 w6') + T(728,490,'SQLITE · ONE PER PROJECT','cap','end');
+  m += `<g id="log" class="lg"></g>`;
+
+  // Workspace lanes
+  [['api',62,284],['ios',358,290]].forEach(([r,y0,h]) => {
+    m += panel(784,y0,320,h,'lane-'+r);
+    m += T(800,y0+28,'orbit-'+r,'s15 w6') + T(1088,y0+28,'REPO LANE','cap','end');
+    m += `<g id="wt-${r}" class="wt ghost"><rect x="800" y="${y0+40}" width="288" height="28" rx="8"/><text id="wtT-${r}" class="mono s11" x="812" y="${y0+58}"><tspan class="muted">worktree</tspan><tspan dx="8">yh-saved-searches</tspan></text></g>`;
+    m += `<text id="laneCard-${r}" class="s13" x="800" y="${y0+96}"><tspan class="muted">No Card running</tspan></text>`;
+    m += `<text id="laneMeta-${r}" class="mono s105 muted" x="800" y="${y0+116}"></text>`;
+    const ny = y0 + 128;
+    NODES.forEach(([n,label],i) => {
+      const x = 800 + i*76;
+      m += `<g id="p-${r}-${n}" class="node"><rect x="${x}" y="${ny}" width="60" height="44" rx="9"/><text x="${x+30}" y="${ny+27}">${label}</text></g>`;
+      if (i < 3) m += `<line class="flow" x1="${x+62}" y1="${ny+22}" x2="${x+73}" y2="${ny+22}" marker-end="url(#arr)"/>`;
+    });
+    m += `<path id="loop-${r}" class="loop" d="M982 ${ny+46} C982 ${ny+76} 906 ${ny+76} 906 ${ny+48}" marker-end="url(#arr)"/><text class="loopt mono s105" x="944" y="${ny+84}" text-anchor="middle">Round</text>`;
+    m += `<g id="queue-${r}" class="ghost">${T(800,y0+232,'CARDS IN THIS LANE','cap')}`;
+    CARDS.filter(c => c.repo === r).forEach((c,j) => {
+      m += `<g id="q-${c.k}" class="qchip st-todo"><circle cx="${806+j*110}" cy="${y0+258}" r="4.5"/><text x="${818+j*110}" y="${y0+262}">${c.id}</text></g>`;
+    });
+    m += `</g>`;
+  });
+
+  // Dispatch
+  m += panel(1144,62,272,278,'dispatch');
+  CLIS.forEach(c => {
+    m += `<g id="cli-${c.k}" class="cli"><rect x="1160" y="${c.y}" width="240" height="76" rx="10"/>${T(1176,c.y+30,c.name,'s15 w6')}${T(1386,c.y+30,'PROBED','cap','end')}<text id="cliPass-${c.k}" class="pass mono s11" x="1176" y="${c.y+56}">idle</text></g>`;
+  });
+  // Publication
+  m += panel(1144,412,272,236,'pub');
+  [['api',428,'#418'],['ios',514,'#97']].forEach(([r,y,n]) => {
+    m += `<g id="gh-${r}"><rect class="item" x="1160" y="${y}" width="240" height="76" rx="10"/>${T(1176,y+24,'orbit-'+r,'s13 w6')}<text id="ghb-${r}" class="mono s11 g ghost" x="1176" y="${y+45}">pushed  yh-saved-searches</text><text id="ghp-${r}" class="mono s11 y ghost" x="1176" y="${y+65}">PR ${n} · open, ready for you</text></g>`;
+  });
+  m += `<g id="ghMain"><text class="mono s11 muted" x="1176" y="622">main</text><text class="s12 muted" x="1386" y="622" text-anchor="end">merging is yours</text></g>`;
+
+  // App
+  m += panel(24,668,1392,172,'app');
+  m += T(44,698,'THE APP','port') + T(44,724,'Yellowhammer.app','s16 w6');
+  m += T(44,748,'A window, not a daemon.','s12 muted') + T(44,766,'Opens each Journal read-only.','s12 muted') + T(44,784,'Writes nothing. Schedules nothing.','s12 muted');
+  m += `<text id="appStatus" class="mono s105 muted" x="44" y="818">not running · the Night doesn't need it</text>`;
+  m += `<g id="appWin"><rect class="win" x="340" y="684" width="1060" height="140" rx="10"/>`
+    + `<circle class="dot" cx="357" cy="698" r="4"/><circle class="dot" cx="371" cy="698" r="4"/><circle class="dot" cx="385" cy="698" r="4"/>`
+    + `<line class="sep" x1="340" y1="712" x2="1400" y2="712"/><rect class="side" x="341" y="713" width="159" height="110"/>`
+    + `<line class="sep" x1="500" y1="712" x2="500" y2="824"/><line class="sep" x1="1160" y1="712" x2="1160" y2="824"/>`
+    + T(354,734,'PROJECTS','cap') + `<rect class="sel" x="348" y="744" width="144" height="24" rx="6"/>` + T(360,761,'orbit','s13 w6') + T(360,791,'harbor','s13 muted')
+    + T(518,734,'PULSE · ORBIT ONLY','cap') + `<text id="appVerdict" class="s15 w6 muted" x="518" y="758">Last Night: 2026-10-20</text>`;
+  ['Cards Done','Attempts','Pull requests','Waiting on you'].forEach((l,i) => {
+    const x = 518 + i*158;
+    m += `<rect class="tile" x="${x}" y="772" width="146" height="44" rx="8"/>${T(x+12,789,l,'s11 muted')}<text id="tileV-${i}" class="mono s15" x="${x+12}" y="809">–</text>`;
+  });
+  m += T(1176,734,'INSPECTOR','cap') + T(1176,758,'Health','s13 w6') + `<text id="appHealth" class="s12 muted" x="1176" y="778">–</text>` + T(1176,806,'next Night 01:00','mono s11 muted') + `</g>`;
+
+  m += `<g id="pk"></g>`;
+  return m;
+}
+
+/* ---------- state helpers ---------- */
+let LIVE = true, T0 = 0, LOG = [], PK = [], CLOCK = '01:00';
+const show = id => { const e = $(id); if (e) e.classList.remove('ghost'); };
+const setText = (id,t) => { const e = $(id); if (e) e.textContent = t; };
+function setPill(id, st){ const g = $(id); if (!g) return; g.setAttribute('class','pill st-'+st); g.querySelector('text').textContent = STATE_LABEL[st]; }
+function card(k, st){ show('card-'+k); setPill('cardpill-'+k, st); const q = $('q-'+k); if (q) q.setAttribute('class','qchip st-'+st); }
+function laOn(a){ ['author','build','land'].forEach(x => $('la-'+x).setAttribute('class', x===a ? 'row on' : 'row')); }
+function laOff(){ laOn(null); }
+function setProc(a){
+  const c = $('procCmd'); c.textContent = `$ yh ${a} --project orbit`; c.setAttribute('class','mono s13');
+  $('plist').setAttribute('class','');
+  PROC[a].forEach((s,i) => { setText('piT-'+i, s); $('pi-'+i).setAttribute('class','pi'); });
+}
+function procItem(i, st){ $('pi-'+i).setAttribute('class','pi '+st); }
+function procIdle(){ const c = $('procCmd'); c.textContent = 'process exited'; c.setAttribute('class','mono s13 muted'); $('plist').setAttribute('class','dim'); }
+function laneCard(r, k){
+  const e = $('laneCard-'+r);
+  if (!k){ e.innerHTML = `<tspan class="muted">Lane finished</tspan>`; return; }
+  const c = BYK[k]; e.innerHTML = `<tspan class="lc-id">${c.id}</tspan><tspan dx="8">${esc(c.title)}</tspan>`;
+}
+const meta = (r,t) => setText('laneMeta-'+r, t);
+function pass(r, n, st){ $(`p-${r}-${n}`).setAttribute('class','node'+(st && st!=='idle' ? ' '+st : '')); }
+function passReset(r){ NODES.forEach(([n]) => pass(r,n,'idle')); }
+function loop(r, on){ $('loop-'+r).setAttribute('class', on ? 'loop on' : 'loop'); }
+function cli(k, text, fail){
+  const g = $('cli-'+k);
+  g.setAttribute('class','cli' + (text ? (fail ? ' fail' : ' active') : ''));
+  setText('cliPass-'+k, text || 'idle');
+}
+function releaseWt(r){ const g = $('wt-'+r); g.setAttribute('class','wt released'); $('wtT-'+r).innerHTML = `<tspan>worktree released</tspan>`; }
+
+function tone(kind, detail){
+  if (/^Act/.test(kind)) return 'act';
+  if (/fail|route failure/.test(detail) || /fail/.test(kind)) return 'bad';
+  if (/approved|passed|clean|met|landed|released|done|sync/.test(detail) || kind==='push' || kind==='pull-request') return 'ok';
+  if (/outbox|delta-read|night-opened|archive/.test(kind)) return 'ch';
+  return '';
+}
+function log(kind, detail){
+  LOG.push({t:CLOCK, kind, detail, tone:tone(kind, detail)});
+  if (LOG.length > 6) LOG.shift();
+  renderLog(true);
+}
+function renderLog(fresh){
+  const g = $('log'); if (!g) return;
+  if (!LOG.length){ g.innerHTML = T(400,520,'empty until an Act runs','mono s11 t'); return; }
+  g.innerHTML = LOG.map((l,i) => {
+    const y = 516 + i*21, f = fresh && LIVE && i === LOG.length-1 ? ' fresh' : '';
+    return `<g class="${f.trim()}"><text class="mono s11 t" x="400" y="${y}">${l.t}</text><text class="mono s11 k ${l.tone}" x="446" y="${y}">${esc(l.kind)}</text><text class="mono s11 d" x="728" y="${y}" text-anchor="end">${esc(l.detail)}</text></g>`;
+  }).join('');
+}
+
+/* packets: a glowing dot travelling along a cubic between two anchors */
+function anchor(spec){
+  const [id, s='c'] = spec.split(':'); const b = $(id).getBBox();
+  const x = s==='l' ? b.x : s==='r' ? b.x+b.width : b.x+b.width/2;
+  const y = s==='t' ? b.y : s==='b' ? b.y+b.height : b.y+b.height/2;
+  return {x, y, s};
+}
+function ctrl(p, k){ const d = {l:[-1,0], r:[1,0], t:[0,-1], b:[0,1], c:[0,0]}[p.s]; return `${(p.x+d[0]*k).toFixed(1)} ${(p.y+d[1]*k).toFixed(1)}`; }
+function pkt(a, b, color='var(--yellow)', dur=950){
+  if (!LIVE || reduce) return;
+  const p = anchor(a), q = anchor(b);
+  const k = Math.max(46, Math.hypot(q.x-p.x, q.y-p.y) * 0.38);
+  const NS = 'http://www.w3.org/2000/svg', layer = $('pk');
+  const path = document.createElementNS(NS,'path');
+  path.setAttribute('d', `M${p.x} ${p.y} C${ctrl(p,k)} ${ctrl(q,k)} ${q.x} ${q.y}`);
+  path.setAttribute('fill','none'); path.setAttribute('stroke-width','1.3'); path.setAttribute('stroke-dasharray','2 5');
+  path.style.stroke = color; path.style.opacity = '.55';
+  const dot = document.createElementNS(NS,'circle');
+  dot.setAttribute('r','4.6'); dot.setAttribute('filter','url(#glow)'); dot.style.fill = color;
+  dot.setAttribute('cx', p.x); dot.setAttribute('cy', p.y);
+  layer.append(path, dot);
+  PK.push({path, dot, len:path.getTotalLength(), start:T0, dur});
+}
+const ease = t => t<.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2;
+function updatePackets(){
+  PK = PK.filter(o => {
+    const pr = (T0 - o.start) / o.dur;
+    if (pr >= 1.35){ o.path.remove(); o.dot.remove(); return false; }
+    const pt = o.path.getPointAtLength(o.len * ease(Math.min(Math.max(pr,0),1)));
+    o.dot.setAttribute('cx', pt.x); o.dot.setAttribute('cy', pt.y);
+    if (pr > 1){ const f = 1 - (pr-1)/.35; o.path.style.opacity = (.55*f).toFixed(2); o.dot.style.opacity = f.toFixed(2); }
+    return true;
+  });
+}
+
+function appOpen(){ $('appWin').setAttribute('class','on'); setText('appStatus','open · reading the Journal'); $('appStatus').setAttribute('class','mono s105 y'); }
+function appFill(){
+  const v = $('appVerdict'); v.textContent = 'Night 2026-10-21 · ORB-212 Saved searches landed'; v.setAttribute('class','s15 w6');
+  ['4 / 4','5','2','0'].forEach((t,i) => setText('tileV-'+i, t));
+  const h = $('appHealth'); h.textContent = 'all checks pass'; h.setAttribute('class','s12 g');
+}
+
+/* ---------- script ---------- */
+const S = (act, clock, title, text, dur, ev) => ({act, clock, title, text, dur, ev});
+const both = (fn) => { fn('api'); fn('ios'); };
+const STEPS = [
+  S('author','01:00','launchd fires the author Act',
+    'Every Act is a short-lived `yh` process that launchd starts on schedule, scoped to exactly one Project. It opens the Night Card on the Linear board first. The app isn\'t running, and the Night doesn\'t need it.', 4400, [
+    [0,    () => { laOn('author'); pkt('la-author:b','proc:t'); }],
+    [700,  () => { setProc('author'); procItem(0,'active'); log('ActStarted','author'); }],
+    [1600, () => { show('nightcard'); pkt('proc:l','nightcard:r','var(--chestnut)'); log('night-opened','2026-10-21'); procItem(0,'done'); }],
+  ]),
+  S('author','01:00','Read the board before deciding anything',
+    'A Delta Read pulls what changed in Linear since the last cursor: replies, edits, cancellations. Linear owns intent. The Journal, one SQLite file per Project, owns loop state.', 3800, [
+    [0,    () => { procItem(1,'active'); pkt('nightcard:r','proc:l','var(--chestnut)'); }],
+    [1500, () => { log('delta-read','complete'); procItem(1,'done'); }],
+  ]),
+  S('author','01:01','Predecessor gate',
+    'A Project has at most one Feature in flight. Authoring starts only after the previous Feature has landed in every one of the Project\'s repositories.', 3400, [
+    [0,    () => procItem(2,'active')],
+    [1300, () => { log('predecessor-gate','landed'); procItem(2,'done'); }],
+  ]),
+  S('author','01:01','Select the next Feature',
+    'An agent CLI reads the spec and the repositories and chooses one Feature. The engine validates that choice against the Project\'s own configuration before recording it.', 4800, [
+    [0,    () => procItem(3,'active')],
+    [400,  () => { cli('claude','selecting · ORB-212'); pkt('proc:r','cli-claude:l'); }],
+    [2300, () => pkt('cli-claude:l','proc:r')],
+    [3200, () => { cli('claude',null); show('feat'); setPill('featpill','todo'); pkt('proc:l','feat:r','var(--chestnut)'); log('feature-selected','ORB-212'); procItem(3,'done'); }],
+  ]),
+  S('author','01:03','A Cycle of Cards',
+    'Each Card belongs to one repository and carries an Architectural Brief and a Definition of Done whose clauses cite the spec. Cards never link to each other; their order in a repo is just position. Board writes go through an Outbox, so nothing lands half-done.', 6000, [
+    [0, () => { procItem(4,'active'); show('cycText'); }],
+    ...CARDS.map((c,i) => [500 + i*850, () => { card(c.k,'todo'); pkt('proc:l','card-'+c.k+':r','var(--chestnut)'); log('outbox', c.id+' delivered'); }]),
+  ]),
+  S('author','01:04','The process exits',
+    'Nothing stays resident: no daemon, no timer, no cache. Whatever must outlive this run is already in the Journal.', 3200, [
+    [0,    () => { procItem(4,'done'); procItem(5,'active'); }],
+    [900,  () => { procItem(5,'done'); log('ActEnded','author'); }],
+    [1800, () => { procIdle(); laOff(); }],
+  ]),
+
+  S('build','01:30','launchd fires the build Act',
+    'It reclaims Card Leases that a crashed or sleeping run left behind, reconciles Worktrees, and reads the board again before touching anything.', 4800, [
+    [0,    () => { laOn('build'); pkt('la-build:b','proc:t'); }],
+    [700,  () => { setProc('build'); procItem(0,'active'); log('ActStarted','build'); }],
+    [1600, () => { log('lease-sweep','0 expired'); procItem(0,'done'); procItem(1,'active'); }],
+    [2500, () => { procItem(1,'done'); procItem(2,'active'); pkt('feat:r','proc:l','var(--chestnut)'); }],
+    [3700, () => { log('delta-read','complete'); procItem(2,'done'); }],
+  ]),
+  S('build','01:31','One Repo Lane per repository',
+    'Orca ADE gives each lane one Worktree on the Feature Branch. Lanes run in parallel; inside a lane, Cards run one at a time in authored order.', 4400, [
+    [0,    () => { procItem(3,'active'); pkt('proc:r','lane-api:l'); pkt('proc:r','lane-ios:l'); }],
+    [1000, () => { both(r => { show('wt-'+r); show('queue-'+r); }); log('worktree','orbit-api'); log('worktree','orbit-ios'); }],
+    [1900, () => procItem(3,'done')],
+  ]),
+  S('build','01:31','Claim the Lease, pick a Route',
+    'A Card Lease guarantees one run per Card, and it is revalidated before every write. Routing picks which agent CLI and model take the Card, and the run records Attempt 1.', 4600, [
+    [0,    () => { procItem(4,'active'); laneCard('api','213'); laneCard('ios','215'); meta('api','Attempt 1 · Claude Code · Round 1'); meta('ios','Attempt 1 · Codex · Round 1'); }],
+    [600,  () => { card('213','prog'); card('215','prog'); pkt('proc:l','card-213:r','var(--chestnut)'); pkt('proc:l','card-215:r','var(--chestnut)'); log('lease-claimed','ORB-213'); log('lease-claimed','ORB-215'); }],
+    [2000, () => { log('attempt-started','#1 claude-code'); log('attempt-started','#1 codex'); }],
+  ]),
+  S('build','01:32','Architect, then worker',
+    'The architect pass plans from the Card\'s brief. The worker pass edits code inside the lane\'s Worktree. Yellowhammer itself never writes a line of code.', 5400, [
+    [0,    () => { both(r => pass(r,'architect','run')); cli('claude','architect · ORB-213'); cli('codex','architect · ORB-215'); pkt('p-api-architect:t','cli-claude:l'); pkt('p-ios-architect:t','cli-codex:l'); }],
+    [1700, () => { both(r => { pass(r,'architect','ok'); pass(r,'worker','run'); }); cli('claude','worker · ORB-213'); cli('codex','worker · ORB-215'); pkt('cli-claude:l','p-api-worker:t'); pkt('cli-codex:l','p-ios-worker:t'); }],
+    [3900, () => { both(r => pass(r,'worker','ok')); cli('claude',null); cli('codex',null); log('worker','ORB-213 done'); log('worker','ORB-215 done'); }],
+  ]),
+  S('build','01:58','The engine runs the Check',
+    'When the repo\'s own Check goes red, the same worker gets another Round in the same Worktree, with the failure attached. A Round is not a new Attempt. The reviewer never sees red code.', 6600, [
+    [0,    () => { both(r => pass(r,'check','run')); }],
+    [1000, () => { pass('api','check','ok'); pass('ios','check','bad'); log('check','ORB-213 passed'); log('check','ORB-215 failed'); }],
+    [1900, () => { loop('ios',true); meta('ios','Attempt 1 · Codex · Round 2'); pass('ios','worker','run'); pass('ios','check','idle'); cli('codex','worker · ORB-215 · round 2'); pkt('cli-codex:l','p-ios-worker:t'); }],
+    [3900, () => { pass('ios','worker','ok'); pass('ios','check','run'); loop('ios',false); cli('codex',null); }],
+    [4900, () => { pass('ios','check','ok'); log('check','ORB-215 passed'); }],
+  ]),
+  S('build','02:16','Reviewer approves',
+    'Approved work is committed on the Feature Branch, the Card moves to Done, and its Lease is released. A reviewer asking for changes would start another Round instead.', 5200, [
+    [0,    () => { both(r => pass(r,'reviewer','run')); cli('claude','reviewer · ORB-213'); cli('codex','reviewer · ORB-215'); pkt('cli-claude:l','p-api-reviewer:t'); pkt('cli-codex:l','p-ios-reviewer:t'); }],
+    [1900, () => { both(r => pass(r,'reviewer','ok')); cli('claude',null); cli('codex',null); log('reviewer','ORB-213 approved'); log('reviewer','ORB-215 approved'); }],
+    [2800, () => { card('213','done'); card('215','done'); pkt('proc:l','card-213:r','var(--ok)'); pkt('proc:l','card-215:r','var(--ok)'); log('lease-released','ORB-213'); log('lease-released','ORB-215'); }],
+  ]),
+  S('build','02:20','A hard failure ends the Attempt',
+    'When a CLI crashes or hits a usage limit, the Attempt ends and a fresh one starts on a different Route, from the architect again. If the Attempt budget runs out, the Card goes Blocked and waits for you in Linear.', 7200, [
+    [0,    () => { both(passReset); laneCard('api','214'); laneCard('ios','216'); meta('api','Attempt 1 · Antigravity · Round 1'); meta('ios','Attempt 1 · Codex · Round 1'); card('214','prog'); card('216','prog'); log('attempt-started','#1 antigravity'); log('attempt-started','#1 codex'); }],
+    [700,  () => { both(r => pass(r,'architect','run')); cli('anti','architect · ORB-214'); cli('codex','architect · ORB-216'); pkt('p-api-architect:t','cli-anti:l'); pkt('p-ios-architect:t','cli-codex:l'); }],
+    [1900, () => { both(r => { pass(r,'architect','ok'); pass(r,'worker','run'); }); cli('anti','worker · ORB-214'); cli('codex','worker · ORB-216'); pkt('cli-anti:l','p-api-worker:t'); pkt('cli-codex:l','p-ios-worker:t'); }],
+    [3300, () => { pass('api','worker','bad'); cli('anti','exited: usage limit', true); log('attempt-ended','#1 route failure'); pass('ios','worker','ok'); pass('ios','check','run'); }],
+    [4300, () => { pass('ios','check','ok'); pass('ios','reviewer','run'); cli('codex','reviewer · ORB-216'); }],
+    [4900, () => { cli('anti',null); passReset('api'); meta('api','Attempt 2 · Claude Code · Round 1'); log('attempt-started','#2 claude-code'); pass('api','architect','run'); cli('claude','architect · ORB-214'); pkt('p-api-architect:t','cli-claude:l'); }],
+    [6200, () => { pass('ios','reviewer','ok'); card('216','done'); cli('codex',null); log('reviewer','ORB-216 approved'); }],
+  ]),
+  S('build','03:05','Attempt 2 finishes the lane',
+    'Same Card, new Route, clean run. Every Card is now Done, and nothing has left this machine yet. Pushing is the land Act\'s job.', 5600, [
+    [0,    () => { pass('api','architect','ok'); pass('api','worker','run'); cli('claude','worker · ORB-214'); pkt('cli-claude:l','p-api-worker:t'); laneCard('ios',null); meta('ios',''); passReset('ios'); }],
+    [1500, () => { pass('api','worker','ok'); pass('api','check','run'); cli('claude',null); }],
+    [2500, () => { pass('api','check','ok'); pass('api','reviewer','run'); cli('claude','reviewer · ORB-214'); log('check','ORB-214 passed'); }],
+    [3800, () => { pass('api','reviewer','ok'); card('214','done'); cli('claude',null); log('reviewer','ORB-214 approved'); pkt('proc:l','card-214:r','var(--ok)'); }],
+  ]),
+  S('build','03:12','Write-back',
+    'Pending board writes are delivered from the Outbox. The Act ends and the process exits.', 3400, [
+    [0,    () => { procItem(4,'done'); procItem(5,'active'); pkt('proc:l','feat:r','var(--chestnut)'); laneCard('api',null); meta('api',''); passReset('api'); }],
+    [1200, () => { log('outbox','board in sync'); procItem(5,'done'); log('ActEnded','build'); }],
+    [2200, () => { procIdle(); laOff(); }],
+  ]),
+
+  S('land','05:30','launchd fires the land Act',
+    'With every Card finished, each lane first runs a merge test against main in local git. A rehearsal Night runs this step too.', 4800, [
+    [0,    () => { laOn('land'); pkt('la-land:b','proc:t'); }],
+    [700,  () => { setProc('land'); procItem(0,'active'); log('ActStarted','land'); pkt('proc:r','wt-api:l'); pkt('proc:r','wt-ios:l'); }],
+    [2100, () => { log('merge-test','orbit-api clean'); log('merge-test','orbit-ios clean'); procItem(0,'done'); }],
+  ]),
+  S('land','05:31','Push the Feature Branches',
+    'Branches go to GitHub. A refused push, from branch protection or missing credentials, is recorded as outstanding, and the next land firing resumes it.', 4200, [
+    [0,    () => { procItem(1,'active'); pkt('wt-api:r','gh-api:l','var(--ok)'); pkt('wt-ios:r','gh-ios:l','var(--ok)'); }],
+    [1200, () => { show('ghb-api'); show('ghb-ios'); log('push','orbit-api'); log('push','orbit-ios'); procItem(1,'done'); }],
+  ]),
+  S('land','05:32','Verify the Definition of Done',
+    'A verifier pass checks every clause before any pull request exists, because each PR body is written once and carries the clause report.', 5000, [
+    [0,    () => { procItem(2,'active'); cli('claude','verifier · ORB-212'); pkt('proc:r','cli-claude:l'); }],
+    [2400, () => pkt('cli-claude:l','proc:r')],
+    [3400, () => { cli('claude',null); show('featDod'); log('verification','6 of 6 clauses met'); procItem(2,'done'); }],
+  ]),
+  S('land','05:41','Open pull requests, release Worktrees',
+    'One pull request per repository. Then the Worktrees go back to Orca ADE.', 4600, [
+    [0,    () => { procItem(3,'active'); pkt('proc:r','gh-api:l','var(--ok)'); pkt('proc:r','gh-ios:l','var(--ok)'); }],
+    [1100, () => { show('ghp-api'); show('ghp-ios'); log('pull-request','orbit-api #418'); log('pull-request','orbit-ios #97'); procItem(3,'done'); procItem(4,'active'); }],
+    [2600, () => { releaseWt('api'); releaseWt('ios'); log('release-worktree','orbit-api'); log('release-worktree','orbit-ios'); procItem(4,'done'); }],
+  ]),
+  S('land','05:42','Archive the Cycle',
+    'The Feature is Done and its Cycle archived. Yellowhammer never merges to main; the pull requests wait for you.', 4600, [
+    [0,    () => { procItem(5,'active'); pkt('proc:l','feat:r','var(--chestnut)'); }],
+    [900,  () => { setPill('featpill','done'); setText('cycText','CYCLE · ARCHIVED'); setText('nightNote','landed'); log('archive-cycle','ORB-212'); procItem(5,'done'); $('ghMain').setAttribute('class','hl'); }],
+    [2000, () => log('ActEnded','land')],
+    [2800, () => { procIdle(); laOff(); }],
+  ]),
+
+  S('morning','08:10','Morning: open the app',
+    'The app opens each Project\'s Journal read-only and shows its Pulse: what landed, what is waiting on you, and Health. It makes no decisions. Those happen in Linear and on GitHub.', 9000, [
+    [0,   () => { appOpen(); pkt('journal:b','appWin:t'); }],
+    [900, () => appFill()],
+  ]),
+];
+
+const ACT_LABEL = {author:'yh author', build:'yh build', land:'yh land', morning:'morning'};
+const START = []; let TOTAL = 0;
+STEPS.forEach(s => { START.push(TOTAL); TOTAL += s.dur; });
+const EVENTS = [];
+STEPS.forEach((s,i) => s.ev.forEach(([t,fn]) => EVENTS.push({t:START[i]+t, fn, i})));
+EVENTS.sort((a,b) => a.t - b.t);
+
+/* ---------- timeline UI ---------- */
+const tl = $('timeline'); const segs = [];
+['author','build','land','morning'].forEach(act => {
+  const idx = STEPS.map((s,i) => s.act===act ? i : -1).filter(i => i>=0);
+  const g = document.createElement('div'); g.className = 'tg'; g.dataset.act = act;
+  g.style.flex = idx.reduce((a,i) => a + STEPS[i].dur, 0) + ' 1 0';
+  g.innerHTML = `<span class="lbl">${ACT_LABEL[act]}</span><div class="segs"></div>`;
+  const box = g.querySelector('.segs');
+  idx.forEach(i => {
+    const b = document.createElement('button');
+    b.className = 'seg'; b.style.flex = STEPS[i].dur + ' 1 0';
+    b.title = `${i+1}. ${STEPS[i].title}`; b.setAttribute('aria-label', `Step ${i+1}: ${STEPS[i].title}`);
+    b.innerHTML = '<span class="fill"></span>';
+    b.addEventListener('click', () => { seek(i); });
+    box.append(b); segs[i] = b;
+  });
+  tl.append(g);
+});
+
+/* ---------- engine ---------- */
+let ei = 0, cur = -1, playing = !reduce, speed = 1, last = performance.now();
+function reset(){ svg.innerHTML = build(); LOG = []; PK = []; renderLog(false); ei = 0; cur = -1; }
+function stepAt(t){ let k = 0; for (let i=0;i<START.length;i++) if (START[i] <= t) k = i; return k; }
+function fire(live){
+  LIVE = live;
+  while (ei < EVENTS.length && (live ? EVENTS[ei].t <= T0 : EVENTS[ei].t < T0)){
+    CLOCK = STEPS[EVENTS[ei].i].clock; EVENTS[ei].fn(); ei++;
+  }
+  LIVE = true;
+}
+function seek(k){
+  reset(); T0 = START[k]; fire(false); updateUI(true);
+}
+function updateUI(force){
+  const k = stepAt(T0);
+  if (k !== cur || force){
+    cur = k; const s = STEPS[k];
+    $('capAct').textContent = ACT_LABEL[s.act];
+    $('capStep').textContent = `Step ${k+1} of ${STEPS.length}`;
+    $('capTitle').textContent = s.title;
+    $('capText').innerHTML = fmt(s.text);
+    $('clock').textContent = s.clock;
+    $('actChip').innerHTML = `<b>${ACT_LABEL[s.act]}</b>`;
+    document.querySelectorAll('.tg').forEach(g => g.classList.toggle('on', g.dataset.act === s.act));
+    segs.forEach((b,i) => { b.classList.toggle('past', i < k); b.querySelector('.fill').style.width = i < k ? '' : '0'; b.toggleAttribute('aria-current', i === k); });
+  }
+  const pct = Math.min(100, (T0 - START[k]) / STEPS[k].dur * 100);
+  segs[k].querySelector('.fill').style.width = pct.toFixed(1) + '%';
+}
+function tick(now){
+  const dt = Math.min(now - last, 100); last = now;
+  if (playing){
+    T0 += dt * speed;
+    if (T0 >= TOTAL){ seek(0); }
+    else fire(true);
+  }
+  updatePackets(); updateUI(false);
+  requestAnimationFrame(tick);
+}
+
+/* ---------- controls ---------- */
+const playBtn = $('play');
+const setPlaying = p => { playing = p; playBtn.textContent = p ? 'Pause' : 'Play'; };
+playBtn.addEventListener('click', () => setPlaying(!playing));
+$('prev').addEventListener('click', () => seek(Math.max(0, cur - 1)));
+$('next').addEventListener('click', () => seek(Math.min(STEPS.length - 1, cur + 1)));
+$('restart').addEventListener('click', () => { seek(0); setPlaying(true); });
+$('speed').addEventListener('change', e => { speed = parseFloat(e.target.value) || 1; });
+const setRec = on => { document.body.classList.toggle('record', on); $('rec').textContent = on ? 'Exit recording view' : 'Recording view'; };
+$('rec').addEventListener('click', () => setRec(!document.body.classList.contains('record')));
+$('exitrec').addEventListener('click', () => setRec(false));
+document.addEventListener('keydown', e => {
+  const tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'select' || tag === 'input') return;
+  if (e.key === ' ' && tag !== 'button'){ e.preventDefault(); setPlaying(!playing); }
+  else if (e.key === 'ArrowRight'){ seek(Math.min(STEPS.length - 1, cur + 1)); }
+  else if (e.key === 'ArrowLeft'){ seek(Math.max(0, cur - 1)); }
+  else if (e.key === 'Escape'){ setRec(false); }
+});
+if (location.hash === '#record') setRec(true);
+
+if (reduce){ seek(STEPS.length - 1); T0 = TOTAL - 1; fire(false); updateUI(true); }
+else seek(0);
+setPlaying(playing);
+requestAnimationFrame(t => { last = t; tick(t); });
+})();
+</script>
+
+</body></html>

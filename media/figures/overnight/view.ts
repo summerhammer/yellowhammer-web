@@ -4,7 +4,7 @@ import {
 	iso,
 	type Plan,
 	type Point3,
-} from "../iso/iso-kit";
+} from "../../kit/iso/iso-kit";
 import { CARD_COUNT, type Layout, type Stations } from "./shift";
 
 export const WIDTH = 600;

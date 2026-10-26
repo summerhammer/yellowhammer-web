@@ -16,7 +16,7 @@ import {
 	sideArc,
 	sideSeam,
 	slabOf,
-} from "../iso/iso-kit";
+} from "../../kit/iso/iso-kit";
 import {
 	ARM_H,
 	ARM_Y1,

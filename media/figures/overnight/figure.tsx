@@ -1,4 +1,4 @@
-import { Plate } from "../iso/react/draw";
+import { Plate } from "../../kit/iso/react/draw";
 import { OvernightArt } from "./art";
 import {
 	BLOCKED,
