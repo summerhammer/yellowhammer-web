@@ -3,9 +3,16 @@ name: Deploy
 on:
   push:
     branches: [main]
+  # Pushes made by the fast-forward bot use GITHUB_TOKEN, which never
+  # triggers `push` workflows, so deploy when that workflow finishes instead.
+  workflow_run:
+    workflows: ["Fast-forward merge"]
+    types: [completed]
+  workflow_dispatch:
 
 jobs:
   deploy-relay:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -34,6 +41,7 @@ jobs:
           command: deploy
 
   deploy-landing:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
