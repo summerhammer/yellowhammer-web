@@ -2,11 +2,16 @@
 import { site } from "../content/site";
 import DownloadButton from "./DownloadButton.astro";
 
+/*
+ * Appearance: a sun / auto / moon segmented control. Each radio sets `color-scheme` on :root through
+ * `:has()` in global.css, so the ids are load-bearing. Icon paths are drawn on a 16-unit grid like
+ * the download glyph; `half` fills the left half of the auto circle.
+ */
 const schemes = [
-	{ id: "scheme-system", label: "System", checked: true },
-	{ id: "scheme-light", label: "Light", checked: false },
-	{ id: "scheme-dark", label: "Dark", checked: false },
-];
+	{ id: "scheme-light", label: "Light", icon: "sun", checked: false },
+	{ id: "scheme-system", label: "System", icon: "auto", checked: true },
+	{ id: "scheme-dark", label: "Dark", icon: "moon", checked: false },
+] as const;
 ---
 
 <footer>
@@ -33,11 +38,12 @@ const schemes = [
 				</ul>
 				<p class="footer-legal">
 					Yellowhammer is open source under the{" "}
-					<a class="footer-inline" href={site.repo}>{site.licence}</a>. {site.copyright}
+					<a class="footer-inline" href={site.repo}>{site.licence}</a>. ©{" "}
+					<a class="footer-inline" href={site.companyUrl}>{site.company}</a>
 				</p>
 			</div>
 			<fieldset class="scheme">
-				<legend>Appearance</legend>
+				<legend class="sr-only">Appearance</legend>
 				<div class="scheme-options">
 					{
 						schemes.map((scheme) => (
@@ -49,8 +55,25 @@ const schemes = [
 									id={scheme.id}
 									checked={scheme.checked}
 								/>
-								<label class="scheme-option" for={scheme.id}>
-									{scheme.label}
+								<label class="scheme-option" for={scheme.id} title={scheme.label}>
+									<svg class="scheme-glyph" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+										{scheme.icon === "sun" && (
+											<>
+												<circle cx="8" cy="8" r="2.75" />
+												<path d="M8 1.5v1.25M8 13.25v1.25M1.5 8h1.25M13.25 8h1.25M3.4 3.4l.9.9M11.7 11.7l.9.9M3.4 12.6l.9-.9M11.7 4.3l.9-.9" />
+											</>
+										)}
+										{scheme.icon === "auto" && (
+											<>
+												<circle cx="8" cy="8" r="5.75" />
+												<path d="M8 2.25a5.75 5.75 0 0 0 0 11.5z" fill="currentColor" stroke="none" />
+											</>
+										)}
+										{scheme.icon === "moon" && (
+											<path d="M13.25 9.6A5.75 5.75 0 1 1 6.4 2.75a4.5 4.5 0 0 0 6.85 6.85z" />
+										)}
+									</svg>
+									<span class="sr-only">{scheme.label}</span>
 								</label>
 							</>
 						))

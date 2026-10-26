@@ -9,5 +9,6 @@ export const site = {
 	requires: "Requires macOS 26",
 	trust: "Your code, credentials and models stay on your Mac.",
 	licence: "MIT licence",
-	copyright: "© Summer Hammer, LLC",
+	company: "Summer Hammer, LLC",
+	companyUrl: "https://summerhammer.dev",
 } as const;

@@ -295,14 +295,6 @@
 	}
 }
 
-.hero-icon {
-	display: block;
-	width: 6rem;
-	height: 6rem;
-	margin: 0 auto 1.5rem;
-	filter: drop-shadow(0 6px 14px var(--color-shadow-soft));
-}
-
 .hero-title {
 	text-wrap: balance;
 	margin: 0.75rem 0 0;
@@ -837,8 +829,12 @@
 	background: var(--color-line-strong);
 }
 
+/* Above both rails (::before, and the scroll fill ::after, which paints last): each stop's marker
+ * sits on the line, not under it. A z-index here also holds while the scroll animation gives the
+ * stop a stacking context of its own. */
 .night-stop {
 	position: relative;
+	z-index: 1;
 	display: grid;
 	grid-template-columns: minmax(0, 1fr);
 	gap: 1.5rem;
@@ -1135,48 +1131,51 @@
 	padding: 0;
 	border: 0;
 	min-inline-size: 0;
-	display: flex;
-	align-items: center;
-	flex-wrap: wrap;
-	gap: 0.5rem 0.75rem;
 }
 
-.scheme legend {
-	float: left;
-	padding: 0;
-	color: var(--color-ink-muted);
-	font-size: 0.9375rem;
-}
-
-/* Appearance: radios drawn as text links, styled like .footer-links. The current choice is muted
- * and not underlined, so the weight never changes and the row does not shift. */
+/* Appearance: three icon segments in one pill (sun, auto, moon). The checked segment is raised,
+ * like a macOS segmented control; each label carries its name for screen readers and as a tooltip. */
 .scheme-options {
-	display: flex;
-	gap: 1rem;
+	display: inline-flex;
+	gap: 0.125rem;
+	padding: 0.1875rem;
+	border-radius: var(--radius-pill);
+	background: var(--color-surface);
+	box-shadow: inset 0 0 0 1px var(--color-line);
 }
 
 .scheme-option {
-	color: var(--color-ink);
-	font-size: 0.9375rem;
-	text-decoration: underline;
-	text-decoration-color: var(--color-line);
-	text-decoration-thickness: 1px;
-	text-underline-offset: 0.18em;
+	display: inline-grid;
+	place-items: center;
+	width: 2rem;
+	height: 1.75rem;
+	border-radius: var(--radius-pill);
+	color: var(--color-ink-muted);
 	cursor: pointer;
+	transition:
+		background-color 150ms ease,
+		color 150ms ease;
 }
 
 .scheme-option:hover {
-	text-decoration-color: currentColor;
+	color: var(--color-ink);
+}
+
+.scheme-glyph {
+	width: 1rem;
+	height: 1rem;
 }
 
 .seg-input:checked + .scheme-option {
-	color: var(--color-ink-muted);
-	text-decoration: none;
+	background: var(--color-raised);
+	color: var(--color-ink);
+	box-shadow:
+		0 1px 2px var(--color-shadow-soft),
+		0 0 0 1px var(--color-line);
 	cursor: default;
 }
 
 .seg-input:focus-visible + .scheme-option {
 	outline: 2px solid var(--color-focus);
-	outline-offset: 3px;
-	border-radius: 4px;
+	outline-offset: 2px;
 }
