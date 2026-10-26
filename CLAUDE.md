@@ -90,6 +90,8 @@ commit HEAD; never edit the spec from here.
 - Landing install link: `https://github.com/summerhammer/yellowhammer/releases/latest/download/Yellowhammer.dmg`, an unversioned asset name. The app's release pipeline is being changed to publish it. Until then it 404s, which is expected. Don't link a versioned DMG or the releases page instead. The secondary link is the app repo, `https://github.com/summerhammer/yellowhammer` (MIT, open source). The app requires macOS 26.
 - PR previews: Landing only. Every same-repo PR gets a Pages preview deployment at `pr-<number>.yellowhammer-landing.pages.dev` (`.github/workflows/preview.yml`). The relay has no preview: one would share the production `SESSIONS` KV and its daily write quota.
 
+- Social accounts: the handle is `yellowhammerapp` on X, Bluesky, YouTube, Instagram and TikTok (registered 2026-10-26). The governing home is `$SPEC_DIR/docs/brand/channels.md`. Landing links to none of them: Messaging allows only the download and GitHub CTAs.
+
 - Distributed abuse exhausting the 1,000 KV writes/day across many IPs is an **accepted risk**. Per-IP limits only, and no storage change.
 
 ## Still open — raise them, do not invent them
