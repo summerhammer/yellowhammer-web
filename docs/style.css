@@ -12,12 +12,17 @@ html:root {
 html.dark {
 	--yh-ink: #f3efdf;
 	--yh-muted: #bdb8a2;
+	background-color: #1c1c1e;
 }
 
 body,
 #content,
 #header h1 {
 	color: var(--yh-ink);
+}
+
+html.dark body {
+	background-color: #1c1c1e;
 }
 
 #content {
@@ -48,7 +53,7 @@ body,
 }
 
 html.dark .yh-doc-outline {
-	background: color-mix(in srgb, #f6d916 10%, #222211);
+	background: color-mix(in srgb, #f6d916 10%, #1c1c1e);
 }
 
 .yh-doc-outline p,

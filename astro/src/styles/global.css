@@ -17,12 +17,12 @@
 	--font-sans: -apple-system, system-ui, sans-serif;
 	--font-mono: ui-monospace, Menlo, monospace;
 
-	/* Canvas and surfaces. The light canvas is lighter than the brand `background` (#FBF7EA), on
-	 * request; dark keeps the brand value. */
-	--color-bg: light-dark(#fdfbf5, #222211);
+	/* Canvas and surfaces. The canvas colours (light #FDFAF0, dark #1C1C1E) are set on request and
+	 * differ from the brand `background` (#FBF7EA). */
+	--color-bg: light-dark(#fdfaf0, #1c1c1e);
 	--color-raised: light-dark(#ffffff, #313120);
 	--color-surface: light-dark(#f1ede0, #2b2b1a);
-	--color-header: light-dark(rgb(253 251 245 / 0.72), rgb(34 34 17 / 0.72));
+	--color-header: light-dark(rgb(253 250 240 / 0.72), rgb(28 28 30 / 0.72));
 	/* Always shown, and quieter than --color-line so the header edge stays a hint. */
 	--color-header-line: light-dark(
 		rgb(31 29 20 / 0.06),
