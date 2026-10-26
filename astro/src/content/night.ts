@@ -24,7 +24,7 @@ export const nightStops: NightStop[] = [
 		time: "22:00",
 		phase: "Pick",
 		title: "It picks the work.",
-		body: "Each Night it reads your specification and picks one Feature, plus the repos it touches, even on a Night that started with an empty board. Then it writes the Work Cards: one Linear issue per piece of the Feature, per repo. The Feature carries a Definition of Done: what “finished” means, written before any code exists, every line pointing to your spec.",
+		body: "Each Night it reads your specification and picks the next Feature, plus the repos it touches, even on a Night that started with an empty board. Then it writes the Work Cards: one Linear issue per piece of the Feature, per repo. The Feature carries a Definition of Done: what “finished” means, written before any code exists, every line pointing to your spec.",
 		shot: "S3",
 	},
 	{

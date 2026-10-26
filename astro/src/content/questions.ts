@@ -44,7 +44,7 @@ export const questions: Question[] = [
 	{
 		question: "What do I need?",
 		answer:
-			"macOS 26, a Mac that stays awake, the Orca ADE, Linear (in v1 you must be a workspace admin to run setup), GitHub, and at least one agent CLI.",
+			"macOS 26, a Mac that stays awake, the Orca ADE, Linear (a workspace admin approves the app, at your Mac or from a link you send them), GitHub, and at least one agent CLI.",
 	},
 	{
 		question: "Is it open source?",

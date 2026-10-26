@@ -25,7 +25,7 @@ export const tools: Tool[] = [
 		name: "Linear",
 		logo: marks.linear,
 		role: "The board",
-		body: "Intent comes from your Linear board, and every report goes back to it. In v1, the person running setup must be a workspace admin.",
+		body: "Intent comes from your Linear board, and every report goes back to it. You don't have to be a workspace admin: setup can send an admin a link to approve the app.",
 	},
 	{
 		name: "GitHub",
