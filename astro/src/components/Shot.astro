@@ -5,7 +5,13 @@ import { captureSteps, getShot } from "../content/shots";
 /**
  * One screenshot, as a light/dark pair that follows the footer switcher (theme-only classes).
  * Until the shot has an `image` in content/shots.ts it renders a placeholder per theme that says
- * what to capture. Text in the default slot becomes the figure's caption.
+ * what to capture. Text in the default slot becomes the figure's caption; a real app screenshot also
+ * says it shows the example Project, so nobody reads its names as a customer's.
+ *
+ * App screenshots come from a UI test: the window's bounding rectangle at 2x, with no shadow and with
+ * the desktop showing in its corners. The page rounds the corners off and adds the shadow; the radius
+ * class is keyed on the window's width in points. Browser screenshots are hand captures with the
+ * macOS shadow already in them, so they are shown as they are.
  */
 interface Props {
 	id: string;
@@ -21,7 +27,13 @@ const {
 } = Astro.props;
 const shot = getShot(id);
 const image = shot.image;
-const hasCaption = Astro.slots.has("default");
+const isApp = shot.source === "app";
+const isExample = Boolean(image) && isApp;
+const hasCaption = Astro.slots.has("default") || isExample;
+const imageClass = [
+	"shot-img",
+	isApp && image && `shot-img-app shot-win-${image.light.width / 2}`,
+];
 
 const themes = [
 	{ key: "light", label: "Light" },
@@ -34,7 +46,7 @@ const themes = [
 		image ? (
 			<>
 				<Image
-					class="shot-img theme-light-only"
+					class:list={[imageClass, "theme-light-only"]}
 					src={image.light}
 					alt={shot.alt}
 					widths={[1280, 1920, image.light.width]}
@@ -45,7 +57,7 @@ const themes = [
 					fetchpriority={priority ? "high" : "auto"}
 				/>
 				<Image
-					class="shot-img theme-dark-only"
+					class:list={[imageClass, "theme-dark-only"]}
 					src={image.dark}
 					alt={shot.alt}
 					widths={[1280, 1920, image.dark.width]}
@@ -60,7 +72,7 @@ const themes = [
 				<div
 					class:list={[
 						"shot-window",
-						shot.source === "app" ? "shot-ratio-app" : "shot-ratio-web",
+						isApp ? "shot-ratio-app" : "shot-ratio-web",
 						`theme-${theme.key}-only`,
 					]}
 				>
@@ -103,7 +115,7 @@ const themes = [
 	}
 	{hasCaption && (
 		<figcaption class="shot-caption">
-			<slot />
+			<slot /> {isExample && "Example Project."}
 		</figcaption>
 	)}
 </figure>

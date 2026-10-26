@@ -1,4 +1,14 @@
 import type { ImageMetadata } from "astro";
+import githubPrClausesDark from "../assets/screenshots/github-pr-clauses-dark.png";
+import githubPrClausesLight from "../assets/screenshots/github-pr-clauses-light.png";
+import linearNightCardDark from "../assets/screenshots/linear-night-card-dark.png";
+import linearNightCardLight from "../assets/screenshots/linear-night-card-light.png";
+import nightAccountDark from "../assets/screenshots/night-account-dark.png";
+import nightAccountLight from "../assets/screenshots/night-account-light.png";
+import pulseAttemptsDark from "../assets/screenshots/pulse-attempts-dark.png";
+import pulseAttemptsLight from "../assets/screenshots/pulse-attempts-light.png";
+import pulseNightDoneDark from "../assets/screenshots/pulse-night-done-dark.png";
+import pulseNightDoneLight from "../assets/screenshots/pulse-night-done-light.png";
 
 /**
  * Screenshots. Every entry renders as a placeholder until `image` is set, so a real screenshot drops
@@ -36,7 +46,8 @@ export const shots: ShotSpec[] = [
 			"A Project whose Feature just verified: the header reads “Night done” with the mesh gradient, nothing needs you, the inspector closed or on the Feature.",
 		saveAs: "pulse-night-done",
 		lightCandidate: "Pasted 2026-10-26 at 7.35.57 PM.png",
-		alt: "The Yellowhammer window the morning after a Night: the header reads Night done, Feature verified, all clauses met, above the Needs you, Now, Feature, Tonight and Health cards.",
+		alt: "The Yellowhammer window the morning after a Night: the header reads Night done, Feature ORB-212 verified, all 18 clauses met. Nothing needs you, and the Feature has one pull request open in each of its three repositories.",
+		image: { light: pulseNightDoneLight, dark: pulseNightDoneDark },
 	},
 	{
 		id: "S2",
@@ -46,7 +57,8 @@ export const shots: ShotSpec[] = [
 			"Open a finished Night from Show the Night's account. Put the playhead inside the Land phase, with a few problems visible in the timeline.",
 		saveAs: "night-account",
 		lightCandidate: "Pasted 2026-10-15 at 9.30.05 AM.png",
-		alt: "The Night's account in the app: the Author, Build and Land phases of one Night on a timeline from 22:00 to 06:00, with the step log at the playhead.",
+		alt: "The Night's account in the app: the Author, Build and Land phases of one Night on a timeline from 22:00 to 06:00, with the playhead on the Night's one problem, a failed Attempt whose Route was then excluded.",
+		image: { light: nightAccountLight, dark: nightAccountDark },
 	},
 	{
 		id: "S3",
@@ -65,7 +77,8 @@ export const shots: ShotSpec[] = [
 			"During a build: several Attempts running across repos in the Now card, the inspector on one Attempt showing its Route and Round.",
 		saveAs: "pulse-attempts",
 		lightCandidate: "Pasted 2026-10-14 at 10.23.52 PM.png",
-		alt: "The Pulse during a Night: five Attempts running across five repositories, and the inspector showing one Attempt's Route.",
+		alt: "The Pulse during a Night: three Attempts running in three repositories, on Claude Code, Codex and Antigravity Routes, and the inspector showing one Attempt's Route and Round.",
+		image: { light: pulseAttemptsLight, dark: pulseAttemptsDark },
 	},
 	{
 		id: "S5",
@@ -74,7 +87,8 @@ export const shots: ShotSpec[] = [
 		state:
 			"On GitHub, a pull request Yellowhammer opened, scrolled to the Definition of Done report: each clause, its spec citation and its verdict.",
 		saveAs: "github-pr-clauses",
-		alt: "A GitHub pull request opened by Yellowhammer, showing the Definition of Done report clause by clause.",
+		alt: "A GitHub pull request opened by Yellowhammer, showing its Verification section: each Definition of Done clause with its spec citation, its verdict and the evidence behind it.",
+		image: { light: githubPrClausesLight, dark: githubPrClausesDark },
 	},
 	{
 		id: "S6",
@@ -83,7 +97,8 @@ export const shots: ShotSpec[] = [
 		state:
 			"In Linear, the Night Card for a finished Night, showing its Night Summary: what landed, what is Blocked and what is Waiting on You.",
 		saveAs: "linear-night-card",
-		alt: "The Night Card in Linear with its Night Summary: what landed, what is blocked and what needs you.",
+		alt: "The Night Card in Linear: the Night's verdict, the Feature it selected and each Work Card with its Attempt, Route and Check.",
+		image: { light: linearNightCardLight, dark: linearNightCardDark },
 	},
 ];
 

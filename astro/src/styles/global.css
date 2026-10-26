@@ -451,6 +451,22 @@
 	height: auto;
 }
 
+/* An app window: the radius clips the desktop out of its corners. Percentages are relative to the
+ * width and to the height, so each window size gets its own pair: 22pt over the window's points. */
+.shot-img-app {
+	box-shadow:
+		0 0 0 1px var(--color-line),
+		var(--shadow-float);
+}
+
+.shot-win-1280 {
+	border-radius: 1.72% / 2.53%;
+}
+
+.shot-win-960 {
+	border-radius: 2.29% / 3.24%;
+}
+
 .shot-window {
 	display: flex;
 	flex-direction: column;
