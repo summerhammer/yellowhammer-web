@@ -442,7 +442,42 @@
 	opacity: 0.8;
 }
 
-.card > .logo {
+/* Optical size: these files draw their glyph inside wide empty margins (measured: OpenAI fills
+ * 49.5% of its viewBox, Antigravity about 70%). A taller box brings the glyph to the 1.25rem the
+ * other marks use, and the negative margin gives the extra space back so rows keep their rhythm. */
+.logo-fit-wide {
+	height: 2.5rem;
+	margin: -0.625rem;
+}
+
+.logo-fit-medium {
+	height: 1.75rem;
+	margin: -0.25rem;
+}
+
+/* A mark published only in colour keeps its colour as given: no muting. */
+.logo-colour {
+	opacity: 1;
+}
+
+/* A mark published only in white sits on a dark plate in light, at the same 1.25rem height. */
+.logo-plate {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	height: 1.25rem;
+	padding-inline: 0.3125rem;
+	border-radius: 0.3125rem;
+	background: #1f1d14;
+}
+
+.logo-plate .logo {
+	height: 0.8125rem;
+	opacity: 1;
+}
+
+.card > .logo,
+.card > .logo-plate {
 	align-self: flex-start;
 }
 
