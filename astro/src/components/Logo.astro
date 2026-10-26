@@ -1,51 +1,14 @@
 ---
-import type { VendorLogo } from "../content/vendors";
-
 /**
  * A third-party mark as a light/dark pair. Decorative: the product name always sits next to it as
- * text. The pair follows the footer switcher through the theme-only classes; a mark with one file
- * for both themes renders once. `fit` evens out the empty space files draw around their glyphs.
+ * text. The pair follows the footer switcher through the theme-only classes.
  */
 interface Props {
-	logo: VendorLogo;
+	logo: { light: string; dark: string };
 }
 
 const { logo } = Astro.props;
-const fitClass = logo.fit && `logo-fit-${logo.fit}`;
-const single = logo.light === logo.dark;
 ---
 
-{
-	single && !logo.plate ? (
-		<img
-			class:list={["logo", "logo-colour", fitClass]}
-			src={logo.light}
-			alt=""
-			height="20"
-			loading="lazy"
-		/>
-	) : (
-		<>
-			{logo.plate ? (
-				<span class="logo-plate theme-light-only">
-					<img class:list={["logo", fitClass]} src={logo.light} alt="" height="20" loading="lazy" />
-				</span>
-			) : (
-				<img
-					class:list={["logo", fitClass, "theme-light-only"]}
-					src={logo.light}
-					alt=""
-					height="20"
-					loading="lazy"
-				/>
-			)}
-			<img
-				class:list={["logo", fitClass, "theme-dark-only"]}
-				src={logo.dark}
-				alt=""
-				height="20"
-				loading="lazy"
-			/>
-		</>
-	)
-}
+<img class="logo theme-light-only" src={logo.light} alt="" height="20" loading="lazy" />
+<img class="logo theme-dark-only" src={logo.dark} alt="" height="20" loading="lazy" />

@@ -4,27 +4,16 @@
  */
 
 /**
- * An official mark, copied unchanged from yellowhammer-artwork/logos/vendors (SOURCES.md there lists
- * each source and its usage terms). Paths are under /vendors/ in astro/public.
+ * An official mark from yellowhammer-artwork/logos/vendors (SOURCES.md there lists
+ * each source, its usage terms and the edits made). Paths are under /vendors/ in astro/public.
  */
 export interface VendorLogo {
 	light: string;
 	dark: string;
-	/**
-	 * How much empty space the file draws around its glyph, so every mark renders at the same optical
-	 * size: "wide" fills about half its viewBox (OpenAI), "medium" about 70% (Antigravity).
-	 */
-	fit?: "wide" | "medium";
-	/** The vendor publishes only a white mark: on light, it sits on a dark plate. */
-	plate?: boolean;
 }
 
 export const marks = {
-	orca: {
-		light: "/vendors/orca-white.svg",
-		dark: "/vendors/orca-white.svg",
-		plate: true,
-	},
+	orca: { light: "/vendors/orca-black.svg", dark: "/vendors/orca-white.svg" },
 	linear: {
 		light: "/vendors/linear-black.svg",
 		dark: "/vendors/linear-white.svg",
@@ -39,12 +28,10 @@ export const marks = {
 	openai: {
 		light: "/vendors/openai-black.svg",
 		dark: "/vendors/openai-white.svg",
-		fit: "wide",
 	},
 	antigravity: {
 		light: "/vendors/antigravity-black.svg",
 		dark: "/vendors/antigravity-white.svg",
-		fit: "medium",
 	},
 } satisfies Record<string, VendorLogo>;
 
