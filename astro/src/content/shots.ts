@@ -1,6 +1,8 @@
 import type { ImageMetadata } from "astro";
 import githubPrClausesDark from "../assets/screenshots/github-pr-clauses-dark.png";
 import githubPrClausesLight from "../assets/screenshots/github-pr-clauses-light.png";
+import linearCycleDark from "../assets/screenshots/linear-cycle-dark.png";
+import linearCycleLight from "../assets/screenshots/linear-cycle-light.png";
 import linearNightCardDark from "../assets/screenshots/linear-night-card-dark.png";
 import linearNightCardLight from "../assets/screenshots/linear-night-card-light.png";
 import nightAccountDark from "../assets/screenshots/night-account-dark.png";
@@ -67,7 +69,8 @@ export const shots: ShotSpec[] = [
 		state:
 			"In Linear, the project view listing the Work Cards Yellowhammer wrote for one Feature, with one Work Card open so its Definition of Done and spec citations show.",
 		saveAs: "linear-cycle",
-		alt: "A Linear project listing the Work Cards Yellowhammer wrote for one Feature, with one Work Card open on its Definition of Done.",
+		alt: "A Feature Card in Linear: its status line, then the Work Cards Yellowhammer wrote for the Feature, each marked Done.",
+		image: { light: linearCycleLight, dark: linearCycleDark },
 	},
 	{
 		id: "S4",
