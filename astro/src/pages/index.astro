@@ -2,24 +2,26 @@
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
-import HowItWorks from "../components/HowItWorks.astro";
 import NeverBand from "../components/NeverBand.astro";
-import Showcase from "../components/Showcase.astro";
+import NightTimeline from "../components/NightTimeline.astro";
+import Questions from "../components/Questions.astro";
 import Tools from "../components/Tools.astro";
+import WorksWith from "../components/WorksWith.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout
-	title="Yellowhammer: an unattended engineering Shift for your Mac"
+	title="Yellowhammer: wake up to pull requests for work nobody wrote down"
 	description="Yellowhammer picks the next Feature from your specification each Night, runs your own coding agents on it, and leaves one pull request per repository and an honest report on your Linear board by morning."
 >
 	<Header />
 	<main id="main">
 		<Hero />
-		<Showcase />
+		<WorksWith />
+		<NightTimeline />
 		<NeverBand />
 		<Tools />
-		<HowItWorks />
+		<Questions />
 	</main>
 	<Footer />
 </Layout>

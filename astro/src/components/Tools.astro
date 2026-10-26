@@ -1,5 +1,6 @@
 ---
 import { agentClis, tools } from "../content/tools";
+import Logo from "./Logo.astro";
 import Section from "./Section.astro";
 ---
 
@@ -13,6 +14,7 @@ import Section from "./Section.astro";
 		{
 			tools.map((tool) => (
 				<li class="card">
+					{tool.logo && <Logo logo={tool.logo} />}
 					<p class="card-tag">{tool.role}</p>
 					<h3 class="card-title">{tool.name}</h3>
 					<p class="card-body">{tool.body}</p>
@@ -26,10 +28,11 @@ import Section from "./Section.astro";
 		The coding agents you already use in the terminal. They write the code. Each Work Card runs on a
 		route: which agent CLI, model and effort level runs a piece of work.
 	</p>
-	<ul class="card-grid" data-cols="2">
+	<ul class="card-grid" data-cols="3">
 		{
 			agentClis.map((cli) => (
 				<li class="card cli-card">
+					{cli.logo && <Logo logo={cli.logo} />}
 					<p class="cli-name">{cli.name}</p>{" "}
 					<code class="cli-command">{cli.command}</code>
 					<p class="card-body">Probed for unattended runs.</p>

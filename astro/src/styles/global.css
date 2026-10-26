@@ -41,8 +41,12 @@
 	);
 	--color-wing: #8e8f26;
 
-	/* Brand fill: never text, never behind text */
-	--color-brand: light-dark(#f4c900, #ffd426);
+	/* Brand fill: never text, never behind text. One value in both schemes. */
+	--color-brand: #f6d916;
+
+	/* Accent and info hues. They tint the hero glow; neither is a text colour. */
+	--color-accent: light-dark(#a8481b, #ee8c5f);
+	--color-info: light-dark(#4649c8, #8285ff);
 
 	/* Action. The Download button is black on light and white on dark; blue stays for links. */
 	--color-download: light-dark(#000000, #ffffff);
@@ -76,6 +80,25 @@
 
 :root:has(#scheme-dark:checked) {
 	color-scheme: dark;
+}
+
+/* Theme-only content, for anything light-dark() cannot colour: a light/dark image pair. It follows
+ * the footer radios first and the OS preference otherwise, like color-scheme above. */
+:root:has(#scheme-dark:checked) .theme-light-only,
+:root:has(#scheme-light:checked) .theme-dark-only {
+	display: none;
+}
+
+@media (prefers-color-scheme: light) {
+	:root:not(:has(#scheme-dark:checked)) .theme-dark-only {
+		display: none;
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not(:has(#scheme-light:checked)) .theme-light-only {
+		display: none;
+	}
 }
 
 @layer base {
@@ -272,9 +295,17 @@
 	}
 }
 
+.hero-icon {
+	display: block;
+	width: 6rem;
+	height: 6rem;
+	margin: 0 auto 1.5rem;
+	filter: drop-shadow(0 6px 14px var(--color-shadow-soft));
+}
+
 .hero-title {
 	text-wrap: balance;
-	margin: 0;
+	margin: 0.75rem 0 0;
 	font-size: clamp(2.5rem, 7vw, 4.5rem);
 	font-weight: 750;
 	letter-spacing: -0.035em;
@@ -282,10 +313,10 @@
 }
 
 .hero-lede {
-	text-wrap: balance;
-	max-width: 36rem;
+	text-wrap: pretty;
+	max-width: 44rem;
 	margin: 1.25rem auto 0;
-	font-size: clamp(1.25rem, 2.6vw, 1.5rem);
+	font-size: clamp(1.125rem, 2.2vw, 1.375rem);
 	line-height: 1.35;
 	letter-spacing: -0.012em;
 	font-weight: 500;
@@ -312,16 +343,52 @@
 	text-wrap: balance;
 }
 
-/* Segmented control. Each <input type="radio"> is followed by its <label>; the pair scales to
- * any number of options with no per-option selector. */
-.segmented {
+/* The hero screenshot sits on a soft mesh glow, echoing the app's header. Radial gradients only.
+ * The glow reaches the wrap's side padding and no further, so it cannot scroll the page. */
+.hero-stage {
 	position: relative;
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	gap: 0.25rem 0;
+	isolation: isolate;
+	max-width: 68rem;
+	margin: 3.5rem auto 0;
 }
 
+.hero-stage::before {
+	content: "";
+	position: absolute;
+	z-index: -1;
+	inset: -5rem -1rem -5rem;
+	pointer-events: none;
+	/* Fixed-size radials would be clipped by this box; the mask fades every edge to nothing. */
+	-webkit-mask-image: radial-gradient(closest-side, #000 55%, transparent);
+	mask-image: radial-gradient(closest-side, #000 55%, transparent);
+	background:
+		radial-gradient(
+			40rem 26rem at 16% 32%,
+			light-dark(
+				color-mix(in srgb, var(--color-brand) 35%, transparent),
+				color-mix(in srgb, var(--color-accent) 22%, transparent)
+			),
+			transparent 70%
+		),
+		radial-gradient(
+			34rem 24rem at 84% 24%,
+			light-dark(
+				color-mix(in srgb, var(--color-info) 15%, transparent),
+				color-mix(in srgb, var(--color-brand) 15%, transparent)
+			),
+			transparent 70%
+		),
+		radial-gradient(
+			36rem 26rem at 58% 92%,
+			light-dark(
+				color-mix(in srgb, var(--color-accent) 10%, transparent),
+				color-mix(in srgb, var(--color-info) 14%, transparent)
+			),
+			transparent 70%
+		);
+}
+
+/* Footer scheme radios. Each <input type="radio"> is visually hidden and followed by its <label>. */
 .seg-input {
 	position: absolute;
 	width: 1px;
@@ -331,150 +398,178 @@
 	pointer-events: none;
 }
 
-.seg-label {
-	order: 0;
+/* Works with */
+.works-with {
+	padding-block: 1.5rem 0.5rem;
+	text-align: center;
+}
+
+.works-with-label {
+	margin: 0;
+	color: var(--color-ink-muted);
+	font-size: 0.8125rem;
+	font-weight: 650;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.works-with-list {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.5rem 0.75rem;
+	margin: 1rem 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.works-with-item {
 	display: inline-flex;
 	align-items: center;
-	padding: 0.25rem 0;
-	background: var(--color-surface);
-	box-shadow:
-		inset 0 1px 0 var(--color-line),
-		inset 0 -1px 0 var(--color-line);
-	cursor: pointer;
-}
-
-.seg-label:first-of-type {
-	padding-left: 0.25rem;
-	border-radius: var(--radius-pill) 0 0 var(--radius-pill);
-	box-shadow:
-		inset 1px 0 0 var(--color-line),
-		inset 0 1px 0 var(--color-line),
-		inset 0 -1px 0 var(--color-line);
-}
-
-.seg-label:last-of-type {
-	padding-right: 0.25rem;
-	border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
-	box-shadow:
-		inset -1px 0 0 var(--color-line),
-		inset 0 1px 0 var(--color-line),
-		inset 0 -1px 0 var(--color-line);
-}
-
-.seg-label:first-of-type:last-of-type {
-	border-radius: var(--radius-pill);
-}
-
-.seg-text {
-	display: inline-block;
+	gap: 0.5rem;
 	padding: 0.375rem 0.875rem;
 	border-radius: var(--radius-pill);
-	color: var(--color-ink-muted);
+	box-shadow: inset 0 0 0 1px var(--color-line);
 	font-size: 0.9375rem;
-	font-weight: 550;
-	white-space: nowrap;
-	transition:
-		background-color 150ms ease,
-		color 150ms ease;
+	font-weight: 600;
 }
 
-.seg-label:hover .seg-text {
-	color: var(--color-ink);
+/* A third-party mark, muted so it never outshouts the product name beside it. */
+.logo {
+	flex: none;
+	width: auto;
+	height: 1.25rem;
+	opacity: 0.8;
 }
 
-/* The ring and focus outline overhang the label; lift it so the next label's background, painted
- * later, does not cover their right edge. */
-.seg-input:checked + .seg-label,
-.seg-input:focus-visible + .seg-label {
-	position: relative;
-	z-index: 1;
+.card > .logo {
+	align-self: flex-start;
 }
 
-.seg-input:checked + .seg-label .seg-text {
-	background: var(--color-raised);
-	color: var(--color-ink);
-	box-shadow:
-		0 1px 2px var(--color-shadow-soft),
-		0 0 0 1px var(--color-line);
-}
-
-.seg-input:focus-visible + .seg-label .seg-text {
-	outline: 2px solid var(--color-focus);
-	outline-offset: 2px;
-}
-
-@media (max-width: 26rem) {
-	.seg-text {
-		padding-inline: 0.5rem;
-		font-size: 0.8125rem;
-	}
-}
-
-/* Screenshot showcase */
-.showcase {
-	padding-bottom: 5rem;
-}
-
-.tab-panel {
-	order: 1;
-	display: none;
-	flex-basis: 100%;
-	margin-top: 1.5rem;
-}
-
-.seg-input:checked + .seg-label + .tab-panel {
-	display: block;
-}
-
+/* Screenshots. A real image is shown whole; until one exists, a placeholder window says what to
+ * capture. Both come as a light/dark pair, and aspect-ratio boxes grow with their content, so
+ * the text is never clipped on a phone. */
 .shot {
 	margin: 0;
 }
 
-.shot-frame {
-	position: relative;
-	max-width: 64rem;
-	margin-inline: auto;
-	aspect-ratio: 2360 / 1780;
-	overflow: hidden;
-	/* The macOS window's own corner radius, measured on the screenshot (50 px of 2360 x 1780). */
-	border-radius: 2.12% / 2.81%;
+.shot-img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.shot-window {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	border-radius: 0.875rem;
 	background: var(--color-raised);
 	box-shadow:
 		0 0 0 1px var(--color-line),
 		var(--shadow-float);
+	text-align: left;
 }
 
-.shot-img {
-	display: block;
-	max-width: none;
-	height: auto;
+/* The aspect of the real screenshots: the app's window (3138 x 2276), or a browser window. */
+.shot-ratio-app {
+	aspect-ratio: 3138 / 2276;
 }
 
-/* Crops of pulse-001.png (2584 x 2004). Each keeps the window's aspect ratio:
- * width = 2584 / crop width, margin-left = -x / crop width, margin-top = -y / crop width
- * (vertical margins resolve against the frame's width). */
-.crop-pulse {
-	width: 109.4915%;
-	margin-left: -4.7458%;
-	margin-top: -3.2203%;
+.shot-ratio-web {
+	aspect-ratio: 16 / 10;
 }
 
-.crop-tiles {
-	width: 200%;
-	margin-left: -46.8266%;
-	margin-top: -13.5449%;
+.shot-bar {
+	position: relative;
+	flex: none;
+	height: 2.25rem;
+	border-radius: 0.875rem 0.875rem 0 0;
+	background: var(--color-surface);
+	box-shadow: inset 0 -1px 0 var(--color-line);
 }
 
-.crop-feature {
-	width: 200%;
-	margin-left: -46.8266%;
-	margin-top: -68.1889%;
+/* The three traffic lights: one dot, and two more drawn as its shadows. */
+.shot-bar::before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 0.875rem;
+	width: 0.75rem;
+	height: 0.75rem;
+	margin-top: -0.375rem;
+	border-radius: 50%;
+	background: #ff5f57;
+	box-shadow:
+		1.25rem 0 0 #febc2e,
+		2.5rem 0 0 #28c840;
 }
 
-.crop-lane {
-	width: 287.1111%;
-	margin-left: -174.6667%;
-	margin-top: -8.4444%;
+.shot-body {
+	flex: 1;
+	padding: 1rem 1.125rem 1.25rem;
+	border-radius: 0 0 0.875rem 0.875rem;
+	background:
+		repeating-linear-gradient(
+			135deg,
+			transparent 0 0.75rem,
+			var(--color-line) 0.75rem calc(0.75rem + 1px)
+		),
+		var(--color-raised);
+	font-size: 0.8125rem;
+	line-height: 1.5;
+}
+
+@media (min-width: 40rem) {
+	.shot-body {
+		padding: 1.5rem 1.75rem 1.75rem;
+		font-size: 0.875rem;
+	}
+}
+
+.shot-pill {
+	display: inline-block;
+	margin: 0;
+	padding: 0.125rem 0.625rem;
+	border-radius: var(--radius-pill);
+	background: var(--color-surface);
+	box-shadow: inset 0 0 0 1px var(--color-line-strong);
+	color: var(--color-ink-muted);
+	font-size: 0.75rem;
+	font-weight: 650;
+}
+
+.shot-title {
+	margin: 0.75rem 0 0;
+	font-size: 1.0625rem;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+}
+
+.shot-details {
+	margin: 0.5rem 0 0;
+}
+
+.shot-details dt {
+	margin-top: 0.75rem;
+	color: var(--color-ink-muted);
+	font-size: 0.75rem;
+	font-weight: 650;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+.shot-details dd {
+	margin: 0.125rem 0 0;
+}
+
+.shot-details ol {
+	margin: 0;
+	padding-left: 1.25rem;
+}
+
+.shot-details code {
+	overflow-wrap: anywhere;
 }
 
 .shot-caption {
@@ -484,7 +579,6 @@
 	font-size: 0.9375rem;
 	text-align: center;
 }
-
 /* Sections */
 .section {
 	padding-block: 5rem;
@@ -526,6 +620,18 @@
 	border-radius: 50%;
 	background: var(--color-brand);
 	box-shadow: 0 0 0 1px var(--color-wing);
+}
+
+/* The hero eyebrow wraps on a phone; inline, the dot stays with the first line. */
+.hero .eyebrow {
+	display: inline;
+	text-wrap: balance;
+}
+
+.hero .eyebrow::before {
+	display: inline-block;
+	margin-right: 0.5rem;
+	vertical-align: 0.05em;
 }
 
 .section-title {
@@ -712,72 +818,235 @@
 	font-size: 0.9375rem;
 }
 
-/* How it works */
-.steps {
-	display: grid;
-	gap: 1rem;
-	margin: 2rem 0 0;
-	padding: 0;
+/* How a Night runs: stops along a vertical rail. The rail is a line on the left of the list, and
+ * each stop hangs a marker dot on it. */
+.night-stops {
+	position: relative;
+	margin: 4rem 0 0;
+	padding: 0 0 0 2rem;
 	list-style: none;
-	counter-reset: step;
 }
 
-@media (min-width: 40rem) {
-	.steps {
-		grid-template-columns: repeat(2, 1fr);
-	}
+.night-stops::before {
+	content: "";
+	position: absolute;
+	top: 0.6875rem;
+	bottom: 0;
+	left: calc(0.3125rem - 1px);
+	width: 2px;
+	background: var(--color-line-strong);
+}
+
+.night-stop {
+	position: relative;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 1.5rem;
+	padding-bottom: 4rem;
+}
+
+.night-stop:last-child {
+	padding-bottom: 0;
+}
+
+/* Like the eyebrow dot: a brand-yellow fill outlined in wing. The canvas-coloured ring lets it
+ * cut the rail. */
+.night-stop::before {
+	content: "";
+	position: absolute;
+	top: 0.375rem;
+	left: -2rem;
+	width: 0.625rem;
+	height: 0.625rem;
+	border-radius: 50%;
+	background: var(--color-brand);
+	box-shadow:
+		0 0 0 1px var(--color-wing),
+		0 0 0 5px var(--color-bg);
 }
 
 @media (min-width: 64rem) {
-	.steps {
-		grid-template-columns: repeat(4, 1fr);
+	.night-stop {
+		grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+		gap: 3rem;
+		align-items: start;
 	}
 }
 
-.step {
-	counter-increment: step;
-	padding: 1.25rem 1.375rem 1.5rem;
-	border-radius: var(--radius-card);
-	background: var(--color-raised);
-	box-shadow: 0 0 0 1px var(--color-line);
-}
-
-.step-act {
+.night-stop-meta {
 	display: flex;
-	align-items: center;
-	gap: 0.625rem;
+	flex-wrap: wrap;
+	gap: 0 0.75rem;
 	margin: 0;
 	color: var(--color-ink-muted);
 	font-family: var(--font-mono);
 	font-size: 0.875rem;
 }
 
-.step-act::before {
-	content: counter(step);
-	display: inline-grid;
-	place-items: center;
-	width: 1.75rem;
-	height: 1.75rem;
-	border-radius: 50%;
-	box-shadow: inset 0 0 0 1.5px var(--color-wing);
+.night-stop-time {
 	color: var(--color-ink);
-	font-family: var(--font-sans);
-	font-size: 0.875rem;
-	font-weight: 700;
+	font-weight: 600;
 }
 
-.step h3 {
-	margin: 0.875rem 0 0;
-	font-size: 1.1875rem;
-	font-weight: 700;
-	letter-spacing: -0.01em;
-}
-
-.step p {
+.night-stop-title {
+	text-wrap: balance;
 	margin: 0.5rem 0 0;
+	font-size: 1.5rem;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	line-height: 1.2;
+}
+
+.night-stop-subtitle {
+	margin: 0.5rem 0 0;
+	font-size: 1.0625rem;
+	font-weight: 650;
+}
+
+.night-stop-body {
+	margin: 0.875rem 0 0;
 	color: var(--color-ink-muted);
 }
 
+.verdicts {
+	margin-top: 1.25rem;
+	padding: 0.875rem 1rem;
+	border-radius: 0.75rem;
+	background: var(--color-raised);
+	box-shadow: 0 0 0 1px var(--color-line);
+}
+
+.verdicts-label {
+	margin: 0;
+	color: var(--color-ink-muted);
+	font-size: 0.8125rem;
+}
+
+.verdicts-list {
+	display: grid;
+	gap: 0.375rem;
+	margin: 0.5rem 0 0;
+	padding: 0;
+	list-style: none;
+	font-family: var(--font-mono);
+	font-size: 0.875rem;
+	overflow-wrap: anywhere;
+}
+
+/* Scroll-driven, CSS only: the rail fills as the list scrolls past and each stop eases in. Without
+ * support, or with reduced motion, the timeline is static. */
+@media (prefers-reduced-motion: no-preference) {
+	@supports (animation-timeline: view()) {
+		.night-stops::after {
+			content: "";
+			position: absolute;
+			top: 0.6875rem;
+			bottom: 0;
+			left: calc(0.3125rem - 1px);
+			width: 2px;
+			background: var(--color-wing);
+			transform-origin: top;
+			animation: rail-fill linear both;
+		}
+
+		.night-stop {
+			animation: stop-in linear both;
+		}
+
+		/* The timelines sit in rules of their own: the CSS minifier would otherwise fold `view()`
+		 * into the `animation` shorthand, which does not accept it. */
+		.night-stops > .night-stop {
+			animation-timeline: view();
+			animation-range: entry 0% entry 40%;
+		}
+
+		ol.night-stops::after {
+			animation-timeline: view();
+			animation-range: cover 10% cover 90%;
+		}
+
+		@keyframes rail-fill {
+			from {
+				transform: scaleY(0);
+			}
+
+			to {
+				transform: scaleY(1);
+			}
+		}
+
+		@keyframes stop-in {
+			from {
+				opacity: 0.2;
+				transform: translateY(1.5rem);
+			}
+
+			to {
+				opacity: 1;
+				transform: none;
+			}
+		}
+	}
+}
+
+/* Questions */
+.faq {
+	max-width: 48rem;
+	border-top: 1px solid var(--color-line);
+}
+
+.faq-item {
+	border-bottom: 1px solid var(--color-line);
+}
+
+.faq-item summary {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 1.125rem 0;
+	font-size: 1.125rem;
+	font-weight: 650;
+	letter-spacing: -0.01em;
+	list-style: none;
+	cursor: pointer;
+}
+
+.faq-item summary::-webkit-details-marker {
+	display: none;
+}
+
+/* A chevron drawn from two borders; it flips when the item is open. */
+.faq-item summary::after {
+	content: "";
+	flex: none;
+	width: 0.5rem;
+	height: 0.5rem;
+	margin-top: -0.25rem;
+	border-right: 2px solid var(--color-ink-muted);
+	border-bottom: 2px solid var(--color-ink-muted);
+	transform: rotate(45deg);
+}
+
+.faq-item[open] summary::after {
+	margin-top: 0.25rem;
+	transform: rotate(-135deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.faq-item summary::after {
+		transition:
+			transform 150ms ease,
+			margin-top 150ms ease;
+	}
+}
+
+.faq-item p {
+	max-width: 40rem;
+	margin: 0;
+	padding-bottom: 1.25rem;
+	color: var(--color-ink-muted);
+}
 /* Footer */
 .closing {
 	padding-block: 6rem 4rem;

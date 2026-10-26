@@ -3,7 +3,7 @@
 	"root": false,
 	"extends": "//",
 	"files": {
-		"includes": ["**", "!public/*.svg"]
+		"includes": ["**", "!public/**/*.svg"]
 	},
 	"css": {
 		"parser": {

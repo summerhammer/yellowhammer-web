@@ -1,0 +1,109 @@
+---
+import { Image } from "astro:assets";
+import { captureSteps, getShot } from "../content/shots";
+
+/**
+ * One screenshot, as a light/dark pair that follows the footer switcher (theme-only classes).
+ * Until the shot has an `image` in content/shots.ts it renders a placeholder per theme that says
+ * what to capture. Text in the default slot becomes the figure's caption.
+ */
+interface Props {
+	id: string;
+	/** Load the light image eagerly, for a shot above the fold. */
+	priority?: boolean;
+	sizes?: string;
+}
+
+const {
+	id,
+	priority = false,
+	sizes = "(min-width: 72rem) 68rem, 100vw",
+} = Astro.props;
+const shot = getShot(id);
+const image = shot.image;
+const hasCaption = Astro.slots.has("default");
+
+const themes = [
+	{ key: "light", label: "Light" },
+	{ key: "dark", label: "Dark" },
+] as const;
+---
+
+<figure class="shot">
+	{
+		image ? (
+			<>
+				<Image
+					class="shot-img theme-light-only"
+					src={image.light}
+					alt={shot.alt}
+					widths={[1280, 1920, image.light.width]}
+					sizes={sizes}
+					format="webp"
+					quality={82}
+					loading={priority ? "eager" : "lazy"}
+					fetchpriority={priority ? "high" : "auto"}
+				/>
+				<Image
+					class="shot-img theme-dark-only"
+					src={image.dark}
+					alt={shot.alt}
+					widths={[1280, 1920, image.dark.width]}
+					sizes={sizes}
+					format="webp"
+					quality={82}
+					loading="lazy"
+				/>
+			</>
+		) : (
+			themes.map((theme) => (
+				<div
+					class:list={[
+						"shot-window",
+						shot.source === "app" ? "shot-ratio-app" : "shot-ratio-web",
+						`theme-${theme.key}-only`,
+					]}
+				>
+					<div class="shot-bar" aria-hidden="true" />
+					<div class="shot-body">
+						<p class="shot-pill">
+							Screenshot placeholder · {shot.id} · {theme.label}
+						</p>
+						<p class="shot-title">{shot.title}</p>
+						<dl class="shot-details">
+							<dt>State to set up</dt>
+							<dd>{shot.state}</dd>
+							<dt>How to capture</dt>
+							<dd>
+								<ol>
+									{captureSteps[shot.source][theme.key].map((step) => (
+										<li>{step}</li>
+									))}
+								</ol>
+							</dd>
+							<dt>Save as</dt>
+							<dd>
+								<code>{`${shot.saveAs}-${theme.key}.png`}</code>
+							</dd>
+							{theme.key === "light" && shot.lightCandidate && (
+								<>
+									<dt>Light candidate</dt>
+									<dd>
+										<code>
+											{`Exists: ${shot.lightCandidate} in yellowhammer-artwork/screenshots`}
+										</code>
+									</dd>
+								</>
+							)}
+						</dl>
+					</div>
+				</div>
+			))
+		)
+	}
+	{hasCaption && (
+		<figcaption class="shot-caption">
+			<slot />
+		</figcaption>
+	)}
+</figure>

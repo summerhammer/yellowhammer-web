@@ -1,0 +1,14 @@
+---
+/**
+ * A third-party mark as a light/dark pair. Decorative: the product name always sits next to it as
+ * text. The pair follows the footer switcher through the theme-only classes.
+ */
+interface Props {
+	logo: { light: string; dark: string };
+}
+
+const { logo } = Astro.props;
+---
+
+<img class="logo theme-light-only" src={logo.light} alt="" height="20" loading="lazy" />
+<img class="logo theme-dark-only" src={logo.dark} alt="" height="20" loading="lazy" />

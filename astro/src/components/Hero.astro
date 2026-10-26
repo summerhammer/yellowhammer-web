@@ -1,15 +1,19 @@
 ---
 import { site } from "../content/site";
 import DownloadButton from "./DownloadButton.astro";
+import Shot from "./Shot.astro";
 ---
 
 <section class="hero" aria-labelledby="hero-title">
 	<div class="wrap">
-		<p class="eyebrow">An unattended engineering Shift</p>
-		<h1 id="hero-title" class="hero-title">Wake up to pull requests.</h1>
+		<img class="hero-icon theme-light-only" src="/app-icon-v2.png" alt="" width="512" height="512" />
+		<img class="hero-icon theme-dark-only" src="/app-icon-v2-dark.png" alt="" width="512" height="512" />
+		<p class="eyebrow">An unattended engineering Shift for your Mac</p>
+		<h1 id="hero-title" class="hero-title">Wake up to pull requests for work nobody wrote down.</h1>
 		<p class="hero-lede">
-			Yellowhammer selects work from your specification each Night and runs your own coding agents on
-			it.
+			Your agents stop when you stop, and nothing decides what they do next. Yellowhammer picks the
+			next Feature from your spec each Night, runs your own agent CLIs on it, and leaves one pull
+			request per repository and a verdict on your Linear board by morning.
 		</p>
 		<div class="hero-actions">
 			<DownloadButton />
@@ -19,5 +23,8 @@ import DownloadButton from "./DownloadButton.astro";
 			<li>{site.requires}</li>
 			<li>{site.trust}</li>
 		</ul>
+		<div class="hero-stage">
+			<Shot id="S1" priority />
+		</div>
 	</div>
 </section>

@@ -3,12 +3,17 @@
 The marketing Landing site for Yellowhammer. Astro + Tailwind, static output, deployed to Cloudflare Pages (Direct Upload) by the Deploy workflow on merge to `main`, with a preview deployment for every PR (see [Previews](#previews)). It contains no auth logic.
 
 The shipped single-page landing site presents the product narrative specified in `yellowhammer-spec` (`docs/brand/messaging.md`):
-- **Hero**: Tagline ("Wake up to pull requests."), supporting value proposition, macOS 26 requirement, the trust line ("Your code, credentials and models stay on your Mac."), and the primary download CTA alongside the GitHub repository link.
-- **Showcase**: An authentic preview of the Yellowhammer night run UI (Pulse view) showing overnight work cards and morning pull requests.
+- **Hero**: The app icon, tagline ("Wake up to pull requests for work nobody wrote down."), supporting value proposition, macOS 26 requirement, the trust line ("Your code, credentials and models stay on your Mac."), the primary download CTA alongside the GitHub repository link, and the Pulse screenshot on a soft mesh glow.
+- **Works with**: A compact strip of the products Yellowhammer sits on (Orca ADE, Linear, GitHub, Claude Code, Codex, Antigravity).
+- **How a Night runs**: The Night's account screenshot, then four stops along a rail (pick, build, land, morning), each with a screenshot.
 - **Never Band ("What it never does")**: Three non-negotiable boundaries—no code written by itself, no auto-merge to main, and no cloud execution.
-- **Tools**: Prerequisites and integrations (Orca ADE worktrees, Linear board, GitHub pull requests, and agent CLIs like Claude Code and Codex).
-- **How It Works**: The four acts of an overnight Shift (select, build, land, verdict).
+- **Tools**: Prerequisites and integrations (Orca ADE worktrees, Linear board, GitHub pull requests, and agent CLIs like Claude Code, Codex and Antigravity).
+- **Questions**: The objections worth answering first, as a list of `<details>` items.
 - **Footer**: Appearance theme selector (System, Light, Dark), navigation links, and MIT licence notice.
+
+## Screenshots
+
+Every screenshot is described in `src/content/shots.ts`. A shot renders as a placeholder, with what to set up and how to capture it, until its `image` (a light and a dark file) is set; adding the files and editing that one entry is all it takes. Light and dark versions come as a pair that follows the footer switcher as well as the OS setting, through the `.theme-light-only` and `.theme-dark-only` classes in `src/styles/global.css`. Use the same classes for any other image that differs by theme.
 
 ## Development
 

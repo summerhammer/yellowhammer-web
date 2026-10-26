@@ -1,0 +1,31 @@
+---
+import { questions } from "../content/questions";
+import Section from "./Section.astro";
+
+/** Splits an answer around its link text, so the link keeps the sentence's spacing. */
+const parts = (answer: string, text?: string) => {
+	if (!text) return [answer, ""] as const;
+	const [before, ...rest] = answer.split(text);
+	return [before, rest.join(text)] as const;
+};
+---
+
+<Section
+	id="questions"
+	eyebrow="Questions"
+	title="The questions worth asking first"
+>
+	<div class="faq">
+		{
+			questions.map((item) => {
+				const [before, after] = parts(item.answer, item.link?.text);
+				return (
+					<details class="faq-item">
+						<summary>{item.question}</summary>
+						<p>{before}{item.link && <a href={item.link.href}>{item.link.text}</a>}{after}</p>
+					</details>
+				);
+			})
+		}
+	</div>
+</Section>

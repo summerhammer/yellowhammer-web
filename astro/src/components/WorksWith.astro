@@ -1,0 +1,20 @@
+---
+import { vendors } from "../content/vendors";
+import Logo from "./Logo.astro";
+---
+
+<section class="works-with" aria-labelledby="works-with-label">
+	<div class="wrap">
+		<p id="works-with-label" class="works-with-label">Works with</p>
+		<ul class="works-with-list">
+			{
+				vendors.map((vendor) => (
+					<li class="works-with-item">
+						{vendor.logo && <Logo logo={vendor.logo} />}
+						<span>{vendor.name}</span>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</section>

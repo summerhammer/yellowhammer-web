@@ -1,0 +1,46 @@
+---
+import { nightStops } from "../content/night";
+import Section from "./Section.astro";
+import Shot from "./Shot.astro";
+---
+
+<Section
+	id="how-it-works"
+	eyebrow="How a Night runs"
+	title="One Night, start to finish"
+	intro="A Night is one overnight run for one of your products, from the first step to the morning report. Here is one, from the Feature it picked to the verdict it left."
+>
+	<Shot id="S2">The app's account of one Night: what ran in each phase, and when.</Shot>
+
+	<ol class="night-stops">
+		{
+			nightStops.map((stop) => (
+				<li class="night-stop">
+					<div class="night-stop-text">
+						<p class="night-stop-meta">
+							<span class="night-stop-time">{stop.time}</span>{" "}
+							<span>{stop.phase}</span>
+						</p>
+						<h3 class="night-stop-title">{stop.title}</h3>
+						{stop.subtitle && <p class="night-stop-subtitle">{stop.subtitle}</p>}
+						<p class="night-stop-body">{stop.body}</p>
+						{stop.verdicts && (
+							<div class="verdicts">
+								<p class="verdicts-label">{stop.verdicts.label}</p>
+								<ul class="verdicts-list">
+									{stop.verdicts.lines.map((line) => (
+										<li>{line}</li>
+									))}
+								</ul>
+							</div>
+						)}
+					</div>
+					<div class="night-stop-shot">
+						<Shot id={stop.shot} sizes="(min-width: 64rem) 44rem, 100vw" />
+					</div>
+				</li>
+			))
+		}
+	</ol>
+	<p class="fine-print">Times are an example.</p>
+</Section>
