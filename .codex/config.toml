@@ -8,3 +8,6 @@ args = [
 [mcp_servers.linear-sh]
 type = "http"
 url = "https://mcp.linear.app/mcp"
+
+[mcp_servers.mintlify-sh]
+url = "https://mcp.mintlify.com"

@@ -6,6 +6,13 @@
       "sourceType": "github",
       "skillPath": "SKILL.md",
       "computedHash": "b8ced09c690eb178684c27d02d0d8aaa48b28d5ce5b0bb9ea3addf2187ffd8a6"
+    },
+    "mintlify": {
+      "source": "mintlify/docs",
+      "ref": "main",
+      "sourceType": "github",
+      "skillPath": "agent-context/context/skills/mintlify/SKILL.md",
+      "computedHash": "de7d5889801533fe501a2602fffc2da1818332bfbfddc5eda605d5b406dbf3da"
     }
   }
 }
