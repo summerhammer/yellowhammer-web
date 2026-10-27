@@ -3,28 +3,34 @@ title: "Review the morning"
 description: "Use Linear to understand each Night and decide what needs your attention."
 ---
 
-import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+import { VisualPlaceholder } from '/snippets/documentation.jsx';
 
-Linear remains the source for triage. Pulse and Inspector are read-only navigational surfaces that help you find the relevant Project and records.
-
-<DocumentationOutline />
+Linear holds the decisions about your work. Use Yellowhammer to find what happened in each [Project](/reference/statuses-and-glossary#project), then follow its records into Linear and GitHub.
 
 ## Recommended reading order
 
-Follow the pages below in order. Each page is a focused brief until its product details have been verified.
-
 <CardGroup cols={2}>
-  <Card title="Read the Night Summary" href="/review/read-the-night-summary">Interpret what a Night completed, blocked, or left for you.</Card>
-  <Card title="Understand the Pulse and Inspector" href="/review/understand-pulse-and-inspector">Use Pulse and Inspector to navigate Project activity and inspect records.</Card>
-  <Card title="Answer questions and unblock work" href="/review/answer-questions-and-unblock-work">Find Work Cards that need a human answer and understand their next state.</Card>
-  <Card title="Review pull requests and Partial Landings" href="/review/pull-requests-and-partial-landings">Assess the pull requests a Night opens and decide whether to merge them.</Card>
+  <Card title="Read the Night Summary" href="/review/read-the-night-summary">Start with the verdict, failures, Work Cards, and pull requests recorded for the Night.</Card>
+  <Card title="Understand the Pulse and Inspector" href="/review/understand-pulse-and-inspector">Find decisions, inspect Attempts, and trace the Night's recorded events.</Card>
+  <Card title="Answer questions and unblock work" href="/review/answer-questions-and-unblock-work">Reply to questions in the correct thread and fix the cause of blocked work.</Card>
+  <Card title="Review pull requests and Partial Landings" href="/review/pull-requests-and-partial-landings">Check completion evidence, missing work, and the order of stacked pull requests.</Card>
 </CardGroup>
 
 ## Start with the Night Summary
 
-Open the Project’s Night Summary, follow its links to Work Cards and pull requests, then decide which items need an answer, a configuration change, or human review.
+1. Select your Project in the sidebar. In **Tonight / last Night**, open the verdict link to its Night Card in Linear.
+2. Read the [Night Summary](/review/read-the-night-summary), starting with its verdict and any failures. A Night can advance work without opening a pull request.
+3. Open **Needs you** to inspect Work Cards that are Blocked or Waiting on You. Follow each Card's link to Linear to answer or re-ready it.
+4. Review every linked repository pull request in GitHub. Check for a Partial Landing or a notice that it is stacked on an earlier Feature.
+5. Revisit **Feature** for the active Feature and the Features awaiting merge. A Night can land several Features sequentially, so review the entire unmerged stack.
 
 <VisualPlaceholder id="review-overview-path" type="workflow" title="Morning review path" purpose="Show how a reader follows the Night Summary into Linear records and GitHub pull requests." caption="Planned workflow: read the summary, inspect Work Cards and Partial Landings, answer or unblock work, then make human review decisions." />
+
+## Keep the decision with its record
+
+The Inspector shows the recorded reasons, routes, Attempts, Rounds, and Check results. It does not answer questions or move Cards to Todo. Make those changes on the Linear issue. Merge decisions belong in GitHub.
+
+Yellowhammer reads your changes during later Acts. A returned Feature can remain visible until the next author Act reads the board; it does not disappear immediately when you act.
 
 ## Next steps
 

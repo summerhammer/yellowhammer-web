@@ -3,43 +3,40 @@ title: "Prepare your specification"
 description: "Make product intent and completion criteria clear enough for a Night."
 ---
 
-import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+Give Yellowhammer a local specification source that explains the product's intended behavior and supplies traceable completion criteria. The author Act reads it when selecting Features and drafting Work Cards.
 
-The specification is the source Yellowhammer uses to select a Feature and cite its Definition of Done. Acme Checkout is a useful example: describe a customer outcome, boundaries, and observable completion evidence.
+## Choose the Spec Source
 
-<DocumentationOutline />
+In Add Project, open **Spec Source** and choose one option:
 
-## Goal
+- **A shared spec folder:** select an existing shared source or choose **Choose Another Folder…**. This is a specification checkout outside the Project; several Projects can read it. It has no Repo Role, Check, or Worktree of its own.
+- **A Repo in this Project:** select a declared repository, or choose **Add the Spec as a Repo…**. The selected repository has the Repo Role `spec` and belongs to this Project only.
 
-Describe a customer outcome and completion evidence clearly enough for a Night to select and verify work.
+Keep the local source available to the account running Nights. Review the selected source in the Project's Settings before execution.
 
-## Before you begin
+## Describe bounded outcomes
 
-Confirm the Project points to the intended specification source and that the specification reflects current product behavior. Acme Checkout is illustrative.
+Write the user-visible outcome, boundaries, constraints, and acceptance criteria in the source. Identify which repositories already provide any contracts the work relies on. Across repositories, a Work Card must be completable against what the other repositories already provide. Work that changes both ends of a declared Repo Dependency needs separate Features, with the producer first.
 
-## Steps
+Within one repository, a Feature can have a sequence of Work Cards. Those Cards share a Worktree and Feature Branch, and each builds on the preceding Card's committed work.
 
-### Describe one Feature
+## Make completion verifiable
 
-Start from a user-visible outcome, boundaries, and the repositories it may touch. Avoid prescribing implementation unless a constraint matters.
+Give each requirement a stable identifier and observable acceptance criteria. Authored Definition of Done clauses carry a citation to a story ID such as `<epic>/<story>` or a goal ID. Keep those references meaningful when editing the specification. A vague statement such as “checkout is better” does not explain what a reviewer should verify.
 
-### Make completion verifiable
+### Acme Checkout example
 
-Write observable criteria before code exists. Each Definition of Done clause should point to a specific place in the specification so a reviewer can trace the claim.
-
-<VisualPlaceholder id="spec-feature-dod-example" type="example" title="Acme Checkout specification example" purpose="Show how one customer outcome can map to a Feature and observable Definition of Done clauses." caption="Planned example: checkout behavior, its repository scope, and verifiable completion evidence." />
-
-### Review the example
-
-Use a checkout outcome to show how intent becomes a Feature and citable clauses. Label invented product details as illustrative and verify any expected behavior before publishing.
+For an illustrative Acme Checkout requirement, use a story ID such as `checkout/show-order-total`. State what the customer sees before confirming an order, which currency and rounding rules apply, and what happens when a cart is empty. Separate those requirements from implementation suggestions. These are example requirements, not behavior Yellowhammer supplies to your product.
 
 ## Confirm it worked
 
-The Feature has a bounded outcome, the Project scope is clear, and each completion clause has a traceable specification citation. Explain where the user can inspect those details.
+The configured Spec Source points to the intended checkout. Your requirements describe bounded outcomes with stable references and observable criteria. After authoring, inspect the Feature and its Work Cards in Linear to check their Definition of Done and citations against the source.
 
 ## Common problems
 
-Address broad or ambiguous outcomes, criteria that cannot be observed, and citations that do not identify a specific specification location. Explain how to revise the source.
+- **The author cannot identify bounded work:** narrow the outcome and spell out the existing contracts and constraints.
+- **Completion cannot be observed:** replace subjective wording with a behavior or check a reviewer can assess.
+- **A citation is stale:** update the source and relevant planning records rather than treating a missing reference as evidence of completion.
 
 ## Next steps
 

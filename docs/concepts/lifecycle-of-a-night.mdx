@@ -3,30 +3,48 @@ title: "The lifecycle of a Night"
 description: "Follow a Feature from selection through execution, verification, and review."
 ---
 
-import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+import { VisualPlaceholder } from '/snippets/documentation.jsx';
 
-A Night selects one Feature, dispatches its Work Cards to local agent routes, evaluates completion, and reports outcomes for human review. The exact internal phases can vary by product version.
-
-<DocumentationOutline />
+A Yellowhammer [Night](/reference/statuses-and-glossary#night) is a Project's scheduled work window. Short-lived author, build, and land Acts select and prepare work, run agents, verify outcomes, and report results for your review.
 
 <VisualPlaceholder id="night-lifecycle-path" type="workflow" title="Night lifecycle" purpose="Trace specification selection through local execution, verification, reporting, and human review." caption="Planned workflow: one Feature moves through Work Cards and returns as a Night Summary and repository pull requests." />
 
-## From specification to selection
+## Author: select and prepare a Feature
 
-The specification describes product intent and completion evidence. The Night selects one Feature for its Project; do not imply it selects several Features at once.
+The author Act reads the Project's specification and current repository state, selects a Feature, and prepares its Feature Card and Work Cards in Linear. It writes completion criteria before implementation and checks whether the work can be grounded in the specification.
 
-## Local execution
+Authoring does not replace a Feature already in flight. After a Feature lands, a later author firing can select another during the same Night. Landed Features remain subject to the unmerged stack limit; a full stack can produce a quiet Night without being an execution failure.
 
-Work Cards are dispatched to configured agent Routes in Orca worktrees on the Mac. Agent CLIs perform code changes; Yellowhammer coordinates and records their results.
+An uncitable outcome, refusal, or authoring halt is a reason to inspect the board record, rather than an instruction for the worker to guess.
 
-## Verification and reporting
+## Build: execute and review Work Cards
 
-Verification reports against Definition of Done clauses and specification citations. The Night Summary carries the result, including empty or interrupted Nights.
+The build Act dispatches Work Cards through their configured Routes to agent CLIs in Orca Worktrees. The agent changes code; Yellowhammer coordinates the work and records its history.
+
+Cards within a Repo Lane run in authored order. Worker changes go through review and the repository's declared Check. Review changes can lead to another Round in the same Attempt. Hard failures can consume an Attempt and lead to another Route, within the configured limits.
+
+A question can put a Card in Waiting on You. A Protected Paths overlap prevents dispatch and asks you to resolve scope. Blocked work records the cause and the action needed before a retry.
+
+## Land: verify and publish reviewable results
+
+The land Act evaluates the Feature's Definition of Done clause by clause, using a verifier Route that did not write the Cycle's code. It records met, unmet, unresolved, or not checked results with their evidence.
+
+Landing produces repository pull requests for the work it can publish. A Partial Landing identifies unfinished Cards and clauses. A successor Feature's pull request can be stacked on an earlier unmerged Feature Branch, so its GitHub base may differ from the default branch.
+
+Landing means making the result available for human review. Yellowhammer never merges to mainline.
+
+## Close and report the Night
+
+The land firing at `night_end` completes the Night Card with a Night Summary. The summary distinguishes landing from progress without landing and reports failures, outstanding decisions, limits, and unmerged Features.
+
+Scheduling belongs to `launchd`, and the engine runs independently of the app. Quitting Yellowhammer's window does not stop a running Act. An interruption is not proof that work completed: inspect the recorded failure and reclaim history before retrying.
+
+A Rehearsal Night exercises the real Acts against its declared rehearsal board and Journal, but never dispatches agent CLIs, pushes, or opens pull requests. Rehearsal evidence does not establish that production agent execution or publication succeeded.
 
 ## Human review
 
-The human reviews Linear records and GitHub pull requests, answers questions, and decides whether to merge. Yellowhammer never merges.
+Read the summary, answer questions and re-ready work in Linear, and review pull requests in GitHub. Review stacked predecessors first. Later Acts observe your changes; a local display is not an immediate acknowledgement of a merge or board edit.
 
 ## Next steps
 
-[Verification and Definition of Done](/concepts/verification-and-definition-of-done) · [Related reference](/reference/statuses-and-glossary)
+[Verification and Definition of Done](/concepts/verification-and-definition-of-done) · [Review the morning](/review/overview)

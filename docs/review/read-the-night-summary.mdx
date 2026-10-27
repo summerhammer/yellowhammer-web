@@ -3,23 +3,46 @@ title: "Read the Night Summary"
 description: "Interpret what a Night completed, blocked, or left for you."
 ---
 
-import { DocumentationOutline } from '/snippets/documentation.jsx';
+The Yellowhammer Night Summary is the account written into a [Night Card](/reference/statuses-and-glossary#night-card) in Linear when the Night completes. Read it to distinguish progress, unfinished work, and failures before opening the linked records.
 
-The Night Summary records the result of a Night, including work completed and exceptions that need attention. Check its links to the underlying Linear records before deciding what to do.
+## Open the summary
 
-<DocumentationOutline />
+Select the Project in Yellowhammer. In **Tonight / last Night**, choose the verdict link to open its Night Card in Linear. While the Night is open, the Card states that the summary will be written when the land firing at `night_end` completes it.
 
-## What the summary tells you
+The header identifies the Project, Night date, mode, opening time, and completion time. Check the mode before interpreting results: a Rehearsal Night never opens real pull requests.
 
-Locate what completed, what stopped, what needs a human decision, and which pull requests were opened. The Night Summary should link back to the records that support each outcome.
+## Read the verdict first
 
-## Follow the records
+The **Verdict** combines how the Night ended, whether it advanced, and how many decisions are waiting.
 
-Open the linked Work Card for a blocked item or human question, and the repository pull request for code review. Keep the Linear record as the place to make triage decisions.
+| Wording | What to investigate |
+| --- | --- |
+| `landed` | Follow the repository pull requests and review their evidence. Landing does not mean merging. |
+| `landed partially` | Read the Partial Landing details for incomplete Cards and clauses. |
+| `advanced without landing` | Inspect Cards and Attempts; work progressed but no Feature landed. |
+| `did not advance`, with `idle` or `quiet` where applicable | Read Authoring and standing items to see why no work advanced. A full unmerged Feature stack is a quiet outcome. |
+| `halted` or `crashed` | Start with Failures, Exceptions, and Crashes and reclaims. |
+
+When several Features land during the same Night, the verdict reports their count, any partial landings, and the number awaiting merge. It does not list every Feature in the headline.
+
+## Follow the supporting sections
+
+Sections appear when there is something to report.
+
+- **Failures** identifies unrecovered Act failures. A later recovery can leave a past problem in the account without making the Night's ending a crash.
+- **Authoring** explains selection, refusals, halts, and reasons no new Feature was authored.
+- **Cards** lists touched Cards in repository and authored order, including their disposition and Attempts from this Night.
+- **Dispositions** counts Blocked and Waiting on You Cards and names recurring failures, operator-aborted work, usage-limit holds, and Cards removed from the board.
+- **Pull requests** lists repository links and flags Partial Landings. In rehearsal it can say `not opened` because of the rehearsal boundary.
+- **Answers on landed Cards** identifies answers banked after landing; those answers do not reopen a landed lane.
+- **Crashes and reclaims**, **Leftover processes**, and **Exceptions** explain interruptions and operational problems.
+- **Bounds**, **Standing items**, **Standing: un-adopted Cards**, and **Standing: unmerged Features** identify limits and unresolved work that may affect subsequent Nights.
+
+Open the underlying Work Card for a question or Block Reason, the Feature Card for completion evidence, and each pull request for code review. The summary describes the Night; current triage belongs on those records.
 
 ## Acme Checkout example
 
-Trace one illustrative checkout outcome from the Feature to its Work Cards, verification result, and repository pull request. Label any invented behavior as an example, not a product promise.
+Suppose an illustrative Acme Checkout Night completes an API reliability Work Card while its website Work Card asks which existing address fields the form should emphasize. Both Cards use an already established API contract. A verdict of `advanced without landing` is compatible with real progress. Read the API Card's recorded result, answer the website question in its comment thread, and check the Feature record before expecting a pull request. This example describes how to interpret records, not a guaranteed Night result.
 
 ## Next steps
 

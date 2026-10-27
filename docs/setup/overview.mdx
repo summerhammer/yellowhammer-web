@@ -3,30 +3,34 @@ title: "Set up your Project"
 description: "Prepare the integrations, repositories, and specification for one product."
 ---
 
-import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+import { VisualPlaceholder } from '/snippets/documentation.jsx';
 
-A Project brings together one product, its repositories, its Linear project, and its specification. Follow this path before asking Yellowhammer to work unattended.
-
-<DocumentationOutline />
+Set up one [Project](/reference/statuses-and-glossary#project) by connecting its services, choosing its local repositories and specification, and reviewing the limits and schedule before unattended work.
 
 ## Recommended reading order
 
-Follow the pages below in order. Each page is a focused brief until its product details have been verified.
+Prepare the machine-wide tools first, then complete the Project-specific choices in **Add Project…**. If setup shows **Before You Start**, follow its Settings link to declare a CLI and configure a base route.
 
 <CardGroup cols={2}>
-  <Card title="Connect Linear" href="/setup/connect-linear">Understand the Linear connection and Project board used by Yellowhammer.</Card>
-  <Card title="Connect GitHub" href="/setup/connect-github">Prepare GitHub access for pull requests across a Project’s repositories.</Card>
-  <Card title="Connect Orca and agent CLIs" href="/setup/connect-orca-and-agent-clis">Prepare local worktree execution and the coding agents you already use.</Card>
-  <Card title="Add a Project and repositories" href="/setup/add-project-and-repositories">Define the product scope and repositories that a Night may touch.</Card>
-  <Card title="Prepare your specification" href="/setup/prepare-specification">Make product intent and completion criteria clear enough for a Night.</Card>
+  <Card title="Connect Orca and agent CLIs" href="/setup/connect-orca-and-agent-clis">Prepare local Worktrees, declare an agent, and check its Probe result.</Card>
+  <Card title="Connect Linear" href="/setup/connect-linear">Install with admin approval and select your workspace and project.</Card>
+  <Card title="Connect GitHub" href="/setup/connect-github">Choose a Code Hosting Connection and check repository access.</Card>
+  <Card title="Add a Project and repositories" href="/setup/add-project-and-repositories">Complete the setup wizard for one product.</Card>
+  <Card title="Prepare your specification" href="/setup/prepare-specification">Choose a source and write traceable completion criteria.</Card>
 </CardGroup>
 
 ## What a Project contains
 
-A Project groups one product with its repositories, one Linear project, and a specification source. A Night works within that scope and creates Work Cards in Linear.
+The Add Project wizard covers **Project**, **Board**, **Repos**, **Code Hosting**, **Spec Source**, **Bounds**, and **Schedule** (the last pane is titled **Scheduled jobs**). Its sidebar shows each step's summary and readiness. You can revisit steps before confirming **Add Project**.
+
+Workspace connections and Operator identity choices save independently of the Project draft. Cancelling the sheet does not disconnect a workspace you just connected. The Project's permanent ID is confirmed when you add it.
 
 <VisualPlaceholder id="setup-overview-path" type="workflow" title="Project setup path" purpose="Show how a reader prepares integrations, repositories, and a specification before running a Night." caption="Planned workflow: connect Linear and GitHub, prepare local execution, define Project scope, and check the specification." />
 
+## Before leaving setup
+
+Check that the selected Linear project belongs to the product, every working repository is included, the GitHub check covers those repositories, and the specification source is correct. Choose **Not now** for scheduled jobs if you want to inspect and rehearse the setup first.
+
 ## Next steps
 
-[Add a Project and repositories](/setup/add-project-and-repositories) · [Related concepts](/concepts/overview)
+[Your first Night](/quickstart) · [Projects, Features, and Work Cards](/concepts/projects-features-and-work-cards)

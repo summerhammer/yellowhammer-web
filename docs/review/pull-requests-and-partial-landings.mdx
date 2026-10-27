@@ -3,43 +3,41 @@ title: "Review pull requests and Partial Landings"
 description: "Assess the pull requests a Night opens and decide whether to merge them."
 ---
 
-import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+import { VisualPlaceholder } from '/snippets/documentation.jsx';
 
-Yellowhammer opens a pull request per touched repository and never merges for you. A Partial Landing names the work or Definition of Done clauses that remain incomplete.
+Yellowhammer opens repository pull requests for human review and never merges them. Review the linked [Feature](/reference/statuses-and-glossary#feature), completion evidence, missing work, and any predecessor before choosing a merge action.
 
-<DocumentationOutline />
+## Review every repository
 
-## Goal
+Start from the Night Summary or select the Feature in the Pulse. Follow each repository's pull request link to GitHub. Compare the changed files with the intended Feature, the **Cards in this repository** list, recorded Checks, and **Verification, clause by clause**.
 
-Review repository pull requests and decide whether to merge, hold, or request changes.
+A multi-repository Feature can have several pull requests. Review the whole Feature rather than treating one repository's green CI as evidence that the customer outcome is complete. A repository with no pushed branch can have no pull request; inspect the Feature's explicit no-pull-request notes and landing failures when an expected link is absent.
 
-## Before you begin
-
-Open the Night Summary and identify the Feature and repositories involved. Review each linked pull request and its Work Cards; Yellowhammer does not merge for you.
-
-## Steps
-
-### Review each repository
-
-Compare the pull request summary, changed repository, and completed Work Cards with the intended Feature. Follow the project's review process and check any required CI evidence.
-
-### Recognize a Partial Landing
+## Recognize a Partial Landing
 
 <VisualPlaceholder id="partial-landing-anatomy" type="screenshot" title="A Partial Landing pull request" purpose="Point out where a pull request identifies incomplete Work Cards and unmet clauses." caption="Planned screenshot: verified Partial Landing summary and links to the affected Work Cards." />
 
-Identify the named missing Work Cards and unmet Definition of Done clauses. Explain what information lets a human judge the pull request without treating it as complete work.
+**Screenshot instructions:** Open a real Partial Landing pull request from a disposable demonstration Project. Capture the opening `partial` roll-up, the Night stamp and Feature Card link, **Incomplete Cards (every repository)**, **Definition of Done clauses unmet**, and the carried-forward list. Use a result that has at least one completed Card and one unfinished Card; include a held Todo Card if demonstrating sequential work. Use a second capture for the clause-by-clause Verification section if it cannot fit legibly. A rehearsal can demonstrate the board records, but cannot produce this GitHub screenshot because it never opens pull requests. Remove private repository names and sensitive content from the demonstration data before capture.
 
-### Make the merge decision
+A Partial Landing explicitly lists unfinished work across all repositories, its state and reason, and unmet completion clauses. A later Card held behind an earlier Card can remain Todo and still be named as unfinished. Read `not checked` clauses separately from unmet clauses: an unavailable check is not a successful check.
 
-Describe the human choices and their implications. Keep merge authority with the user and avoid suggesting that a Partial Landing is automatically safe to merge.
+The pull request body records the Night it describes and links to the live Feature Card. Merging all the Feature's pushed-repository pull requests closes a Partial Landing unverified and archives its Cycle. Merging only some does not close the Feature. Unfinished work can be carried forward for later Adoption; merging does not declare those clauses complete.
 
-## Confirm it worked
+## Review stacked pull requests in order
 
-After a human decision, identify the repository's pull request state and the corresponding Linear record to revisit. State only verified status transitions.
+Several Features can land sequentially in one Night. A successor pull request can target the predecessor Feature Branch instead of the repository's default branch. Read the **Stacked on** notice and inspect the base branch in GitHub.
 
-## Common problems
+Merge the predecessor first. If you merge the successor first, it merges into the predecessor branch and only reaches mainline when the predecessor does. If the predecessor has merged but the successor still targets its branch, change the successor's base to the default branch before merging.
 
-Cover a missing repository pull request, a Partial Landing with unclear missing work, and a pull request whose diff does not match its summary. Direct the reader to the relevant Night and Work Card records.
+The **Feature** group and its Inspector show awaiting-merge Features, predecessor links, and which repositories are in mainline. Leaving Features unmerged can fill `unmerged_features_max` and pause further authoring.
+
+## Choose the human outcome
+
+Follow your repository's review and CI requirements. You can merge, hold the pull request, or request changes in GitHub; Yellowhammer does not make that decision. Do not assume a GitHub review request automatically creates a new Yellowhammer Round.
+
+**Create a merge commit** is the recommended merge method because it preserves evidence Yellowhammer can recognize. Squash and rebase merges can also be recognized while mainline still contains the branch's changes; editing the same lines before a later Night can prevent that recognition.
+
+After acting, revisit the Feature in Linear and the app. Yellowhammer observes mainline and board changes during later Acts, so the displayed merge state can lag your GitHub action. For a returned Feature, the app also directs you to move the Feature Card to Done or Cancelled in Linear if that is your chosen disposition.
 
 ## Next steps
 

@@ -3,43 +3,49 @@ title: "Choose agents and routes"
 description: "Understand how an agent CLI, model, and effort form a Route."
 ---
 
-import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+Choose Yellowhammer [Routes](/reference/statuses-and-glossary#route) to decide which agent CLI, model, and effort handle a Card, authoring, and Verification.
 
-A Route names the agent CLI, model, and effort used for a Work Card. The configured Routing Table determines which routes are available; verify current choices and fallback behavior in the app.
+## Check agent readiness
 
-<DocumentationOutline />
+Open **Settings → Agent CLIs**. Declare an installed CLI, then choose **Probe Now** or **Probe Again**. The CLI must be installed and authenticated for the local account that runs the jobs. Read the individual findings and the **Offered** or **Not offered** routing status.
 
-## Goal
+A Probe invokes the agent and records its findings. To probe a specific configured CLI from a terminal:
 
-Choose usable Routes and understand how the Routing Table assigns them to Work Cards.
+```bash
+yh probe codex
+```
 
-## Before you begin
+Use `yh probe --help` for model and effort overrides. A passing Probe is readiness evidence for the adapter, not proof that every model your account offers will complete a Feature.
 
-Connect and check at least one supported agent CLI. Gather the CLI, model, and effort combinations available to the local account; verify current compatibility.
+## Edit the base Routing Table
 
-## Steps
+Open **Settings → Base Routing Table**. The **Cards** section maps a Card's Kind and Repo Role to a primary Route and an ordered list of fallbacks. Choose **Add Routing Entry** to add a mapping; use **If that fails, try…** and **Then try…** to extend its chain. Select CLI, model, and effort for each Route, then save.
 
-### Understand a Route
+| Entry | Purpose |
+| --- | --- |
+| Any Kind / Any Repo Role | Catch-all for Cards with no more specific matching entry. |
+| A specific Kind | Route that Kind and its dotted descendants. |
+| A specific Kind and Repo Role | Specialize work for one repository role. |
+| Author | Choose the authoring Route, otherwise use the catch-all. |
+| Verification | Order candidate Routes for a verifier that wrote none of the Cycle's code. |
 
-A Route is the agent CLI, model, and effort combination. Explain how the user distinguishes these choices in the current settings.
+Under **Verification**, inspect **Who checks whose code**. Add a verifier when a worker has no independent eligible Route. Independence concerns the complete CLI/model/effort Route, so do not assume a second label for the same Route supplies a different verifier.
 
-### Check route readiness
+Use **Test a Card…**, choose a Kind and Repo Role, and inspect the winning entry with **Show Entry**. This tests the table being edited; it does not save anything or account for Project overrides and Probe eligibility at actual dispatch.
 
-Describe the shipped probe or pre-flight for a selected CLI/model/effort and what a passing check proves. Do not imply that it proves a task will succeed.
+## Apply Project overrides
 
-<VisualPlaceholder id="routes-routing-table" type="table" title="Routes and routing entries" purpose="Compare example CLI, model, and effort combinations with verified work kinds and fallback routes." caption="Planned table: each Route triple and the Routing Table entry that selects it, with examples verified for the shipped release." />
+Open **Settings → your Project → Configuration → Routing overrides**. An override replaces the base entry with the same Kind and Repo Role, including its entire fallback chain. A new key adds an entry; untouched keys inherit the base table. Choose **Save** after editing.
 
-### Review routing and fallback
+The longest matching dotted Kind prefix wins, then a matching explicit Repo Role wins over Any Repo Role. The selected entry's primary and fallbacks are tried in order, filtering routes excluded by previous failures, failed Probes, or temporary CLI usage backoff. The engine does not switch to a less specific entry just because a selected entry's chain is exhausted.
 
-Explain how a Routing Table entry selects a Route and where ordered fallbacks apply. Include how retries move to another eligible route only after verifying shipped rules.
+An Operator Override on a Card pins a complete Route. It takes precedence over ordinary routing and attempt-history exclusion, but still must pass readiness checks. The ordinary fallback chain is not used under that pin.
 
 ## Confirm it worked
 
-Show the readiness evidence for each intended Route and the Routing Table entry that would select it for representative work.
+Check each selected CLI is offered, test representative Card kinds, inspect Project overrides, and confirm every worker has a usable independent verifier. A review asking for changes uses another Round in the same Attempt; a failed Attempt can move to a fallback with a fresh Round budget.
 
-## Common problems
-
-Distinguish a missing CLI, unsupported model or effort, and an entry with no usable fallback. Link to the current probe and configuration diagnostics.
+If a Card becomes Blocked with `route failure`, read its Managed Block, check the selected entry and Probe findings, correct the issue, and move the Card back to **Todo** in Linear when ready to retry.
 
 ## Next steps
 

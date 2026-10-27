@@ -3,43 +3,50 @@ title: "Add a Project and repositories"
 description: "Define the product scope and repositories that a Night may touch."
 ---
 
-import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+import { VisualPlaceholder } from '/snippets/documentation.jsx';
 
-A Project groups the product, its repositories, one Linear project, and its specification. Add only repositories that belong to this product and verify their relationships before execution.
-
-<DocumentationOutline />
-
-## Goal
-
-Create one product scope with its repositories, Linear project, and specification.
+Add a [Project](/reference/statuses-and-glossary#project) to group one product's working repositories, Linear project, specification source, limits, and scheduled jobs.
 
 ## Before you begin
 
-Gather the product name, repository paths, Linear project, and specification source. Where repositories depend on shared contracts, identify the relationships the setup flow asks you to confirm.
+Prepare a declared agent CLI and base route in Settings. Gather local repository paths and their verification commands, the intended Linear workspace/project, a GitHub connection, and the specification checkout. Acme Checkout below is an illustrative product name.
 
-## Steps
+## Define Project scope
 
-### Define Project scope
+Open **Add Project…**. If **Before You Start** appears, follow its **Open Settings → Agent CLIs…** link, declare a CLI and configure a base route, then return.
 
-Explain which product and Linear project belong together. Use Acme Checkout as an illustrative example, not a required name or configuration.
+In **Project**, enter a name such as Acme Checkout. Inspect the generated Project ID. Use **Edit Id…** before adding if you need another ID. The ID names the Project's configuration, Journal, and three LaunchAgents and cannot be changed after adding; the display name can be changed later.
 
-### Add repositories
+In **Board**, connect or select the Linear workspace, choose your Operator identity, and select and verify an existing Linear project or choose a team for a new one. See [Connect Linear](/setup/connect-linear).
 
-Describe how the current release records repository locations and roles. Explain how a user reviews any proposed repository dependencies before finishing setup.
+## Add repositories
+
+In **Repos**, choose **Add Repo…** for each local checkout. Review each repository's name and path, select its **Repo Role**, and enter its **Check** command. Use `none` only when you intend to declare no Check. The **Suggestions** menu supplies common commands, but you should choose one that actually verifies that repository.
+
+A working repository belongs to one Project. Resolve any displayed conflict before continuing. Do not add unrelated repositories merely because they share a parent folder.
+
+With two or more repositories, review **Repo Dependencies**. The scan shows evidence for proposed consumer/producer relationships. Set **Read by** and choose **Confirm** or **Decline**; **Undo** returns a proposal to pending. Only confirmed dependencies are written. A Feature does not change both ends of a declared dependency; consumers can wait for a producer's merge or release.
 
 <VisualPlaceholder id="setup-project-components" type="relationship diagram" title="What belongs to one Project" purpose="Show one product grouped with its repositories, Linear project, and specification." caption="Planned diagram: the Project links these inputs and the Night works within this scope." />
 
-### Review the resulting configuration
+## Complete the remaining steps
 
-Name the visible Project details to inspect and how to catch a repository or Linear project attached to the wrong product.
+1. In **Code Hosting**, choose a Code Hosting Connection and inspect the per-repository access report.
+2. In **Spec Source**, choose **A shared spec folder** or **A Repo in this Project**. See [Prepare your specification](/setup/prepare-specification).
+3. Review **Bounds**. Keep the defaults initially or adjust the displayed per-Project limits.
+4. Open **Schedule** (the pane is titled **Scheduled jobs**), set the Night window and choose whether to install jobs, export them, or use **Not now**. Choose **Not now** if you want to review setup before enabling automatic runs.
+5. When all steps are ready, choose **Add Project**, confirm the permanent ID, and read the run log. Choose **Done** after success.
 
 ## Confirm it worked
 
-State the evidence that the Project and all intended repositories are available in the app, with the intended Linear project and specification source shown.
+The Project appears in the sidebar. Open its Settings entry and confirm the Linear project, repositories, specification source, and connection match the intended product. Inspect any setup warnings before running a Night.
 
 ## Common problems
 
-Cover missing repository paths, duplicate or unrelated repositories, and an unavailable Linear project. Point to current diagnostics without inventing control labels.
+- **The Add Project button is unavailable:** inspect the step summaries and problem counts; each required step must be complete.
+- **A repository belongs to another Project:** correct the selected checkout or Project membership before proceeding.
+- **Setup fails after you confirm:** read the log. The Project file may already exist, so inspect Settings before attempting to add it again.
+- **Chosen Bounds could not be saved:** the run view reports that the Project was added with default Bounds. Change them in **Settings → Recalibrate** for that Project.
 
 ## Next steps
 

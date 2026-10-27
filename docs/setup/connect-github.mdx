@@ -3,44 +3,45 @@ title: "Connect GitHub"
 description: "Prepare GitHub access for pull requests across a Project’s repositories."
 ---
 
-import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+import { VisualPlaceholder } from '/snippets/documentation.jsx';
 
-Yellowhammer opens a pull request for each touched repository. Confirm repository access and the current GitHub connection flow before enabling Nights.
-
-<DocumentationOutline />
-
-## Goal
-
-Prepare GitHub access for every repository that a Project may touch.
+Connect GitHub so Yellowhammer can push Feature Branches and open pull requests for your [Project](/reference/statuses-and-glossary#project)'s working repositories. Each Project selects one Code Hosting Connection.
 
 ## Before you begin
 
-List the Project repositories and identify the account or installation that should open pull requests. Confirm current GitHub permission requirements before giving setup instructions.
+Identify the GitHub account and repositories you intend to use. That account needs push and pull request access to every working repository. A connection's identity alone does not establish access to all of them.
 
-## Steps
+## Connect code hosting
 
-### Check repository scope
+Open **Settings → Code Hosting**. Under **Connect GitHub**, choose either method:
 
-Explain how to compare the configured repositories with the intended product. Include access to each repository that may receive a pull request.
+- **gh CLI:** choose **Connect** to use the displayed active `gh` account. Yellowhammer holds no token for this connection. If it is unavailable, read the reason shown beside the control and authenticate the intended account in your GitHub CLI before returning.
+- **Keychain token:** enter a **Local name** and **GitHub token**, then choose **Connect**. Alternatively, enter a local name and choose **Import from gh** to store the GitHub CLI's current token in the login Keychain.
 
-### Connect code hosting
+The resulting connection card shows its local name, type, **Code Hosting identity**, and the Projects that select it. Check the identity before assigning the connection to a Project. A Keychain connection offers **Replace token…** when you need to rotate its token.
 
-Describe the shipped connection path and permissions to verify. Do not assume a button label or installation scope until checked in the app.
+## Check repository access
 
-### Check pull request access
-
-State how to verify that the connection can create a review pull request in each configured repository without merging it.
+In Add Project, add the repositories first, then open **Code Hosting** and select the connection. The wizard checks the selected connection against the working repository paths and displays the overall report and each repository's result. Use **Connect another…** to add a different connection there, or **Check again** after correcting access.
 
 <VisualPlaceholder id="connect-github-repositories" type="screenshot" title="GitHub repository access" purpose="Show where a user confirms which configured repositories can receive pull requests." caption="Planned screenshot: verified repository access and connection status in the current app." />
 
+**Screenshot instructions:** In the Add Project sheet for a sample Acme Checkout Project, add its working repositories, open **Code Hosting**, and select a connection that can access them. Wait for checking to finish. Capture the selected connection and per-repository report; do not include a token field containing a value. This demonstrates repository coverage rather than only a connected account.
+
 ## Confirm it worked
 
-Show the evidence that the connection covers each intended repository and that review pull requests can be opened. Make clear that merging stays with the human.
+The selected identity is correct and the wizard's report covers every intended working repository without an access refusal. Yellowhammer opens pull requests for you to review; you decide what merges.
 
 ## Common problems
 
-Distinguish missing repository access, a repository absent from Project configuration, and a connection that targets the wrong GitHub identity. Verify remedies against current diagnostics.
+- **Wrong account:** inspect **Code Hosting identity**. Select another connection or correct the active `gh` account, then check again.
+- **One repository fails:** check that repository's configured path, GitHub remote, and the selected account or token's access. A successful connection to another repository does not cover this failure.
+- **Expired Keychain token:** choose **Replace token…** in Settings, paste a replacement or use **Import from gh**, then repeat the Project check.
+
+## Other code hosting services
+
+**TBD — not yet implemented.** GitHub is the supported code hosting service today.
 
 ## Next steps
 
-[Connect Orca and agent CLIs](/setup/connect-orca-and-agent-clis) · [Statuses and glossary](/reference/statuses-and-glossary)
+[Connect Orca and agent CLIs](/setup/connect-orca-and-agent-clis) · [Pull requests and partial landings](/review/pull-requests-and-partial-landings)

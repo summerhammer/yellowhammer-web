@@ -3,44 +3,53 @@ title: "Connect Linear"
 description: "Understand the Linear connection and Project board used by Yellowhammer."
 ---
 
-import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+import { VisualPlaceholder } from '/snippets/documentation.jsx';
 
-Linear is the source for triage and the home of Feature and Work Card records. Confirm workspace access, app installation requirements, and current connection flow in the product.
-
-<DocumentationOutline />
-
-## Goal
-
-Prepare the Linear workspace and Project that will carry Night triage.
+Connect Yellowhammer to your Linear workspace, choose the human who receives questions, and select the Linear project that will hold the [Project](/reference/statuses-and-glossary#project)'s Features and Work Cards.
 
 ## Before you begin
 
-The current product brief requires workspace administrator access for Linear setup. Confirm whether this remains true for the installed release, identify the intended workspace and Linear project, and review [Requirements](/start/requirements).
+Identify the intended workspace and team. A workspace admin must approve the Yellowhammer app. If you are not an admin, use the remote approval option. Complete [agent setup](/setup/connect-orca-and-agent-clis) first if the Add Project steps are locked by **Before You Start**.
 
-## Steps
+## Connect the workspace
 
-### Confirm workspace access
+1. Open **Settings → Boards**. If a workspace is already connected, choose **Connect a Linear Workspace…** to add another; otherwise the connection form is already visible. You can also connect from the **Board** step while adding a Project.
+2. Optionally enter a **Local name**. This name identifies the workspace on this Mac and cannot be changed later. Leave it empty to use the workspace's URL key.
+3. Choose **Install Here as a Workspace Admin…** to approve in the browser on this Mac. Alternatively, choose **Request Approval from an Admin…**, use **Copy Link**, and send that approval link to a workspace admin.
+4. Wait for the installed state. It identifies the workspace where Yellowhammer was installed. A workspace connected in the wizard remains connected if you cancel adding the Project.
 
-Check that the account can access the intended workspace and perform the setup actions the current release requires. Verify the exact role requirement before publishing instructions.
+## Choose your Operator identity
 
-### Connect the workspace
+In the wizard, select the connected workspace. If it has no Operator identity yet, choose your human account under **You in Linear**. The choice saves immediately and applies to every Project using this workspace connection.
 
-Document the current connection flow and app installation step only after checking the shipped app. Record which workspace and operator identity the connection represents.
+When work needs your decision, Yellowhammer moves the issue to **Waiting on You** and assigns it to this user. Changing the identity later does not reassign issues already waiting on you.
 
-### Select the Project board
+## Select the Linear project
 
-Explain how the Linear project scopes a Yellowhammer Project and what to check when several projects or workspaces are available.
+In the wizard's **Board** step, choose one of these options:
+
+- **Existing Linear project:** select a listed project, or paste its ID from Linear's URL or settings and choose **Verify**. Check the displayed name and teams. A successful result says Yellowhammer can read it.
+- **New Linear project:** select the team where Yellowhammer should create a project named after your Yellowhammer Project.
 
 <VisualPlaceholder id="connect-linear-workspace" type="screenshot" title="Linear connection and Project board" purpose="Show the verified connection state and how the chosen Linear project scopes a Yellowhammer Project." caption="Planned screenshot: current app connection state with workspace and Project context visible." />
 
+**Screenshot instructions:** Use an illustrative Acme Checkout Project in the Add Project sheet. Open **Board**, select an installed workspace and **Existing Linear project**, then select or verify the intended Linear project. Capture the workspace selection, project name/team, and successful read confirmation together. Use a sample workspace and omit approval links or personal member details.
+
 ## Confirm it worked
 
-Name the visible connection status and the selected workspace/Project evidence. Confirm the app can read the intended Linear project before scheduling a Night.
+The installation reports the intended workspace. Your Operator identity is selected, and the existing project verification names the expected project and team, or the new-project option names the intended team.
 
 ## Common problems
 
-Cover insufficient workspace permissions, an unavailable workspace, and a connection that exists but points to the wrong Project. For each, identify the diagnostic evidence and verify the supported remedy.
+- **The project does not exist in this workspace:** check both the workspace selection and the pasted project ID, then verify again.
+- **Yellowhammer cannot access the team:** ask a team admin to add Yellowhammer in the team's settings, then verify again.
+- **Remote approval expired or was rejected:** choose **New link**, or **Install here instead** if an admin can sign in on this Mac.
+- **The local approval ports are busy:** use the displayed port information to resolve the conflict, then choose **Retry**.
+
+## Jira
+
+**TBD — not yet implemented.** Jira choices in the wizard are disabled.
 
 ## Next steps
 
-[Connect GitHub](/setup/connect-github) · [Statuses and glossary](/reference/statuses-and-glossary)
+[Connect GitHub](/setup/connect-github) · [Troubleshoot setup and connections](/reference/troubleshoot-setup-and-connections)

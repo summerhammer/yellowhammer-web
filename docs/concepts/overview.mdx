@@ -3,29 +3,33 @@ title: "Understand Yellowhammer"
 description: "Build a mental model of Projects, Nights, Features, and Work Cards."
 ---
 
-import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+import { VisualPlaceholder } from '/snippets/documentation.jsx';
 
-Yellowhammer is a local coordinator for unattended engineering work. These concepts explain how intent in a specification becomes reviewable pull requests and a morning report.
-
-<DocumentationOutline />
+Yellowhammer coordinates local tools to turn product intent into reviewable work. These concepts explain what belongs to a Project, how a Night progresses, and what the recorded evidence can tell you.
 
 ## Recommended reading order
 
-Follow the pages below in order. Each page is a focused brief until its product details have been verified.
-
 <CardGroup cols={2}>
-  <Card title="Projects, Features, and Work Cards" href="/concepts/projects-features-and-work-cards">Understand how product scope and pieces of work relate in Linear.</Card>
-  <Card title="The lifecycle of a Night" href="/concepts/lifecycle-of-a-night">Follow a Feature from selection through execution, verification, and review.</Card>
-  <Card title="Verification and Definition of Done" href="/concepts/verification-and-definition-of-done">Understand how completion criteria connect to the specification and evidence.</Card>
-  <Card title="Local execution and credentials" href="/concepts/local-execution-and-credentials">Understand where code, tools, and credentials are used during a Night.</Card>
+  <Card title="Projects, Features, and Work Cards" href="/concepts/projects-features-and-work-cards">Understand product scope, one in-flight Feature, and repository-scoped work in Linear.</Card>
+  <Card title="The lifecycle of a Night" href="/concepts/lifecycle-of-a-night">Follow author, build, and land Acts through local execution and reporting.</Card>
+  <Card title="Verification and Definition of Done" href="/concepts/verification-and-definition-of-done">Read clause-level evidence and distinguish unmet, unresolved, and unchecked criteria.</Card>
+  <Card title="Local execution and credentials" href="/concepts/local-execution-and-credentials">Understand local orchestration, external services, and permission boundaries.</Card>
 </CardGroup>
 
 ## The core objects
 
-A Project groups the product scope. A Night selects one Feature; its Work Cards represent repository-scoped work and its Night Summary records the result.
+A [Project](/reference/statuses-and-glossary#project) groups one product's repositories, specification source, Linear project, and configuration. A [Feature](/reference/statuses-and-glossary#feature) describes an intended outcome. Its [Work Cards](/reference/statuses-and-glossary#work-card) carry the repository-scoped pieces of work.
+
+A [Night](/reference/statuses-and-glossary#night) is a scheduled window of activity for a Project. One Feature is in flight at a time, but several can land sequentially during the same Night. Landed Features can remain in the unmerged stack while you review their pull requests.
 
 <VisualPlaceholder id="concepts-overview-path" type="relationship diagram" title="Yellowhammer core objects" purpose="Show how Projects, Nights, Features, Work Cards, and Night Summaries relate." caption="Planned diagram: one Project scopes a Night and Feature; Work Cards and a Night Summary carry its work and result." />
 
+## Read evidence at the right level
+
+Use a Work Card's Attempts, review Rounds, and Checks to investigate an individual piece of work. Use the Feature's Definition of Done and Verification report to evaluate the intended outcome across repositories. Use the Night Summary for what happened during that Night, including failures and decisions still waiting.
+
+Yellowhammer coordinates agents and records their results. You make triage decisions in Linear and merge decisions in GitHub.
+
 ## Next steps
 
-[Projects, Features, and Work Cards](/concepts/projects-features-and-work-cards) · [Related concepts](/concepts/overview)
+[Projects, Features, and Work Cards](/concepts/projects-features-and-work-cards) · [Review the morning](/review/overview)

@@ -3,28 +3,35 @@ title: "Requirements"
 description: "Check the Mac, services, and accounts a Project needs."
 ---
 
-import { DocumentationOutline } from '/snippets/documentation.jsx';
+Yellowhammer needs an Apple Silicon Mac running macOS 26 or later, local repositories, Orca ADE, Linear, GitHub, and at least one supported coding agent CLI.
 
-A Project needs macOS 26, Orca ADE, Linear, GitHub, and at least one supported agent CLI. The Mac must remain available for unattended execution. Confirm current compatibility details before setup.
+## Get Yellowhammer
 
-<DocumentationOutline />
-
-## Before you begin
-
-Use this page to check readiness, not to infer a supported version from an old setup guide. Verify the current release requirements before connecting services.
+[Download Yellowhammer for macOS](https://github.com/summerhammer/yellowhammer/releases/latest/download/Yellowhammer.dmg). The app and its `yh` engine ship together.
 
 ## Mac and local environment
 
-Confirm macOS 26 compatibility, available disk space for repositories and worktrees, and that the Mac remains available during the configured Night window. Verify sleep and login requirements in the current scheduler.
+- Use the macOS account that will run Nights to install and authenticate your tools.
+- Install git 2.38 or later and Orca ADE. Setup looks for the `orca` executable on the PATH used by scheduled jobs.
+- Keep local checkouts of your working repositories and specification available, with space for Orca Worktrees and build output.
+- Keep the Mac awake, signed in, and able to reach Linear, GitHub, and your coding agent service during unattended work. The app itself can be quit. See [scheduling](/run/configure-the-schedule) for timing and sleep behavior.
 
 ## Connected services
 
-Check access to the Linear workspace and project, GitHub repositories that may receive pull requests, and Orca ADE. The current product brief requires workspace administrator access for Linear setup; verify this requirement before publication.
+**Linear:** use a workspace with a Linear project for the product, or a team where setup can create one. A workspace admin must approve Yellowhammer's app installation. You can install as an admin on this Mac or send an approval link to an admin. You do not have to be the admin yourself. Select your own human Linear user as the Operator identity so issues needing a decision can be assigned to you.
+
+**GitHub:** prepare access to every working repository. Yellowhammer can use the active `gh` account or a named GitHub token stored in your login Keychain. The connection must be able to push and open pull requests in the repositories it serves. [Connect GitHub](/setup/connect-github) explains how to check the Project's repository access.
 
 ## Agent access
 
-Confirm at least one supported agent CLI is installed for the macOS account that runs Nights. Check current CLI version, authentication, and the model/effort combinations the product can use.
+The current adapters support `claude`, `codex`, and `agy`. Install and authenticate the CLI you intend to use, then declare it in **Settings → Agent CLIs** and give it a route in **Base Routing Table**. Run **Probe Now** before relying on it unattended. A declaration alone does not run a Probe.
+
+A Probe reports the installed CLI version and compatibility findings. Read a failed finding and its reason rather than assuming an installed CLI is ready. See [Connect Orca and agent CLIs](/setup/connect-orca-and-agent-clis).
+
+## Other issue trackers
+
+**TBD — not yet implemented.** The Add Project flow shows Jira as coming later. Linear is the supported board today.
 
 ## Next steps
 
-[Your first Night](/quickstart) · [Related reference](/reference/statuses-and-glossary)
+[Your first Night](/quickstart) · [Statuses and glossary](/reference/statuses-and-glossary)

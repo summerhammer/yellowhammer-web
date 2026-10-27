@@ -19,9 +19,9 @@ The 30 current public pages are listed in `docs.json`. `_authoring/` is intentio
 
 ## Shared requirements for every public page
 
-Use title and one-sentence description frontmatter. Place snippet imports immediately after frontmatter. Open the rendered content with a one-sentence purpose statement, then render `DocumentationOutline`. Its notice identifies unfinished content briefs. Do not present unverified UI labels, procedures, defaults, command syntax, compatibility, or results as fact. Use a footer with a recommended next task and related concept or reference, using native links or cards.
+Use title and one-sentence description frontmatter. Place snippet imports immediately after frontmatter. Open the rendered content with a purpose statement. Completed pages must not render `DocumentationOutline`; that component is reserved for the unused starter templates. Do not present unverified UI labels, procedures, defaults, command syntax, compatibility, or results as fact. Use a footer with a recommended next task and related concept or reference, using native links or cards.
 
-Link key terms when they first appear to their canonical page, normally `/reference/statuses-and-glossary#term`. Keep terminology aligned with the sibling spec's `docs/glossary.md`; do not invent alternate names. Check product behavior against current app stories and release details before upgrading a content brief into instructions.
+Link key terms when they first appear to their canonical page, normally `/reference/statuses-and-glossary#term`. Keep terminology aligned with the sibling spec's `docs/glossary.md`; do not invent alternate names. Verify product behavior against the current local app views, Engine commands, configuration, and relevant tests. The specification describes intended behavior; an unchecked requirement is not evidence of an implemented capability.
 
 Use **Acme Checkout** as the illustrative product when an example helps. Make clear which details are illustrative and verify all expected behavior before publishing them as steps.
 
@@ -41,6 +41,12 @@ Import `VisualPlaceholder` from `/snippets/documentation.jsx`. Every planned scr
 
 Use a unique ID per visual across the site. Replace `replace-me-` template IDs before publishing. `purpose` describes what readers should learn; `caption` describes the intended visual contents. Do not leave an empty box or use an unlabelled image. The shared styling lives in `style.css` and supports light and dark themes.
 
+Follow every screenshot placeholder with visible **Screenshot instructions:** describing what the capture should show, how to navigate to that screen, and how to prepare the necessary selection, sample data, or run state. Use non-sensitive example names and hide credentials. If the required state is not implemented, mark the capture TBD. Creating screenshots and diagrams is a separate task; preserve existing diagram and workflow placeholders during a textual content pass.
+
 ## Current content status
 
-All pages in the initial public structure are **outlines/content briefs**, not complete instructions. Overview paths and product explanations describe the intended learning architecture. Connection steps, settings, exact control names, command examples, defaults, status displays, and diagnostic remedies remain to be verified against the current app. Replace the notice only when a page's specific content has been checked. Do not infer behavior from this guide.
+The public pages describe the current local Yellowhammer implementation as checked on 2026-10-27. They are end-user guides, not a copy of the product specification or a promise about a particular distributed release. The visual placeholders remain intentional.
+
+For an unimplemented section, retain its heading and write **TBD — not yet implemented.** Omit speculative procedures. For a detail whose implementation cannot be verified, write **TBD — behavior requires verification.** These are different conditions: do not call a feature unimplemented merely because its behavior has not been checked. Keep TBD notices local to the affected section so verified instructions remain useful.
+
+When the app changes, recheck the affected procedure and its screenshot instructions together. Review concepts and quickstart text for assumptions that may have changed across features, such as scheduling or the number of Features advanced during a Night. Do not infer behavior from this guide.

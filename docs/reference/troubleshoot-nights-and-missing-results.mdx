@@ -3,28 +3,58 @@ title: "Troubleshoot Nights and missing results"
 description: "Investigate a Night that did not run or produced an unexpected result."
 ---
 
-import { DocumentationOutline } from '/snippets/documentation.jsx';
-
-Use the Night Card and Night Summary as the first record of what happened. Follow linked Work Cards and pull requests, then verify schedule and local execution diagnostics for the current release.
-
-<DocumentationOutline />
+Investigate a Yellowhammer Night using its Linear records, the selected Project's Pulse, and local engine diagnostics. Keep the affected Project and Night date clear before retrying work.
 
 ## No Night result appeared
 
-Check whether the Night Card exists for the Project. If it does not, inspect schedule installation and local scheduler diagnostics; if it does, follow the card’s recorded state.
+Look for that Project's Night Card in Linear. A Night that started should leave a Night Card even when it produced no work. If no card exists, inspect the local schedule and recent runs:
 
-## Night stopped or blocked
+```bash
+yh status --project acme-checkout
+yh doctor --check launchd --project acme-checkout
+```
 
-Read the Night Summary and the affected Work Card’s status and Block Reason. Distinguish a human question from a route, check, host, or configuration failure.
+Replace `acme-checkout` with your Project id. `status` examines seven past Nights by default and reports job state, sleep history, and missed-Night diagnoses. A sleeping Mac, missing or disabled jobs, or an invocation that failed before initialization require different fixes; follow the reported diagnosis.
 
-## Pull request is missing
+For missing or stale jobs, inspect the report before using `yh doctor --fix --check launchd --project acme-checkout`. If it names a different app copy, review the executable path before using the explicit `--repoint` option. For other setup failures, use [connection troubleshooting](/reference/troubleshoot-setup-and-connections).
 
-Confirm whether work touched that repository and whether the Night Summary reports a pushed branch or landing exception. Check the GitHub connection and repository permissions using current diagnostics.
+Logs are under `~/Library/Logs/Yellowhammer/`, named `<project-id>.author.log`, `<project-id>.build.log`, and `<project-id>.land.log`. Read the first failure rather than assuming a later empty invocation means the original work succeeded.
+
+## Night stopped or work is Blocked
+
+Read the Night Summary, then the affected Card's Managed Block and Attempts. The Block Reason is prose in that block, not a separate label to search for.
+
+| Reason | What to inspect and do |
+| --- | --- |
+| `reviewer rejection` or `check failure` | Read the findings or failing Check under Attempts; correct the cause, then move the Card to **Todo** in Linear to retry. |
+| `route failure` | Inspect the Routing Table, fallbacks, and agent Probe findings; repair readiness before moving the Card to **Todo**. |
+| `host crash` or `engine fault` | The Card is reclaimable, and no partial state was written as if it were complete. Inspect host or engine evidence, then move it to **Todo** to retry. |
+| `operator abort` | The stopped Attempt was deliberate; move the Card to **Todo** when you want to retry. |
+| `reply overdue` or `decision overdue` | Answer the question or make the decision in Linear, then move the Card to **Todo**. |
+| `failure recurrence` | Fix the cause recurring across Nights before retrying. |
+| `authoring defect` | Correct the Card's Architectural Brief or Definition of Done before retrying. |
+| `feature abandoned` or `feature completed` | Review unfinished work carried forward; a later Feature may adopt it, or cancel it in Linear to drop it. |
+
+A **Waiting on You** Card needs an answer or decision in Linear. Follow its explicit next action. Raising Bounds without resolving the cause can repeat the same failure. If authoring stops because implemented Features await merge, review and merge eligible pull requests; later Acts observe merges before authoring more work.
+
+A usage-limited CLI may back off temporarily. Review the recorded usage-limit evidence and available fallback Routes; do not treat a temporary backoff as proof the Card's code failed.
+
+## A pull request is missing
+
+Check the Night Summary and the Feature's per-Repo result. Rehearsals never push or open pull requests. A real Night may have no eligible work to publish, a pending decision holding landing, a verification problem, or a GitHub publication failure. A **Partial Landing** can publish completed work while carrying unfinished Cards forward.
+
+Follow the reported publication exception, inspect the land log, and check the selected credential:
+
+```bash
+yh doctor --check github --project acme-checkout
+```
+
+A successful Check or completed Work Card alone does not establish that a pull request was created. Use the recorded repository and pull request links as evidence. Read [Pull requests and partial landings](/review/pull-requests-and-partial-landings) before merging.
 
 ## Gather diagnostic details
 
-Record the Project and Night, linked Linear issue identifiers, relevant GitHub repository, exact error, and app/CLI version. Remove credentials before sharing.
+Collect the Project id, configured Night date, linked Linear issues, repository and pull request links, exact error, relevant Act log, and app or engine version. Include `yh status` and the relevant filtered `doctor` findings. Remove credential values and private source text before sharing.
 
 ## Next steps
 
-[Review the morning](/review/overview) · [Related reference](/reference/statuses-and-glossary)
+[Review the morning](/review/overview) · [Statuses and glossary](/reference/statuses-and-glossary)

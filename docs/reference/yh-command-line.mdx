@@ -3,24 +3,82 @@ title: "yh command line"
 description: "Understand the role and lookup path for the yh command-line tool."
 ---
 
-import { DocumentationOutline } from '/snippets/documentation.jsx';
+The `yh` command runs Yellowhammer's engine and exposes setup, diagnostics, and explicit control of one Project. Scheduled jobs invoke the bundled engine even when you have not installed the terminal shortcut.
 
-The yh command-line tool exposes setup and diagnostic operations. This page is a navigation stub until supported commands, flags, and examples are verified against the current release.
+## Install the terminal command
 
-<DocumentationOutline />
+Open **Settings → General → Command Line Tool** and choose **Install…**. The command creates `/usr/local/bin/yh` as a symlink to the engine in your app copy. If the app moves or the target becomes stale, use **Update…** when offered. Check the target shown beside the installation status.
 
-## Scope
+Use help to inspect the command supported by your installed copy:
 
-Explain which setup and diagnostic tasks the installed `yh` command supports. Confirm support against the current CLI help before listing a command.
+```bash
+yh --help
+yh doctor --help
+yh setup --help
+```
 
-## Command lookup
+In examples below, `acme-checkout` is an illustrative Project id. Replace it with the permanent id from your Project's Configuration pane.
 
-For each verified command, capture its purpose, required arguments, safety effects, and the source of authoritative help. Do not include unverified flags.
+## Inspect configuration and readiness
 
-## Examples to add after verification
+| Command | Purpose and effects |
+| --- | --- |
+| `yh validate` | Validate configuration offline, without accessing Keychain, Linear, or launchd. |
+| `yh doctor --project acme-checkout` | Inspect that Project and machine-wide readiness: configuration, Probes, git, Linear, GitHub, Keychain, jobs, and Orca ADE. |
+| `yh status --project acme-checkout` | Show recent runs, job state, sleep history, and missed-Night diagnoses. |
+| `yh recalibrate --project acme-checkout` | Read the Project's Bounds and the current reported Night's proximity to them. |
+| `yh probe codex` | Invoke the named agent's readiness Probe and record its result for this Mac. |
 
-Use an Acme Checkout example only after a real supported invocation is verified. Show expected output without exposing credentials or machine-specific paths.
+`doctor --check` narrows the report to `configuration`, `probes`, `git`, `linear`, `github`, `keychain`, `launchd`, `orphans`, or `orca`. `--json` prints findings as JSON. `--probe` runs fresh Probes for declared CLIs before evaluating eligibility; unlike ordinary read-only diagnostics, it invokes agents and records results.
+
+`status --nights 7` examines seven past Nights, the default. Set another positive integer to change the history window. `recalibrate --json` prints its report as JSON.
+
+A diagnostic exits unsuccessfully when it reports failure findings. A warning alone does not make `doctor` or `validate` fail. Read the finding's subject and message to identify whether it concerns the Mac, a connection, or a Project.
+
+## Setup and repair
+
+| Command | Purpose and effects |
+| --- | --- |
+| `yh setup` | Run interactive setup. |
+| `yh setup --install-jobs` | Generate and install scheduled jobs for eligible saved Projects. |
+| `yh setup --export-jobs ./yellowhammer-jobs` | Export LaunchAgent files without installing them. |
+| `yh setup --export-jobs ./yellowhammer-jobs --cron` | Export cron entries instead of LaunchAgents. |
+| `yh doctor --fix --check linear --project acme-checkout` | Create missing provisioned Linear board items for this Project. |
+| `yh doctor --fix --check launchd --project acme-checkout` | Repair the selected Project's scheduled jobs. |
+
+Repairing Linear creates missing items and leaves existing items alone. Re-run the matching read-only check afterwards to confirm the repair. A broad `doctor --fix` can also repair executable paths and the terminal symlink and handle orphaned jobs; read its findings before applying it. `--repoint` requires `--fix` and explicitly permits repointing jobs that name another app copy.
+
+Cron export does not install a crontab. Inspect and merge the generated entries with your existing crontab; replacing the whole crontab can remove unrelated jobs.
+
+## Run or interrupt work
+
+```bash
+yh rehearse --project acme-checkout
+yh author --project acme-checkout --force
+yh build --project acme-checkout --force
+yh land --project acme-checkout --force
+```
+
+`rehearse` runs all three Acts against the configured rehearsal board and Journal. Its board and Worktree operations are real, but it never dispatches an agent, pushes, or opens a pull request. Each real Act command can invoke agents and change its normal board or repository outputs. `--force` bypasses the Act's ordinary trigger, so use it deliberately. It is not required for scheduled invocations.
+
+To interrupt the illustrative Project:
+
+```bash
+yh stop --project acme-checkout
+```
+
+To abort one running Attempt, use its Journal id shown in the app:
+
+```bash
+yh abort --project acme-checkout --attempt 42
+```
+
+Both commands require an explicit Project id. They wait up to 60 seconds by default; `--wait 0` returns after recording the request. Stopping aborts running Attempts; it does not uninstall the recurring schedule.
+
+## Other command groups
+
+Use `yh project --help` for removal and Code Hosting Connection selection; `yh config --help` for machine connection and Operator configuration; and `yh prompts --help` for deleting selected recorded prompt data. These commands change local configuration or stored records. Prefer the corresponding Settings controls when you want to inspect context before changing them.
 
 ## Next steps
 
-[Troubleshoot setup and connections](/reference/troubleshoot-setup-and-connections) · [Statuses and glossary](/reference/statuses-and-glossary)
+[Troubleshoot setup and connections](/reference/troubleshoot-setup-and-connections) · [Configure the schedule](/run/configure-the-schedule)

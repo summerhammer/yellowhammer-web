@@ -3,24 +3,28 @@ title: "Introduction"
 description: "Understand what Yellowhammer does and where to begin."
 ---
 
-import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+import { VisualPlaceholder } from '/snippets/documentation.jsx';
 
-Yellowhammer runs local, unattended engineering Nights on your Mac. A [Night](/reference/statuses-and-glossary#night) selects one [Feature](/reference/statuses-and-glossary#feature) for a [Project](/reference/statuses-and-glossary#project), coordinates work through Linear, and leaves pull requests for you to review and merge.
-
-<DocumentationOutline />
+Yellowhammer runs unattended engineering [Nights](/reference/statuses-and-glossary#night) on your Mac. It turns your specification into [Features](/reference/statuses-and-glossary#feature) and Work Cards, coordinates coding agents across a [Project](/reference/statuses-and-glossary#project)'s repositories, and opens pull requests for your review.
 
 ## Start here
 
 <CardGroup cols={2}>
-  <Card title="Requirements" icon="list-check" href="/start/requirements">Check what you need before setting up a Project.</Card>
-  <Card title="Your first Night" icon="moon" href="/quickstart">Follow the path from setup to morning review.</Card>
+  <Card title="Requirements" icon="list-check" href="/start/requirements">Check your Mac, services, and coding agents before setup.</Card>
+  <Card title="Your first Night" icon="moon" href="/quickstart">Connect a Project, check readiness, and review its results.</Card>
 </CardGroup>
 
 ## How it fits together
 
+Linear holds your Features, Work Cards, questions, and Night Summary. Orca ADE creates the Worktrees where your local agent CLIs work. GitHub holds the resulting pull requests. You make decisions in Linear and choose what to merge in GitHub.
+
+Each Project has its own repositories, specification source, schedule, and limits. A Night can progress through multiple Features as work finishes, subject to those limits. Work Cards for the same repository run in order; different repositories can advance independently.
+
 <VisualPlaceholder id="intro-product-map" type="relationship diagram" title="Yellowhammer product map" purpose="Show how a Project connects its specification, Linear, repositories, local agent CLIs, and the Night Summary." caption="Planned visual: one Project feeds a local Night; its results return to Linear and GitHub for your review." />
 
-## Continue learning
+## Run locally, review when ready
+
+Scheduled jobs run on your Mac even when the Yellowhammer window is closed or the app is quit. Keep the Mac available during the Night window and set up the local tools before leaving it unattended. The [Pulse](/review/understand-pulse-and-inspector) lets you inspect activity and follow links to Linear.
 
 Start with the [setup overview](/setup/overview), then learn how to [run Nights](/run/overview) and [review the morning](/review/overview).
 

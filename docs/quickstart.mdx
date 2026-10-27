@@ -3,39 +3,52 @@ title: "Your first Night"
 description: "Follow the learning path from prerequisites to reviewing a Night result."
 ---
 
-import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+import { VisualPlaceholder } from '/snippets/documentation.jsx';
 
-Get a [Project](/reference/statuses-and-glossary#project) ready, prepare its specification and integrations, then run or schedule its first [Night](/reference/statuses-and-glossary#night). Setup details vary by release; verify exact controls and requirements against the current app. Begin with [Requirements](/start/requirements).
-
-<DocumentationOutline />
-
-## What you will do
-
-Use this path to understand the prerequisites, prepare one Project, then follow a Night through to its morning result. Acme Checkout is the illustrative product used in examples.
-
-<VisualPlaceholder id="quickstart-first-night" type="workflow" title="Your first Night learning path" purpose="Show the progression from requirements through Project setup and specification preparation to Night review." caption="Planned visual: prepare a Project, let a local Night work on one Feature, then review its Linear records and pull requests." />
+Prepare one [Project](/reference/statuses-and-glossary#project), check its local tools and service access, then run its first [Night](/reference/statuses-and-glossary#night) and review the results in Linear and GitHub. Acme Checkout is an illustrative product used below.
 
 ## Before you begin
 
-Review [Requirements](/start/requirements) first. This page is a learning path; the linked setup pages hold topic-specific briefs until product procedures are verified.
+Check [Requirements](/start/requirements). Use an Apple Silicon Mac running macOS 26 or later, local repository and specification checkouts, Orca ADE, Linear, GitHub, and an authenticated supported coding agent CLI.
 
-## Steps
+<VisualPlaceholder id="quickstart-first-night" type="workflow" title="Your first Night learning path" purpose="Show the progression from requirements through Project setup and specification preparation to Night review." caption="Planned visual: prepare a Project, let a local Night work on one Feature, then review its Linear records and pull requests." />
 
-### 1. Prepare one Project
+## 1. Prepare the machine
 
-Follow the [setup overview](/setup/overview): connect [Linear](/setup/connect-linear), [GitHub](/setup/connect-github), [Orca and agent CLIs](/setup/connect-orca-and-agent-clis), and [add a Project and repositories](/setup/add-project-and-repositories). Prepare a [specification](/setup/prepare-specification) with an observable Definition of Done.
+Open **Settings → Agent CLIs**, declare the installed CLI, and configure a route naming it in **Base Routing Table**. Run **Probe Now** and resolve any failure before relying on unattended dispatch. Confirm setup can find Orca. Follow [Connect Orca and agent CLIs](/setup/connect-orca-and-agent-clis).
 
-### 2. Rehearse and prepare to schedule
+If you want terminal access to `yh`, choose **Install…** in **Settings → General → Command Line Tool**. Scheduled jobs use the bundled executable and do not depend on this optional terminal link.
 
-Read about [rehearsing](/run/rehearse-before-scheduling), [scheduling](/run/configure-the-schedule), [Routes](/run/choose-agents-and-routes), and [limits](/run/set-limits-and-protected-paths) before unattended execution. Verify exact controls and prerequisites against the current app.
+## 2. Add the Project
 
-### 3. Review the morning
+Open **Add Project…** and complete its steps:
 
-Read the [Night Summary](/review/read-the-night-summary), find the selected Feature and Work Cards in Linear, then inspect any repository pull requests before deciding whether to merge.
+1. Name the Project, for example Acme Checkout, and inspect its permanent ID.
+2. Connect Linear through local or remote admin approval. Choose your Operator identity and the Linear project.
+3. Add working repositories with their Repo Roles and Check commands. Review proposed Repo Dependencies.
+4. Select a GitHub connection and inspect the repository access report.
+5. Select the specification source and review the per-Project Bounds.
+6. Open **Schedule** and set the Night window. Choose **Not now** for scheduled jobs while you review setup, then choose **Add Project** and confirm the ID.
+
+Read the run log and choose **Done** after success. The [setup guide](/setup/add-project-and-repositories) explains each decision and setup failure.
+
+## 3. Check the Project before unattended work
+
+Open the Project in Settings and confirm its repositories, Linear project, specification source, and connections. Follow [Rehearse before scheduling](/run/rehearse-before-scheduling) to configure and run a rehearsal when you want to exercise the flow first. A rehearsal needs a separate declared rehearsal Linear project and Journal; it writes to Linear but never dispatches an agent, pushes, or opens a pull request.
+
+## 4. Start work and configure the schedule
+
+Select the Project and choose **Start Author** in the toolbar to start its author Act. This starts authoring; it does not itself run the entire author/build/land sequence. Follow [Configure the schedule](/run/configure-the-schedule) to install or refresh the scheduled jobs that run those Acts automatically.
+
+Keep the Mac available during its Night window. The jobs can run with Yellowhammer quit. Watch progress in the Project's [Pulse and Inspector](/review/understand-pulse-and-inspector), and respond to questions in Linear when needed.
+
+## 5. Review the result
+
+Read the [Night Summary](/review/read-the-night-summary), inspect the Features and Work Cards in Linear, and follow any pull request links to GitHub. A Night can progress through several Features within its configured limits. Review the evidence and any incomplete or blocked work before deciding what to merge.
 
 ## Confirm it worked
 
-You can identify the selected Feature, find its Work Cards and Night Summary in Linear, and review any pull request before deciding whether to merge. The exact success indicators in the app need release verification.
+The Project is visible in Yellowhammer, its authored work is visible in the intended Linear project, and the Night Summary explains the outcome. When work reaches publication, GitHub has pull requests for your review. A blocked or incomplete Night can still produce useful progress; use the recorded reason to decide your next action.
 
 ## Next steps
 

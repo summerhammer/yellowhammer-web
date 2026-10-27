@@ -3,43 +3,43 @@ title: "Connect Orca and agent CLIs"
 description: "Prepare local worktree execution and the coding agents you already use."
 ---
 
-import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+import { VisualPlaceholder } from '/snippets/documentation.jsx';
 
-Yellowhammer coordinates Orca worktrees while your own agent CLIs perform the coding work locally. Exact supported versions, probes, and connection steps need release verification.
+Prepare Orca ADE to manage [Worktrees](/reference/statuses-and-glossary#worktree) and declare the local coding agent CLIs Yellowhammer can dispatch. These tools run under the macOS account that runs your Nights.
 
-<DocumentationOutline />
+## Check Orca readiness
 
-## Goal
+Install Orca ADE and make its `orca` executable available on the PATH used by setup and scheduled jobs. **Settings → General → Orca ADE** explains this relationship; Yellowhammer has no separate Orca setting. Setup warns when it cannot resolve `orca` on the PATH it writes into a Project's jobs.
 
-Prepare local worktree execution and the agent CLIs that perform code work.
+Orca creates, places, and cleans up Worktrees. A Worktree is a working checkout, not a security sandbox. Your agent CLI performs the code work there using its local authentication.
 
-## Before you begin
+## Declare an agent CLI
 
-Confirm Orca ADE and at least one supported agent CLI are installed and available to the macOS account that will run Nights. Check current compatibility and access requirements.
+1. Install and authenticate a supported CLI under the intended macOS account. The current registered adapter names are `claude`, `codex`, and `agy`.
+2. Open **Settings → Agent CLIs**.
+3. In **Declare**, choose the adapter name. Enter its absolute executable path in **Executable (optional)** when needed for unattended discovery, then choose **Declare**. Scheduled jobs use a minimal PATH, which can differ from your terminal's.
+4. Open **Base Routing Table** and configure a route naming that declared CLI. The Add Project prerequisites require a declared CLI and a base route.
+5. Return to **Agent CLIs** and choose **Probe Now**. After a previous run, the button is **Probe Again**.
 
-## Steps
+Declaring the first CLI can create the machine configuration before any Project exists. Declaring does not probe it.
 
-### Check Orca readiness
+## Read the Probe result
 
-Describe the verified integration check and what it says about local repository access. Distinguish Orca worktrees from a security sandbox.
+The card shows the probed CLI version, adapter version, executable, and whether Routes are **Offered** or **Not offered**, including a reason when excluded. The Probe checks unattended dispatch, result-file output, and process containment. It also records session resumption and state containment findings; those two findings do not decide the overall verdict.
 
-### Check each agent CLI
-
-List supported CLI names and versions only after release verification. Explain the current probe or readiness evidence and which account/environment it checks.
-
-### Understand the local execution path
+The findings appear when the Probe finishes. Read the **Probe log** for output and failures. Repeat the Probe after changing the executable, authentication, or CLI version. Only one Probe runs at a time.
 
 <VisualPlaceholder id="connect-orca-agent-flow" type="sequence diagram" title="Local execution path" purpose="Show Yellowhammer coordinating Orca worktrees while an installed agent CLI performs code work on the Mac." caption="Planned sequence: Yellowhammer dispatches through Orca; the local agent CLI works in a Project repository; results return for review." />
 
-Show Yellowhammer coordinating Orca while the user's agent CLI performs code work locally; identify which credentials the current integration can access.
-
 ## Confirm it worked
 
-Name the verified readiness result for Orca and each configured CLI. Note where an unavailable model or effort combination is reported.
+Setup can resolve Orca, the intended agent CLI is declared, a base route names it, and its Probe result offers it for dispatch. [Choose agents and routes](/run/choose-agents-and-routes) explains route-specific model and effort choices.
 
 ## Common problems
 
-Separate an unavailable Orca integration, an undiscoverable CLI, and a CLI that cannot use the selected model or effort. Link the supported diagnostic for each.
+- **Works in Terminal but is not found unattended:** set an absolute CLI executable path and check the scheduled PATH used to find Orca.
+- **Probe stops at authentication or a prompt:** complete that CLI's local sign-in or permission setup, then probe again before leaving it unattended.
+- **No base route names a declared CLI:** choose **Open Base Routing Table**, configure a route, then return to the Add Project sheet so it reads the updated prerequisites.
 
 ## Next steps
 

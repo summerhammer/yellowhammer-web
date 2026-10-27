@@ -3,43 +3,48 @@ title: "Set limits and protected paths"
 description: "Review the Project limits and repository paths that constrain execution."
 ---
 
-import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+import { VisualPlaceholder } from '/snippets/documentation.jsx';
 
-Project limits bound attempts, review rounds, and unanswered Nights. Protected Paths are checked before dispatch; they are not a sandbox. Confirm available settings and effects for the current release.
+Use Yellowhammer's per-Project [Bounds](/reference/statuses-and-glossary#bound) to limit repeated effort, and Protected Paths to refuse overlapping declared work before dispatch.
 
-<DocumentationOutline />
+## Set the Bounds
 
-## Goal
+Open **Settings**, choose the Project, and select **Configuration**. Edit **Bounds** and choose **Save**. Each value must be an integer of at least 1.
 
-Set Project limits and review repository paths before dispatch can begin.
+| Bound | Default | Effect |
+| --- | --- | --- |
+| Review Rounds per Attempt | 2 | Bounds repeated review or Check requests for changes; exhausting it ends the Attempt and allows another eligible Route. |
+| Attempts per Card | 3 | Bounds dispatches of a Card; Operator aborts and usage-limited endings do not consume the budget. |
+| Unanswered Nights | 3 | Bounds how long a question or decision can wait before becoming Blocked; only Nights this Project runs count. |
+| Re-selections per Night | 2 | Bounds additional Feature selections after a refusal, then stops authoring for that Night. |
+| Refusals in a row | 3 | Raises repeated refusals of one Feature as a standing decision for you. |
+| Failed Adoptions in a row | 2 | Raises repeated failures to adopt carried-forward work as a standing decision. |
+| Authoring faults in a row | 3 | Bounds consecutive authoring faults for a Feature before its next selection is halted. |
+| Unmerged Features | 3 | Stops authoring more Features once this many implemented Features await merge, until a merge is observed. |
 
-## Before you begin
+Read each setting's explanation when tuning it. Exhausting a review Round budget alone does not immediately block a Card while another Attempt and Route remain. Raising a standing decision does not itself stop unrelated work.
 
-Understand the work the Project may touch and who will review Night results. Confirm available limits and their current units in the installed release.
+## Review Protected Paths
 
-## Steps
+In **Configuration → Repos**, edit each Repo's **Protected paths** field as a comma-separated list of repository paths, then choose **Save**. For example, Acme Checkout might protect `infra/production` and `.github/workflows`; these are illustrative choices, not defaults.
 
-### Set limits that stop repeated work
+The check compares the Card's Declared Scope and protected paths in both directions. A Card scoped to `infra` overlaps a protected `infra/production` directory, just as a Card scoped to a file below that directory does. Matching is case-sensitive and compares path components, not shell glob patterns.
 
-Explain the configured limits for attempts per Work Card, review rounds, and unanswered Nights. Describe what each limit stops and where a stopped item appears; verify exact setting names and available values.
-
-### Review Protected Paths
-
-Explain that Protected Paths are checked for overlap before dispatch. They are a declaration and pre-dispatch check, not a sandbox or a post-edit fence. Show how a user checks configured paths against repository scope.
+Protected Paths is a scoping check, not a sandbox: refusal happens before dispatch, and nothing prevents a dispatched agent from touching a protected path during its run. Review the resulting diff and pull request.
 
 <VisualPlaceholder id="limits-protected-path-review" type="screenshot" title="Project limits and Protected Paths" purpose="Show where verified per-Project limits and repository path declarations are reviewed." caption="Planned screenshot: current configuration locations, with any default or example value verified before publication." />
 
-### Review before scheduling
+**Screenshot instructions:** Capture the illustrative Acme Checkout Project in **Settings → Acme Checkout → Configuration**. Show the Project name, representative Bounds with their explanations, and a Repo's **Protected paths** field containing clearly illustrative sensitive paths. If both sections do not fit legibly, capture them separately under this placeholder rather than shrinking the text. Prepare a configured sample Project; do not provoke a real protected-path refusal merely to obtain the image.
 
-Use a short checklist: limits reflect an acceptable retry boundary; protected paths name sensitive areas; the user understands what happens when work is refused or blocked.
+## Tune from Night evidence
 
-## Confirm it worked
+Select **Recalibrate** in the Project settings. **This Night** identifies the reported Night; each Bound shows its proximity as reported by `yh recalibrate`. Change a value and save, or inspect the report from a terminal:
 
-Name the configuration view that shows the saved Project limits and Protected Paths. Confirm an overlapping path is reported before a Work Card is dispatched.
+```bash
+yh recalibrate --project acme-checkout
+```
 
-## Common problems
-
-Cover an overly broad protected path, a Work Card scope that overlaps a declared path, and a limit that causes work to stop sooner than expected. Explain which Project or Linear record to inspect.
+Read a blocked Card's Managed Block before changing limits. For an overlapping scope, correct the intended work in Linear or review the protected declaration deliberately. For repeated Check or review failure, fix the underlying cause before spending a new budget.
 
 ## Next steps
 

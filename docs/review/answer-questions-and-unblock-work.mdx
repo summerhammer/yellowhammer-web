@@ -3,41 +3,42 @@ title: "Answer questions and unblock work"
 description: "Find Work Cards that need a human answer and understand their next state."
 ---
 
-import { DocumentationOutline } from '/snippets/documentation.jsx';
+Yellowhammer records why a [Work Card](/reference/statuses-and-glossary#work-card) needs you. Read that reason before replying: an agent question, a scope overlap, and a Block Reason require different actions.
 
-A Work Card may enter Waiting on You when agent work needs a decision or answer. Read its recorded reason first: some conditions need an edit or configuration change instead of a reply.
+## Find the request
 
-<DocumentationOutline />
+Select the Project and choose a Card under **Needs you**. Read its state, reason, and Attempt history in the Inspector, then use **Open … in Linear**. You can also follow the Card from the Night Summary.
 
-## Goal
+On the Linear issue, read the managed description and the latest question or notice. The app shows the record; answering and re-readying happen in Linear.
 
-Decide whether a Work Card needs an answer, an edit, or a configuration change.
+## Answer an agent question
 
-## Before you begin
+For **Waiting on You** with reason `question`, reply directly in the outstanding question comment's thread. A new top-level comment, or a reply in a different thread, is recorded as a remark and does not answer the question.
 
-Open the Work Card from the Night Summary, Pulse, or Linear. Read its status and recorded Block Reason before taking action.
+On a later engine read, a recognized answer is acknowledged. If the Feature has not landed and the Card is still waiting for that question, the engine queues it to resume. Read the acknowledgement for the next action; posting a reply does not synchronously launch an agent.
 
-## Steps
+If the Feature has already landed, the answer is banked with the Card's history. It does not reopen the Repo Lane or amend an open pull request. The acknowledgement explains that the answer can accompany the Card into a later Adoption, subject to readiness checks.
 
-### Identify the request
+## Resolve a decision instead of replying
 
-Summarize the specific question or missing decision. Distinguish an agent question in Waiting on You from a refusal that points to scope, permissions, or Protected Paths.
+| Reason | Action |
+| --- | --- |
+| `overreach` | Read the named overlaps. Edit the Work Card's `Scope` line or the repository's Protected Paths configuration to remove the cause. A reply alone changes nothing. |
+| `divergence` | Read which repository movement invalidated the work. Decide whether to shelve the Card or replace the work in a new Feature. A reply does not resume it or travel into Adoption. |
 
-### Take the matching action
+A Waiting on You Card can become Blocked when its unanswered or undecided Nights reach the configured limit. Follow the resulting Block Reason and next action rather than assuming a late reply alone re-readies it.
 
-Describe where a human answer belongs and when the underlying Work Card or Project configuration must be edited instead. Verify supported gestures in the current app and Linear workflow.
+## Re-ready a Blocked Card
 
-### Recheck the Work Card
+The managed description states the cause and the action to take. For reviewer rejection or Check failure, inspect the findings under Attempts. For a route failure, check the Routing Table and CLI. For an authoring defect, correct the brief or Definition of Done.
 
-Explain how to confirm the response or change was recorded and whether the Work Card can proceed on a later Night.
+After fixing a retryable cause, move the Card back to **Todo** in Linear. For an overdue reply, answer the question and then move it to Todo. For an overdue decision, make the decision first. Work left behind by a completed or abandoned Feature may instead await Adoption by a later Feature; cancel it if you no longer want it.
 
 ## Confirm it worked
 
-Name the updated record and the visible state or activity that confirms the human action was captured. Do not promise an immediate retry unless the product guarantees it.
+Read the engine's acknowledgement on the issue and, after a subsequent Act, inspect the Card's updated state and history. If nothing changes, check that you replied to the current question's thread, that the reason actually accepts an answer, and that you edited the correct Project's configuration.
 
-## Common problems
-
-Cover replying to a refusal instead of fixing its cause, editing the wrong Project's configuration, and a Work Card that remains blocked after a response. Link the diagnostic record.
+A landed Feature's banked answer is a successful recording even though nothing starts. A top-level remark is also recorded, but leaves the outstanding question and its countdown unchanged.
 
 ## Next steps
 

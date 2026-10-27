@@ -3,29 +3,27 @@ title: "Run Nights"
 description: "Choose how a Project rehearses, schedules, and bounds unattended work."
 ---
 
-import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+import { VisualPlaceholder } from '/snippets/documentation.jsx';
 
-A Night selects one Feature for a Project and coordinates its Work Cards through local agent CLIs. Learn the controls before leaving work unattended.
+Each Yellowhammer [Night](/reference/statuses-and-glossary#night) belongs to one Project, with local tools executing its author, build, and land Acts. Different Projects can run independent Nights concurrently. Prepare the execution settings before leaving a Night unattended.
 
-<DocumentationOutline />
-
-## Recommended reading order
-
-Follow the pages below in order. Each page is a focused brief until its product details have been verified.
+## Prepare a Night
 
 <CardGroup cols={2}>
-  <Card title="Rehearse before scheduling" href="/run/rehearse-before-scheduling">Learn what a rehearsal Night can reveal before unattended runs.</Card>
-  <Card title="Configure the schedule" href="/run/configure-the-schedule">Understand the scheduling choices for local unattended Nights.</Card>
-  <Card title="Choose agents and routes" href="/run/choose-agents-and-routes">Understand how an agent CLI, model, and effort form a Route.</Card>
-  <Card title="Set limits and protected paths" href="/run/set-limits-and-protected-paths">Review the Project limits and repository paths that constrain execution.</Card>
+  <Card title="Rehearse before scheduling" href="/run/rehearse-before-scheduling">Exercise the real board and Worktrees without dispatching agents or publishing code.</Card>
+  <Card title="Configure the schedule" href="/run/configure-the-schedule">Set the Night window and install its scheduled jobs.</Card>
+  <Card title="Choose agents and routes" href="/run/choose-agents-and-routes">Choose workers, fallbacks, authoring, and independent Verification.</Card>
+  <Card title="Set limits and protected paths" href="/run/set-limits-and-protected-paths">Bound repeated effort and refuse overlapping declared scopes.</Card>
 </CardGroup>
 
 ## A Night at a glance
 
-One Night selects one Feature for one Project, coordinates its Work Cards through local agent CLIs, records a Night Summary, and leaves any pull requests for human review.
+The author Act selects and prepares a Feature. The build Act coordinates its Work Cards and review. The land Act verifies and publishes eligible results as pull requests. A Project has one Feature in flight at a time, but can advance through multiple Features sequentially in the same Night. The Night Summary reports the result, including Nights that produced no work.
+
+The installed LaunchAgents invoke the engine independently of the app. Quitting Yellowhammer does not stop a Night; keeping the Mac available is still necessary. Yellowhammer leaves merging to you.
 
 <VisualPlaceholder id="run-overview-path" type="workflow" title="Run a Night safely" purpose="Show the learning path from rehearsal through schedule, Routes, limits, and Protected Paths." caption="Planned workflow: rehearse, verify local readiness, review the schedule and Routes, then check limits before unattended runs." />
 
 ## Next steps
 
-[Rehearse before scheduling](/run/rehearse-before-scheduling) · [Related concepts](/concepts/overview)
+[Rehearse before scheduling](/run/rehearse-before-scheduling) · [The lifecycle of a Night](/concepts/lifecycle-of-a-night)

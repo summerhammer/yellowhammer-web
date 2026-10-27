@@ -3,30 +3,28 @@ title: "Reference and troubleshooting"
 description: "Look up settings, statuses, commands, and recovery guidance."
 ---
 
-import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+import { VisualPlaceholder } from '/snippets/documentation.jsx';
 
-Use this section when you need a specific term or want to diagnose setup and Night results. Exact settings and command syntax must match the installed release.
+Use Yellowhammer's reference pages to look up a setting, interpret a Linear record, or diagnose why a Project did not produce the result you expected.
 
-<DocumentationOutline />
-
-## Recommended reading order
-
-Follow the pages below in order. Each page is a focused brief until its product details have been verified.
+## Find the right reference
 
 <CardGroup cols={2}>
-  <Card title="Settings" href="/reference/settings">Find the settings that shape Project setup and Night behavior.</Card>
-  <Card title="yh command line" href="/reference/yh-command-line">Understand the role and lookup path for the yh command-line tool.</Card>
-  <Card title="Statuses and glossary" href="/reference/statuses-and-glossary">Look up authoritative Yellowhammer terms and Work Card statuses.</Card>
-  <Card title="Troubleshoot setup and connections" href="/reference/troubleshoot-setup-and-connections">Diagnose common problems while preparing a Project and its integrations.</Card>
-  <Card title="Troubleshoot Nights and missing results" href="/reference/troubleshoot-nights-and-missing-results">Investigate a Night that did not run or produced an unexpected result.</Card>
+  <Card title="Settings" href="/reference/settings">Find machine-wide connections, agent declarations, routing, and Project configuration.</Card>
+  <Card title="yh command line" href="/reference/yh-command-line">Install the terminal command and choose diagnostic or execution operations.</Card>
+  <Card title="Statuses and glossary" href="/reference/statuses-and-glossary">Interpret Card states, Block Reasons, and Yellowhammer's core terms.</Card>
+  <Card title="Troubleshoot setup and connections" href="/reference/troubleshoot-setup-and-connections">Resolve configuration, authorization, repository, and Probe findings.</Card>
+  <Card title="Troubleshoot Nights and missing results" href="/reference/troubleshoot-nights-and-missing-results">Inspect missed firings, stopped work, and publication failures.</Card>
 </CardGroup>
 
 ## Diagnose a problem
 
-Start from the Night Card, Night Summary, or failed setup check. Follow linked records before changing configuration or repeating a Night.
+Start with the selected Project's Night Card, Night Summary, and affected Work Card. The Managed Block names a blocked Card's reason and next action. Make triage decisions in Linear; use Settings for local configuration.
+
+If no Night Card exists, use `yh status --project YOUR_PROJECT_ID` to inspect scheduled jobs, recent runs, sleep history, and missed Nights. Use `yh doctor --project YOUR_PROJECT_ID` to check readiness. Ordinary diagnostics report findings; `doctor --fix` is an explicit repair operation.
 
 <VisualPlaceholder id="reference-overview-path" type="workflow" title="Find the right reference" purpose="Route readers from a settings or status question to the correct reference or troubleshooting page." caption="Planned workflow: look up settings, command syntax, or status first; follow symptom-based troubleshooting when diagnosing a failure." />
 
 ## Next steps
 
-[Settings](/reference/settings) · [Related concepts](/concepts/overview)
+[Settings](/reference/settings) · [Understand Yellowhammer](/concepts/overview)

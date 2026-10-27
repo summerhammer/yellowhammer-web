@@ -3,41 +3,46 @@ title: "Rehearse before scheduling"
 description: "Learn what a rehearsal Night can reveal before unattended runs."
 ---
 
-import { DocumentationOutline } from '/snippets/documentation.jsx';
-
-A Rehearsal Night is a deliberate trial used to inspect readiness and execution behavior. Confirm the current prerequisites and reporting surfaces before starting one.
-
-<DocumentationOutline />
-
-## Goal
-
-Use a Rehearsal Night to inspect readiness and reporting before relying on a schedule.
+Run a Yellowhammer [Rehearsal Night](/reference/statuses-and-glossary#rehearsal-night) to exercise setup, board updates, Worktrees, and reporting before scheduling real work.
 
 ## Before you begin
 
-Review [Requirements](/start/requirements). Confirm the Project has the separate rehearsal board project and Journal required by the product glossary; verify current setup labels and availability in the installed release.
+Complete [Project setup](/setup/overview). A rehearsal uses a separate Linear project and a separate Journal. Board writes and Worktree operations are real. It never dispatches an agent CLI, pushes code, or opens a pull request.
 
-## Steps
+In the Project's TOML file under `~/.config/yellowhammer/projects/`, declare the rehearsal Linear project as `rehearsal_project` in the existing `[board.linear]` section, and declare the rehearsal Journal in `[rehearsal]`. The following values are illustrative; replace the Linear project id and path for your Mac:
 
-### Check rehearsal prerequisites
+```toml
+# Add this key inside the existing [board.linear] section:
+rehearsal_project = "YOUR_REHEARSAL_LINEAR_PROJECT_ID"
 
-Identify the rehearsal context that must exist and the product evidence that the action is available. A rehearsal is a mode of a Night, not a separate sandbox environment.
+[rehearsal]
+journal = "~/.config/yellowhammer/rehearsals/acme-checkout.sqlite"
+```
 
-### Start the rehearsal
+The rehearsal project must differ from the real Linear project. The Journal must resolve to an absolute path outside the real Journals directory and must differ from the real Journal. A relative path does not qualify. Keep the rehearsal board in the workspace reached through this Project's Board Connection.
 
-Document the current user-initiated flow and any warnings that appear. Do not publish a command or button name until verified.
+## Run the rehearsal
 
-### Review its result
+1. Open **Settings**, choose the Project, and select **Recalibrate**.
+2. In **Rehearsal Night**, choose **Run a Rehearsal Night…**.
+3. Read the confirmation and choose **Run Rehearsal Night**. The engine runs author, build, and land in that order; it keeps running if you quit the app.
+4. Use **Show Log** after launch to inspect the output. Review the Night Card and Summary in the rehearsal Linear project.
 
-Follow the rehearsal Night Card and Night Summary. Identify setup, routing, or execution issues to resolve before unattended scheduling.
+With the [command-line tool installed](/reference/yh-command-line), the equivalent invocation for the illustrative Project id is:
+
+```bash
+yh rehearse --project acme-checkout
+```
 
 ## Confirm it worked
 
-Describe the record that proves a rehearsal ran and where its result appears. State what a successful result does and does not establish.
+Inspect the rehearsal log and the rehearsal board's Night records. Resolve reported configuration or board failures before real scheduling. A successful rehearsal exercises coordination and reporting; it cannot establish that a real agent will implement the Feature, that its Check will pass, or that publication will succeed.
 
 ## Common problems
 
-Cover a missing rehearsal board, missing rehearsal Journal, and a rehearsal result that reports an execution issue. Give verified diagnostic paths.
+If the button is unavailable, read the reason beside it. Missing `rehearsal_project`, a reused real Linear project, a missing Journal declaration, or a Journal among the real Journals are refused before any Act writes. Correct the named declaration and refresh the Project settings.
+
+If a rehearsal stops later, preserve its log and review the failed Act and linked Linear records. Use [setup diagnostics](/reference/troubleshoot-setup-and-connections) to repair the underlying connection or repository problem.
 
 ## Next steps
 

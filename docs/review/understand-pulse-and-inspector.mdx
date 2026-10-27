@@ -3,23 +3,41 @@ title: "Understand the Pulse and Inspector"
 description: "Use Pulse and Inspector to navigate Project activity and inspect records."
 ---
 
-import { DocumentationOutline } from '/snippets/documentation.jsx';
+Yellowhammer's Pulse shows the selected [Project](/reference/statuses-and-glossary#project), and the Inspector explains the item you select. Use both to trace recorded activity and find the Linear issue or GitHub pull request where you take action.
 
-Pulse and Inspector provide read-only views into activity and records. Linear remains the source for triage and decisions; exact displayed fields should be verified against the current app.
+## Read the Pulse
 
-<DocumentationOutline />
+Select a Project in the sidebar. Its name and repository count head the Pulse. The groups appear in this order:
 
-## Pulse as a way in
+| Group | What it shows |
+| --- | --- |
+| **Needs you** | Blocked and Waiting on You Cards, authoring decisions, and returned Features requiring attention. |
+| **Now** | Current Act and running Attempts, when recorded. |
+| **Feature** | The in-flight Feature, its Repo Lanes, and the unmerged Features awaiting human review. |
+| **Tonight / last Night** | The Night's verdict, state, disposition counts, outstanding failure notices, and link to its account. Before a Night exists, it shows the upcoming schedule where available. |
+| **Health** | Diagnostic flags and relevant setup or repair actions. |
 
-Explain how Pulse groups the selected Project’s current and recent activity, including where a user finds the latest Night and items that need attention. Verify current labels and ordering.
+A Project's Pulse uses its own Journal. Selecting another Project changes the context; counts do not combine different Projects' Nights. An unknown field means the recorded snapshot does not supply it, rather than an inferred success.
 
-## Inspector as a way through
+## Inspect a Card, Feature, or Attempt
 
-Describe Inspector as read-only detail for the current selection. Show how it helps the reader follow a record to Linear for the actions that remain there.
+Select a Card in **Needs you** to open its Inspector. The header shows its state and Block Reason or waiting reason. **Details** identifies the repository, work kind, budget epoch, and Attempt and Round counts. **Routes** shows tried and excluded routes.
 
-## What remains in Linear
+Expand an entry under **Attempts** to read its route source, start and end, classification, Rounds, and recorded Check results. The latest Attempt starts expanded. A Check can show its exit status and recorded output; a review Round can show requested changes. **View Prompts** opens captured prompts for the Attempt when available.
 
-List triage actions that take place in Linear, such as answering a Work Card or making a merge decision. Keep Pulse and Inspector framed as navigational surfaces.
+A Feature selection shows Repo Lanes, Card counts, pull request links, and recorded Verification. A Feature awaiting merge shows which repositories have reached mainline, its Feature Branches, and any **Stacked on** predecessor.
+
+A running Attempt shows its Repo, Route, Round, start time, running duration, and recorded status. This status is not an agent terminal transcript. Where available, **Abort Attempt** asks you to confirm before triggering the engine command; it does not answer or re-ready the Card.
+
+## Trace a Night's account
+
+In **Tonight / last Night**, choose **Show the Night’s account**. The main area replaces the Pulse with the Night's recorded Journal events, and the Inspector shows its facts and link to Linear.
+
+Move the playhead, step **Back 5 minutes** or **Forward 5 minutes**, or jump to **Previous problem** and **Next problem**. Selecting an outstanding failure notice opens the account at that failure. These are recorded events, not live agent output; the playhead moves when you move it. Use **Pulse** in the toolbar to return.
+
+## Take action in the right place
+
+Use **Open … in Linear** to answer a question, edit a Card, move it to Todo, or make Feature triage decisions. Open a pull request link to review or merge in GitHub. The app exposes engine controls and diagnostics, but its record views do not replace the board.
 
 ## Next steps
 

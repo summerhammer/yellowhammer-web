@@ -3,28 +3,66 @@ title: "Troubleshoot setup and connections"
 description: "Diagnose common problems while preparing a Project and its integrations."
 ---
 
-import { DocumentationOutline } from '/snippets/documentation.jsx';
+Use Yellowhammer's visible refusal and diagnostic findings to identify the failed connection, Project, or local tool before changing configuration.
 
-Start with the failed connection or readiness check, identify which Project and service it names, and consult current diagnostics before changing configuration.
+## Start with the diagnostic report
 
-<DocumentationOutline />
+With the [command-line tool installed](/reference/yh-command-line), run these checks for your Project. `acme-checkout` is an illustrative id:
 
-## Connection will not complete
+```bash
+yh validate
+yh doctor --project acme-checkout
+```
 
-Check which service and Project are named, whether the user has the required workspace/repository access, and whether the app reports a refusal or a network failure. Verify remedies against current diagnostics.
+`validate` is offline. Ordinary `doctor` reports readiness without repairing it. Read the finding's subject and full message; a machine-wide failure can affect several Projects even when the report is filtered to one.
 
-## Repository or Project is unavailable
+## Configuration or Project is unavailable
 
-Compare configured paths with the local checkout and inspect the named repository or Project validation error. Avoid guessing a path or configuration key.
+Open **Settings → Refused Files**. Read the named file, key, line, and validation error where supplied. Correct the file in `~/.config/yellowhammer/`, then run `yh validate` again. Each Project file must match its permanent Project id, and a Repo cannot belong to two Projects.
+
+If a Repo path is unavailable, verify that the checkout exists at its configured path and is registered in Orca ADE. Inspect **Settings → your Project → Configuration → Repos** and the `orca` and `git` findings before trying another Night.
+
+## Linear connection will not complete
+
+Open **Settings → Boards** and inspect the intended Board Connection and workspace. Confirm that you approved the intended Linear workspace and that the selected Operator identity is yours. For remote approval, wait for the approving administrator's result before treating the connection as ready. Follow [Connect Linear](/setup/connect-linear) for the supported connection flow.
+
+```bash
+yh doctor --check linear --project acme-checkout
+```
+
+For an authorization failure, reconnect the affected Board Connection in **Boards**. A connection to a different workspace cannot be repaired by changing only a Project's Linear project id; its workspace is fixed for its life.
+
+If diagnostics report missing provisioned board states or labels, choose **Repair** in the Project's Health card or run:
+
+```bash
+yh doctor --fix --check linear --project acme-checkout
+yh doctor --check linear --project acme-checkout
+```
+
+Repair creates missing items without renaming or deleting existing ones. A name collision or refused creation remains a failure; follow the action named in that finding rather than repeatedly recreating the connection.
+
+## GitHub access fails
+
+Open **Settings → Code Hosting** and inspect the connection selected by the Project. Check that its account can access and push to every working Repo, then run:
+
+```bash
+yh doctor --check github --project acme-checkout
+```
+
+For a different account or credential, follow [Connect GitHub](/setup/connect-github). In the Project's **Configuration → Code Hosting**, select the replacement and choose **Change connection**; the engine checks push access before saving the selection. Correct the credential or permission named by a refusal before retrying publication.
 
 ## Agent CLI is not ready
 
-Check whether the CLI is installed for the scheduled macOS account, authenticated, and accepted by the current readiness probe. Then verify selected model and effort support.
+Open **Settings → Agent CLIs**. Inspect the executable, latest Probe findings, and routing eligibility. Authenticate the CLI under the macOS account used for the Night, then choose **Probe Now** or **Probe Again**.
+
+A failed unattended-dispatch, result-file, or process-containment finding can exclude a CLI from routing. Read the Probe log for the actual vendor refusal. If it names an unavailable model or effort, choose a combination your account supports and re-probe with explicit options from `yh probe --help`.
+
+If the CLI works in a terminal but is missing overnight, check its declared executable and the tool path captured in the scheduled jobs. Reinstall or regenerate jobs after correcting the installation path. See [Configure the schedule](/run/configure-the-schedule).
 
 ## Gather details for support
 
-Collect the Project identifier, service involved, exact visible diagnostic, app/CLI version, and time of the attempt. Remove tokens and other secrets.
+Collect the Project id, connection name, exact finding, time, relevant app or CLI version, and logs for the failing operation. Include the failed Probe finding when applicable. Remove tokens, credential values, and private source content before sharing.
 
 ## Next steps
 
-[Troubleshoot Nights and missing results](/reference/troubleshoot-nights-and-missing-results) · [Related reference](/reference/statuses-and-glossary)
+[Troubleshoot Nights and missing results](/reference/troubleshoot-nights-and-missing-results) · [Settings](/reference/settings)

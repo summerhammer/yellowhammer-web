@@ -3,24 +3,54 @@ title: "Settings"
 description: "Find the settings that shape Project setup and Night behavior."
 ---
 
-import { DocumentationOutline } from '/snippets/documentation.jsx';
-
-Settings are organized around machine-wide connections and Project-specific configuration. This reference summarizes scope; verify labels, available values, and effects in the current release.
-
-<DocumentationOutline />
+Yellowhammer's Settings window separates shared Mac configuration from each Project's configuration. Open **Settings…** from the Yellowhammer application menu and choose a section in the sidebar.
 
 ## Machine-wide settings
 
-Describe connections and agent/Orca configuration that apply across Projects. Confirm exact sections and editable values in the current Settings window.
+| Section | What you manage |
+| --- | --- |
+| General | Read how Orca ADE is located, install or update the `yh` Command Line Tool, and inspect diagnostic prompt templates and recorded diagnostic dispatches. |
+| Boards | Connect Linear workspaces and manage their Board Connections and Operator identities. |
+| Code Hosting | Manage the GitHub Code Hosting Connections that Projects use for publication. |
+| Agent CLIs | Declare installed CLIs, inspect Probe findings and routing eligibility, and run **Probe Now** or **Probe Again**. |
+| Repo Roles | Declare repository roles for routing and see the roles already in use. |
+| Base Routing Table | Edit shared Card routes, fallbacks, authoring, and Verification; test a hypothetical Card. |
+| Refused Files | Read Project configuration files the loader rejected and their diagnostics. |
+
+Orca ADE has no Yellowhammer-specific setting: setup resolves `orca` on the tool path saved into scheduled jobs. Manage the local Orca installation and registered repositories in Orca ADE.
+
+The Command Line Tool installs a symlink at `/usr/local/bin/yh` for interactive terminal use. Its installation does not change scheduled jobs, which invoke the engine bundled in the app directly.
 
 ## Project settings
 
-Describe configuration scoped to one Project, including its repositories, specification, schedule, Routes, limits, and Protected Paths where present. Verify the current location for each.
+Choose a Project's name in the sidebar. Its **Configuration** and **Recalibrate** tabs share the Project's scope.
 
-## Changes to verify
+| Configuration section | Editable behavior |
+| --- | --- |
+| Project | Change its display name. The Project id is permanent. |
+| Linear | Inspect its fixed workspace and Board Connection, and edit the Linear project id. |
+| Code Hosting | Select another connection, then choose **Change connection** to check push access before switching. |
+| Spec Source | Inspect the configured source folder; this display is read-only. |
+| Repos | Add or remove Repos and edit their name, path, Repo Role, Check, and comma-separated Protected paths. |
+| The Night | Edit Starts, Ends, and Build every. Saving a changed schedule regenerates installed LaunchAgents. |
+| Bounds | Edit the eight per-Project effort and escalation limits. |
+| Routing overrides | Replace matching base Routing Table entries or add Project-specific mappings. |
+| Prompt catalog | Inspect the prompt templates used for the Project. |
 
-List version-sensitive labels, available defaults, and the effects of changing a setting. Do not publish assumed defaults.
+Use **Save** to validate and write form edits, or **Revert** to discard unsaved changes. Saving rewrites the Project TOML file, so comments and layout are not retained. Direct file editing remains supported. The app displays validation refusals instead of treating invalid edits as saved configuration.
+
+The Linear workspace is fixed for the Project's life. Moving to another workspace requires removing and adding the Project again. **Remove Project…** is available beneath both tabs; the removal workflow keeps the Journal for history.
+
+## Recalibrate
+
+**Recalibrate** reports the selected Night and how close it came to each Bound. You can edit and save new Bound values, refresh the report, and start **Run a Rehearsal Night…** when its separate rehearsal context is configured. Follow [Rehearse before scheduling](/run/rehearse-before-scheduling) before starting it.
+
+## Defaults and saved configuration
+
+Machine configuration lives in `~/.config/yellowhammer/config.toml`; each Project has `projects/<project-id>.toml` beneath that directory. The engine reads configuration on each invocation. Inspect the relevant Project's saved values rather than assuming all Projects share the base defaults.
+
+The default Night window is 22:00 to 06:00 with a 15-minute build interval. See [Bounds and Protected Paths](/run/set-limits-and-protected-paths) for the eight default limits and their effects, and [routing](/run/choose-agents-and-routes) for inheritance and fallback rules.
 
 ## Next steps
 
-[yh command line](/reference/yh-command-line) · [Related reference](/reference/statuses-and-glossary)
+[yh command line](/reference/yh-command-line) · [Statuses and glossary](/reference/statuses-and-glossary)

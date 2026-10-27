@@ -3,25 +3,29 @@ title: "Statuses and glossary"
 description: "Look up authoritative Yellowhammer terms and Work Card statuses."
 ---
 
-import { DocumentationOutline } from '/snippets/documentation.jsx';
-
-Use these summaries to read Linear records consistently. These summaries use Yellowhammer's canonical product terms. Verify shipped labels and behavior before publishing status instructions.
-
-<DocumentationOutline />
+Use Yellowhammer's terms to interpret the selected Project's Pulse, Linear records, and Night Summary. Triage decisions belong in Linear; local configuration belongs in Settings.
 
 ## Statuses
 
 ### Blocked
 
-Work stopped for the Night, with a reason recorded for the human to review. Read the Block Reason on the relevant Feature or Work Card to find where attention is needed.
+Automatic work on this Card has stopped and needs human action. Read the precise Block Reason and next action at the start of its Managed Block in Linear. Review failures, missing Routes, expired questions, Operator aborts, and authoring defects require different responses. After the stated repair, moving the Card back to **Todo** can make it eligible to retry; follow its own next action.
 
 ### Waiting on You
 
-A Work Card or Feature needs a human decision. The record carries what is needed; determine whether the requested action is an answer, an edit, or another configuration change before responding.
+A Work Card or Feature needs your answer or decision. Read the question and reply in Linear using the action requested on that record. Only Nights this Project runs count toward the Unanswered Nights Bound; an overdue question can become Blocked.
 
 ### Partial Landing
 
-A repository lane opened a pull request while one or more Work Cards did not complete. The pull request should identify the missing work and why it did not happen.
+A repository lane published eligible completed work while other Work Cards remained incomplete. Read the pull request and Night Summary for missing work and its reason. Partial Landing describes a result, not a promise that the whole Feature is complete.
+
+### Todo, In Progress, and Done
+
+**Todo** is eligible pending work; **In Progress** shows work underway; **Done** marks completed work in the board workflow. Read the Check and Verification evidence and pull request links before concluding that a Feature is merged. Moving a Feature to Done on the board can carry its unfinished Cards forward without establishing they passed their Checks.
+
+### Shelved
+
+A Card deliberately taken out of active work in Linear. Yellowhammer reads this state but never writes it. Shelved work does not hold landing as unfinished active work.
 
 ## Canonical terms
 
@@ -31,7 +35,7 @@ One product scope containing its repositories, Linear project, and specification
 
 ### Night
 
-One run for one Project, from its first scheduled work through the Night Card being completed. A Night that produced no work still has a result.
+One run for one Project, from its first Act firing through the Night Card being completed. A Night can advance through several Features sequentially, with one in flight at a time. Its identity is the date of the configured Night start; a Night that produced no work still has a result.
 
 ### Feature
 
@@ -83,7 +87,7 @@ The local development environment that provides isolated worktrees for Night exe
 
 ### Worktree
 
-A Git working tree allocated for execution of a unit of work.
+An isolated Git working tree managed by Orca ADE for a repository lane. Sequential Cards in the same lane share its Worktree; a fresh Attempt resets to the recorded known-good state rather than treating failed work as completed.
 
 ### Bound
 
@@ -95,7 +99,7 @@ Repository paths declared as out of scope for a Work Card. Yellowhammer checks f
 
 ### Rehearsal Night
 
-A deliberate rehearsal mode of a Night with its own configured board project and Journal. It is not a separate execution environment.
+A deliberate rehearsal mode of a Night with its own configured board project and Journal. It uses the same installed app and engine, with rehearsal mode selected at runtime.
 
 ### Pulse
 
@@ -108,6 +112,38 @@ The main window's detail pane for the current selection. It provides read-only i
 ### Pull Request
 
 A GitHub review request opened for a repository touched by a Feature. A human decides whether and when to merge it.
+
+### Act
+
+One short-lived engine invocation: **author** prepares a Feature, **build** coordinates implementation and review, and **land** handles Verification and publication. Each invocation belongs to exactly one Project.
+
+### Attempt
+
+One dispatch of a Work Card on a Route. A new Attempt has a fresh Round budget. Hard failures and exhausted Rounds can exclude a Route; an Operator abort or usage-limited ending does not consume the Attempt budget.
+
+### Round
+
+A review or Check asks the same Attempt to revise its work. This uses the same worker and Worktree; it is separate from starting another Attempt on another Route.
+
+### Check
+
+The command configured for a Repo that the engine runs to check its work. A declared `none` means that Repo has no automated Check; it does not establish correctness.
+
+### Managed Block
+
+The section of a Linear Card that Yellowhammer maintains with execution evidence, Attempts, outcomes, and the next action. Read its Block Reason to understand why work stopped.
+
+### Board Connection
+
+A named local connection to a Linear workspace, with its authorized app and selected Operator identity. Projects select a Board Connection; multiple Projects can use the same workspace connection.
+
+### Code Hosting Connection
+
+A named GitHub credential choice used by Projects for repository access and publication. Changing a Project's connection checks push access before accepting the change.
+
+### Journal
+
+The local execution record for one Project. The engine owns its state; the app reads it to show the Pulse and Inspector. A rehearsal has a separate Journal.
 
 ## Related pages
 

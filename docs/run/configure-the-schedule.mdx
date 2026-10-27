@@ -3,41 +3,52 @@ title: "Configure the schedule"
 description: "Understand the scheduling choices for local unattended Nights."
 ---
 
-import { DocumentationOutline } from '/snippets/documentation.jsx';
+Yellowhammer's schedule generates three local LaunchAgents per Project: author, build, and land. Choose the Night window, install the jobs, and verify them before relying on unattended execution.
 
-Scheduled Nights run on the configured Mac, using local tools and credentials. Verify current scheduling controls, wake behavior, and timing semantics in the installed release.
+## Choose the timing window
 
-<DocumentationOutline />
+Open **Settings**, choose the Project, and select **Configuration**. Under **The Night**, edit **Starts**, **Ends**, and **Build every**, then choose **Save**.
 
-## Goal
+| Setting | Default | Meaning |
+| --- | --- | --- |
+| Starts | 22:00 | The configured start of the Night window. |
+| Ends | 06:00 | The configured closing time; the window can cross midnight. |
+| Build every | 15 minutes | The interval used to generate periodic Act firings. |
 
-Choose when local unattended Nights run and confirm the Mac can support that schedule.
+The generated LaunchAgents use the Mac's local calendar time. There is no per-Project timezone selector. The time pickers display the stored hour and minute without converting them to another zone. Equal start and end times are refused because a 24-hour window cannot close its Night unambiguously.
 
-## Before you begin
+Setup records a per-Project `stagger_minutes` offset so Projects need not fire together. It assigns offsets in three-minute steps; the recorded offset stays with the Project. Actual firings add that offset to the configured window.
 
-Complete a rehearsal and review the result. Check the Mac's expected availability, the local account used for execution, and the schedule's timezone and overnight window as shown by the current release.
+The author Act fires at the start. Periodic land ticks are followed by build one minute later and author two minutes later when the interval permits; the offsets shrink for one- or two-minute intervals. This allows a landed Feature to be followed by another Feature within the same Night. A closing land firing runs at the end. Later flush firings at 15 minutes, one hour, and three hours after closing retry pending board delivery when they fit before the next Night.
 
-## Steps
+## Install and check the schedule
 
-### Choose a timing window
+Saving schedule changes regenerates that Project's already installed LaunchAgents. Read the regeneration result shown in **The Night**; a saved configuration and a successful job installation are separate results. Exported launchd or cron files must be exported again after a change.
 
-Explain how the configured start, end, and firing interval relate. Document timezone handling and any Project offset only after checking current settings and behavior; do not invent defaults.
+To install jobs from saved configuration, use:
 
-### Check Mac availability
+```bash
+yh setup --install-jobs
+```
 
-Cover whether the Mac must be awake, logged in, connected to power or a network, and able to reach local repositories. Verify each condition against the shipped scheduler.
+This operation installs jobs for eligible configured Projects. To inspect the illustrative Project afterwards:
 
-### Enable and inspect the schedule
+```bash
+yh doctor --check launchd --project acme-checkout
+yh status --project acme-checkout
+```
 
-Describe the verified control to save or enable a schedule and where the app reports its next or installed invocation. Include behavior on missed or delayed firings only when confirmed.
+The jobs are named `dev.yellowhammer.<project-id>.author`, `.build`, and `.land`. Their logs are under `~/Library/Logs/Yellowhammer/`, named `<project-id>.<act>.log`.
+
+## Keep the Mac available
+
+Keep the macOS account logged in, the Mac awake, local repositories available, and network access available to Linear, GitHub, and your agents. The app itself can be closed. Schedule installation does not arrange a wake time. If the Mac slept through a Night, use `yh status` to inspect its sleep history and missed-Night diagnosis before running work manually.
+
+Setup records the tool search path in the scheduled jobs. If a tool works in your interactive shell but fails overnight, check its configured executable and regenerate the jobs after fixing the path.
 
 ## Confirm it worked
 
-Name the status or diagnostic that shows the schedule is installed and identify the expected next firing in the configured timezone. Confirm the Mac meets the stated availability conditions.
-
-## Common problems
-
-Separate a schedule that is not installed, a time or timezone mismatch, a sleeping Mac, and a local dependency that is unavailable. Link each symptom to a verified diagnostic.
+The launchd check should show the expected Project jobs without failures. Review `yh status` for job state and recent invocations. After the next window, inspect the Project's Night Card and Summary.
 
 ## Next steps
 

@@ -3,26 +3,47 @@ title: "Verification and Definition of Done"
 description: "Understand how completion criteria connect to the specification and evidence."
 ---
 
-import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+import { VisualPlaceholder } from '/snippets/documentation.jsx';
 
-A Definition of Done states what must be true for a Feature to count as complete. Verification reports against its clauses and citations; this makes the judgment auditable, not a guarantee that the work is correct.
-
-<DocumentationOutline />
+Yellowhammer records a [Definition of Done](/reference/statuses-and-glossary#definition-of-done) before implementation and reports [Verification](/reference/statuses-and-glossary#verification) against its individual clauses. Read those clauses and their evidence to judge what a Feature actually demonstrated.
 
 ## Definition of Done
 
-Define this as the set of completion clauses written before code exists. Each clause cites a specific specification location.
+Both Features and Work Cards can have completion clauses. Each clause states a distinct, testable condition and carries a stable clause identifier and a [Spec Citation](/reference/statuses-and-glossary#spec-citation) pointing to an addressable specification location.
+
+The citation's provenance distinguishes `machine-found` from `Author-supplied`. Human edits are visible in the recorded evidence; they are not silently treated as an agent's original interpretation.
+
+The Definition of Done describes the expected outcome. A repository Check, such as its declared test command, is one source of evidence and does not replace those criteria.
 
 ## Clause-level evidence
 
-Explain that Verification reports on each clause with its citation and result. The page should show what evidence is carried to the Feature record and pull request after verification is confirmed.
+The report appears on the Feature Card and in repository pull request bodies under **Verification, clause by clause**. Feature-level clauses appear first, followed by Work Card clauses in authored order.
+
+Each line identifies the issue and clause, its text, Spec Citation location, citation provenance, verdict, what was checked, and the interpretation used. Read the reason alongside the verdict.
+
+| Verdict | Meaning |
+| --- | --- |
+| `met` | The recorded check supports the clause under the stated interpretation. |
+| `unmet` | The condition was not satisfied. A clause on a Work Card that did not complete is recorded as unmet. |
+| `unresolved` | The Spec Citation could not be resolved. Repair the citation; this is different from finding unfinished code. |
+| `not checked` | The verifier could not perform the check in its environment. The report should explain why. |
 
 <VisualPlaceholder id="verification-clause-evidence" type="relationship diagram" title="Definition of Done evidence" purpose="Connect a clause to its specification citation and the Verification result reported for that clause." caption="Planned diagram: each clause points to a specification location and receives an individual result." />
 
-## What verification can tell you
+## An independent verifier Route
 
-Verification makes the judgment traceable to stated criteria. It does not prove the specification is current or that the implementation is correct.
+The land Act uses a separate verifier invocation, routed under the authoring work kind. Its CLI, model, and effort Route must differ from every Route that wrote code in the Cycle. Starting a new invocation on the same Route does not meet that requirement.
+
+If no eligible Route remains or Verification faults, the Cycle stays unlanded and pull requests are skipped for that firing. Check routes and the recorded failure rather than interpreting a missing report as a pass.
+
+## What Verification can tell you
+
+Verification makes the judgment auditable. It cannot establish that the specification is correct or complete, that individually met clauses form a coherent Feature, or that the right Feature was selected. The report carries this limitation alongside its results.
+
+A `not checked` clause still needs your attention even if recorded Checks passed. Inspect those gaps before relying on the Feature. A Partial Landing can carry an explicit report of unmet work and still be offered for your review; it does not turn missing work into completion.
+
+Keep Spec Citation locations stable when maintaining the specification. Renaming or moving a cited location can leave references stale, and a past report does not guarantee they still resolve after a later specification change.
 
 ## Next steps
 
-[Local execution and credentials](/concepts/local-execution-and-credentials) · [Related reference](/reference/statuses-and-glossary)
+[Local execution and credentials](/concepts/local-execution-and-credentials) · [Review pull requests and Partial Landings](/review/pull-requests-and-partial-landings)

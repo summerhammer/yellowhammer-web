@@ -3,29 +3,43 @@ title: "Projects, Features, and Work Cards"
 description: "Understand how product scope and pieces of work relate in Linear."
 ---
 
-import { DocumentationOutline, VisualPlaceholder } from '/snippets/documentation.jsx';
+import { VisualPlaceholder } from '/snippets/documentation.jsx';
 
-A Project represents one product and its repositories, Linear project, and specification. A Feature describes a unit selected for a Night; Work Cards represent its pieces of work in Linear.
+A Yellowhammer [Project](/reference/statuses-and-glossary#project) is one product's working context. Its [Features](/reference/statuses-and-glossary#feature) describe outcomes, and [Work Cards](/reference/statuses-and-glossary#work-card) describe the repository-scoped work needed to reach them.
 
-<DocumentationOutline />
+## Project: product scope
 
-## Definitions
+A Project connects local repositories, one specification source, a Linear project, routes, limits, and a schedule. A repository belongs to one Yellowhammer Project. This prevents two Projects from independently treating the same checkout as their own.
 
-Define Project as product scope, Feature as the unit of intent selected for a Night, and Work Card as one repository-scoped dispatchable unit. Link each first-use term to the glossary.
+Capital-P Project means Yellowhammer's configuration. A lowercase Linear project is the board location selected for it. They are related, but are not interchangeable names for the same object.
 
-## How they relate
+## Feature: the intended outcome
 
-A Project contains its repositories, Linear project, and specification. One Feature is in flight per Project; it may produce several Work Cards, each tied to one repository.
+A Feature carries the customer or product outcome and its Definition of Done. Its Feature Card in Linear is the place to read that intent, completion evidence, and current disposition.
+
+One Feature is in flight per Project. After landing, a Feature can await merge in the unmerged Feature stack while a successor becomes in flight. This lets a single Night advance several Features sequentially, subject to the configured stack bound.
+
+## Work Card: one repository's work
+
+Each Work Card belongs to one repository and carries an Architectural Brief, Declared Scope, work kind, and Definition of Done. Work Cards are Linear issues associated with their Feature. Related Cards for a repository form its Repo Lane.
+
+A Repo Lane can contain several Work Cards. They execute in authored order in the lane's shared Worktree. Later work can be held behind an earlier Card that has not finished; a held Card remaining Todo is not evidence that it was forgotten.
+
+An **Attempt** is an execution effort on a Route. A **Round** is a review or Check iteration within that Attempt. Asking the same worker to make review changes adds a Round, rather than automatically starting a new Attempt on another Route.
 
 <VisualPlaceholder id="project-feature-card-map" type="relationship diagram" title="Project to Feature to Work Cards" purpose="Show Project scope, one in-flight Feature, and its repository-scoped Work Cards." caption="Planned diagram: Acme Checkout Project contains a Feature represented by its Feature Card and related Work Cards in Linear." />
 
 ## Acme Checkout example
 
-For Acme Checkout, use a concrete customer outcome and identify which repositories change. Keep the example illustrative until its steps and expected result are verified.
+Consider an illustrative Acme Checkout Project with `checkout-api` and `checkout-web` repositories and a separate specification source. The address API contract already exists. A Feature called “Improve saved delivery addresses” can require an API Work Card to improve storage reliability without changing that contract and a website Work Card to improve the existing form. Each Card can finish against what the other repository already provides. If the API lane needs a second Card for validation tests, that Card follows the first API Card in authored order.
+
+If the work needs a new API contract and a consumer of that contract, split it into separate Features with the producer first. See [Prepare your specification](/setup/prepare-specification) for the cross-repository dependency boundary.
+
+Review the Feature to judge the complete customer outcome. Open the website Card to answer a form question, or the API Card to inspect a failing Check. Review the pull request for each repository before merging; one completed Card does not establish that the whole Feature is complete.
 
 ## What this means for triage
 
-Use the Project to scope the Night, the Feature to understand the intended outcome, and individual Work Cards to inspect execution or answer a request.
+Use the Project to choose the scope, the Feature to understand the intended outcome, and Work Cards to diagnose or unblock execution. After landing, review the Feature's place in the unmerged stack and any predecessor before merging its repository pull requests.
 
 ## Next steps
 
