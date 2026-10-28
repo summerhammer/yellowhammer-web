@@ -69,3 +69,15 @@ PRs from forks are skipped because they get no secrets.
 Cloudflare Pages automatically serves all preview deployments with `X-Robots-Tag: noindex`, ensuring preview deployments remain unindexed.
 
 On production (`main`), the placeholder `<meta name="robots" content="noindex">` directive in `src/layouts/Layout.astro` was removed upon verifying the release DMG, making the production landing page indexable while preview deployments retain their `X-Robots-Tag: noindex` protection.
+
+## Social previews
+
+The server-rendered Open Graph and X metadata uses the opaque 1200 × 630 card at
+`public/social/yellowhammer-link-preview.png`. X uses `summary_large_image`.
+The editable SVG and export instructions live in the sibling artwork repo at
+`social/link-preview/`; copy its finished PNG unchanged. The original square
+`public/social/yellowhammer.png` is retained as a separate asset.
+
+Open Graph has no theme selector for images, so the card carries its own cream
+background and dark text for consistent contrast in either surrounding theme.
+The page's `theme-color` media queries affect browser chrome, not social cards.
