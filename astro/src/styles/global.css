@@ -1198,3 +1198,28 @@
 	outline: 2px solid var(--color-focus);
 	outline-offset: 2px;
 }
+
+/* Keep the shared header usable with Blog navigation on narrow phones. */
+@media (max-width: 25rem) {
+	.site-header-inner {
+		gap: 0.5rem;
+	}
+	.site-header .header-group {
+		gap: 0.625rem;
+		flex-shrink: 0;
+	}
+	.site-header .brand-link {
+		flex-shrink: 0;
+		gap: 0.25rem;
+		font-size: 0.9375rem;
+	}
+	.site-header .brand-link img {
+		width: 1.5rem;
+		height: 1.5rem;
+	}
+	.site-header .btn {
+		gap: 0.25rem;
+		padding-inline: 0.5rem;
+		font-size: 0.875rem;
+	}
+}

@@ -40,3 +40,6 @@ jobs:
 
       - name: Build landing
         run: pnpm --filter landing build
+
+      - name: Verify blog publishing and output
+        run: pnpm --filter landing test:blog

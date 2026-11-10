@@ -2,6 +2,11 @@
 import { site } from "../content/site";
 import DownloadButton from "./DownloadButton.astro";
 
+interface Props {
+	compact?: boolean;
+}
+const { compact = false } = Astro.props;
+
 /*
  * Appearance: a sun / auto / moon segmented control. Each radio sets `color-scheme` on :root through
  * `:has()` in global.css, so the ids are load-bearing. Icon paths are drawn on a 16-unit grid like
@@ -15,7 +20,8 @@ const schemes = [
 ---
 
 <footer>
-	<div class="wrap closing">
+	<div class:list={["wrap", "closing", { "closing-compact": compact }]}>
+		{compact ? <div class="blog-cta"><p>Let your specification work the night shift.</p><DownloadButton size="sm" /></div> : <>
 		<p class="eyebrow">In the morning</p>
 		<p class="closing-line">Night done. 2 pull requests open.</p>
 		<p class="closing-note">
@@ -28,10 +34,12 @@ const schemes = [
 			<a class="btn btn-secondary" href={site.repo}>View on GitHub</a>
 		</div>
 		<p class="hero-meta">{site.requires}</p>
+		</>}
 
 		<div class="footer-meta">
 			<div>
 				<ul class="footer-links">
+					<li><a href="/blog">Blog</a></li>
 					<li><a href={site.docs}>Docs</a></li>
 					<li><a href={site.repo}>GitHub</a></li>
 					<li><a href={site.download}>Download</a></li>

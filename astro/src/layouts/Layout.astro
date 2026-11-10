@@ -4,15 +4,21 @@ import "../styles/global.css";
 interface Props {
 	title: string;
 	description?: string;
+	article?: { author: string; published: Date; updated?: Date };
+	cover?: { src: string; alt: string };
 }
 
-const { title, description } = Astro.props;
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const { title, description, article, cover } = Astro.props;
+const canonicalURL = new URL(
+	Astro.url.pathname.replace(/\/$/, "") || "/",
+	Astro.site,
+);
 const socialImageURL = new URL(
-	"/social/yellowhammer-link-preview.png",
+	cover?.src ?? "/social/yellowhammer-link-preview.png",
 	Astro.site,
 );
 const socialImageAlt =
+	cover?.alt ??
 	"Yellowhammer — Wake up to pull requests for work nobody wrote down. An unattended engineering Shift for your Mac, beside the yellow and olive bird mark on a cream background.";
 ---
 
@@ -24,15 +30,24 @@ const socialImageAlt =
 		<title>{title}</title>
 		{description && <meta name="description" content={description} />}
 		<link rel="canonical" href={canonicalURL.href} />
-		<meta property="og:type" content="website" />
+		<meta property="og:type" content={article ? "article" : "website"} />
+		{article && <>
+			<meta name="author" content={article.author} />
+			<meta property="article:author" content={article.author} />
+			<meta property="article:published_time" content={article.published.toISOString()} />
+			{article.updated && <meta property="article:modified_time" content={article.updated.toISOString()} />}
+		</>}
+		<link rel="alternate" type="application/rss+xml" title="Yellowhammer blog" href="/blog/rss.xml" />
 		<meta property="og:site_name" content="Yellowhammer" />
 		<meta property="og:url" content={canonicalURL.href} />
 		<meta property="og:title" content={title} />
 		{description && <meta property="og:description" content={description} />}
 		<meta property="og:image" content={socialImageURL.href} />
-		<meta property="og:image:type" content="image/png" />
-		<meta property="og:image:width" content="1200" />
-		<meta property="og:image:height" content="630" />
+		{!cover && <>
+			<meta property="og:image:type" content="image/png" />
+			<meta property="og:image:width" content="1200" />
+			<meta property="og:image:height" content="630" />
+		</>}
 		<meta property="og:image:alt" content={socialImageAlt} />
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:site" content="@yellowhammerapp" />

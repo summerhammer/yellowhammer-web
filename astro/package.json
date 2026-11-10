@@ -6,9 +6,12 @@
 		"dev": "astro dev",
 		"build": "astro build",
 		"preview": "astro preview",
-		"check": "astro check"
+		"check": "astro check",
+		"test:blog": "node scripts/verify-blog.mjs"
 	},
 	"dependencies": {
+		"@astrojs/mdx": "^8.1.3",
+		"@astrojs/rss": "^4.0.19",
 		"astro": "7.3.8",
 		"sharp": "0.35.4"
 	},
