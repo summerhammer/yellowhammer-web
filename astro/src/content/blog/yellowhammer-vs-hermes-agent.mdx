@@ -1,0 +1,203 @@
+---
+title: "Yellowhammer vs Hermes Agent: who decides tonight's work"
+description: "Hermes Agent runs a durable task board on your machine. Yellowhammer picks the work from your spec and reports every Night. A sourced comparison."
+author: Yellowhammer
+pubDate: 2026-11-10
+draft: false
+tags: [Comparison]
+cover:
+  src: /blog/yellowhammer-vs-hermes-agent/cover.png
+  alt: "Two workshops at night: one turns a written note into tasks, the other reads a specification and leaves one pull request per repository."
+---
+
+import Fig1 from "../../assets/blog/yellowhammer-vs-hermes-agent/fig-1-source.svg";
+import Fig2 from "../../assets/blog/yellowhammer-vs-hermes-agent/fig-2-retry.svg";
+import Fig3 from "../../assets/blog/yellowhammer-vs-hermes-agent/fig-3-repos.svg";
+
+Hermes Agent is a capable, MIT-licensed general agent. Its Kanban board turns a one-line request into a task graph, runs workers in git worktrees and reclaims workers that crash. It is the nearest product so far to the shape of Yellowhammer's loop.
+
+It still does not replace Yellowhammer, because the two answer different questions. Hermes runs the work you hand it. Yellowhammer decides what the next piece of work is, from your specification.
+
+## The short version
+
+> - **Pick Hermes** if you want a general agent beyond coding, run Linux or Windows, or will write the tasks yourself.
+> - **Pick Yellowhammer** if you have a specification across several repos, an often-empty board, and agent CLIs you already use. Details are in the [comparison matrix](#comparison-matrix).
+> - **Both** are open source under the MIT licence, run unattended on a schedule and keep work on your machine by default.
+
+## What each one is
+
+Hermes Agent comes from Nous Research. It is a general-purpose personal agent with a CLI, a TUI, a desktop app and a messaging gateway. Kanban is one feature of it: a durable SQLite-backed task board for coordinating multiple Hermes profiles.
+
+Yellowhammer is a Mac app that runs an unattended engineering Shift every Night. A Night is one overnight run for one of your products. It sits on top of the Orca ADE, Linear, GitHub and the agent CLIs you already use, which are the coding agents you run in the terminal.
+
+Yellowhammer writes no code and never merges. Your agents write the code, and the merge stays yours.
+
+## Where they genuinely overlap
+
+Several things that once set an overnight agent apart are now ordinary. Both tools have them.
+
+- Scheduled, unattended runs. Hermes has cron jobs, and Kanban cards can carry a `scheduled_at` time.
+- Local by default. Your code stays on your machine, though Hermes also offers hosted options.
+- Open source. Both are MIT-licensed.
+- Stops you set. Both cap retries and attempts, so a stuck task does not run forever.
+
+Since these are table stakes, the difference lies elsewhere.
+
+## Where Hermes is strong
+
+Hermes does several things well that we do not claim for Yellowhammer.
+
+Each Kanban card can get its own workspace, including a git worktree under `.worktrees/<id>/`. Every worker is a full OS process with its own identity. The dispatcher reclaims crashed workers, so a crash does not lose the task.
+
+Its stops are broader than ours. Hermes documents a per-worker iteration budget, a wall-clock limit, a retry circuit breaker and a per-chat `spend_limit` for paid MCP tools. Yellowhammer tracks no spend at all and stops by counting.
+
+Its completion checks are real. A card bound to a pull request cannot complete while GitHub required evidence is missing, pending or failed.
+
+## Six jobs Hermes does not do (as documented in v0.23.1)
+
+Everything below about Hermes is as documented in v0.23.1. *Not documented* means the docs do not say. It does not mean Hermes cannot.
+
+### 1. It picks the work from your spec, even from an empty board
+
+Each Night, Yellowhammer reads your specification and picks one Feature, plus the repos it touches. A Feature is the one feature from your spec that a Night works on. This holds even when the Night started with an empty board.
+
+Hermes decomposes a request that someone wrote. Its documentation calls this the "drop a one-liner, walk away" flow, and a command can flesh out a triage one-liner into a real spec. Nothing in it documents reading a specification and choosing the next piece of work.
+
+Why it matters: on the busiest days nobody writes the cards, and an agent builds only what it is pointed at.
+
+<figure class="post-figure">
+<div class="post-figure-scroll">
+<Fig1 />
+</div>
+<figcaption>Hermes decomposes a request someone wrote; Yellowhammer starts from your specification, even with an empty board.</figcaption>
+</figure>
+
+### 2. Linear is the board
+
+Yellowhammer writes a Work Card, a Linear issue for one piece of the Feature in one repo. It reports each Night on a Night Card, a Linear issue that exists every Night. You keep one board, and it is the one you already use.
+
+Hermes keeps its own SQLite board. Its docs name Linear only as the visual model, "the familiar Linear / Fusion layout". Linear is reachable as an agent tool through a hosted connector or an MCP server, but a Linear trigger, sync or write-back of board state is not documented.
+
+Why it matters: a second board is one more place to look.
+
+### 3. Your own agent CLIs, and a failed try goes to a different Route
+
+A Route is which agent CLI, model and effort level runs a piece of work. Yellowhammer routes each Work Card to one of your agent CLIs. A retry always uses a Route not yet tried on that card, and retries are capped by limits you set.
+
+Hermes workers are Hermes profiles, each with its own model, skills and credentials. Wiring Codex CLI or Claude Code CLI as a worker lane is, in its docs, "not yet a paved path". Since the v0.22.0 release, failed turns "retry in place with context" on the same profile.
+
+Hermes does have fallback providers. They switch model for "rate limits, server overload, auth failures, connection drops", not for a failed task. Release v0.23.0 adds per-profile routing for delegated subagents, not for Kanban cards.
+
+Why it matters: a task that defeated one model should not go back to the same model at the same effort.
+
+<figure class="post-figure">
+<div class="post-figure-scroll">
+<Fig2 />
+</div>
+<figcaption>Hermes retries in place on the same profile; Yellowhammer moves a failed Work Card to a Route it has not tried, then stops.</figcaption>
+</figure>
+
+### 4. One Feature across several repos, one pull request per repo
+
+Yellowhammer opens one pull request per repository for one Feature. A pull request that opened with a named hole says so in its first lines. That is a Partial Landing.
+
+Hermes boards are "one per project, repo, or domain", and its docs say "Linking tasks across boards is not allowed". A worktree is one repository. One task that opens one pull request per repository is not documented.
+
+Why it matters: without this, you track disconnected tickets in the morning.
+
+<figure class="post-figure">
+<div class="post-figure-scroll">
+<Fig3 />
+</div>
+<figcaption>A Hermes card works in one repo, and its boards can't link; Yellowhammer turns one Feature into one pull request per repo and reports the Night on the board.</figcaption>
+</figure>
+
+### 5. The Definition of Done cites your spec, clause by clause
+
+A Definition of Done is what finished means for the Feature, written before any code exists. Each line points to a location in your specification. Verification then reports on each clause, never a bare pass.
+
+In Hermes goal mode, "an auxiliary judge checks the worker's output against the card's title + body". That text is the acceptance criteria. A per-clause check against a cited specification is not documented.
+
+Citation makes the check auditable, not infallible. A Night can still build the wrong thing well, and the risk is named openly.
+
+Why it matters: you can audit a result against your own words.
+
+### 6. A verdict on the board every morning
+
+Every Night gets one Night Card. Its Night Summary says what landed, what is Blocked and what is Waiting on You. A crashed Night, an empty Night and a productive Night each say what they were.
+
+Blocked means stopped for tonight, with the reason written down. Waiting on You is a Linear state for a question that needs your answer, and you reply in Linear whenever you like.
+
+Hermes sends notifications per event, for completed, blocked, gave up, crashed and timed out. It keeps run history per card. A summary across all cards for one run is not documented.
+
+Why it matters: you should never open a terminal to find out what a Night was. A notification only speeds up a record that already exists on the board.
+
+## Could you build Yellowhammer on Hermes?
+
+Partly, and our research says so plainly. The authoring gap is one orchestrator prompt plus a cron job that reads a spec file. In that research, the difference is now judgement, not mechanism.
+
+The rest is not in Hermes's documentation. That means Linear as the board with write-back, a static routing table that excludes tried Routes across CLI families, a multi-repo Feature with per-repo pull requests and a nightly account. You would build and maintain each of them.
+
+## Comparison matrix
+
+| Capability | Yellowhammer | Hermes Agent v0.23.1 |
+| --- | --- | --- |
+| What it is | Mac app that runs a Night per Project | General personal agent with a Kanban board |
+| Platform | macOS 26, Apple Silicon Mac | macOS (Apple Silicon), Windows, Linux |
+| Licence | MIT | MIT |
+| Runs unattended on a schedule | Yes | Yes |
+| Where work comes from | Picks a Feature from your spec | Decomposes a request someone wrote |
+| Board | Your Linear | Its own SQLite board |
+| Who does the work | Your agent CLIs | Hermes profiles |
+| Retry after a failed task | New Route each time, then stops | Retries in place; reassign is manual |
+| Multi-repo work | One pull request per repository | Not documented |
+| Crash recovery | Night Card says the Night crashed | Yes — dispatcher reclaims crashed workers |
+| Stops | Counts: attempts, review rounds, unanswered Nights | Counts, time and per-chat MCP spend limit |
+| Waiting on a person | Waiting on You, answered in Linear | Blocked cards surface to a human |
+| Definition of done | Cited per clause to your spec | Judge checks card body; PR checks |
+| Morning report | One Night Card every Night | Per-event notifications; no per-run summary |
+| Where code lives | Stays on your Mac | Local by default; hosted options exist |
+| Requirements | Orca ADE, Linear, GitHub, one agent CLI | Install on macOS, Windows, Linux or Docker |
+
+## When Hermes is the better choice
+
+- You want a general agent beyond coding, with a CLI, desktop app and messaging gateway.
+- You run Linux or Windows. Yellowhammer needs macOS 26.
+- You do not use Linear or the Orca ADE.
+- You will write the tasks, or let the decomposer split a one-liner.
+- One repository per task is enough.
+- You want local models or hosted options, including Hermes Cloud.
+
+## When Yellowhammer is the better choice
+
+- Your product spans several repos and you want one pull request per repo.
+- You have a specification, but the board is often empty.
+- You already use Claude Code or Codex and want them routed per Work Card.
+- Linear is your source of truth.
+- You want one honest account every morning, empty Nights included.
+
+Yellowhammer has limits of its own. One Feature is in flight per Project, and the Routing Table is static. It needs macOS 26 on a Mac that stays awake.
+
+## How we compared
+
+We compared Yellowhammer against Hermes Agent v0.23.1, published on 2026-11-10. Our competitor research dates from 2026-10-30. Hermes moves fast, with "~6,080 merged PRs" reported in the v0.22.0 notes, so re-check before you decide.
+
+We read primary sources only and ran nothing hands-on. *Not documented* means the docs do not say.
+
+Sources:
+
+- [Hermes Agent v0.23.1 release](https://github.com/NousResearch/hermes-agent/releases/tag/v0.23.1)
+- [Hermes Agent v0.23.0 release](https://github.com/NousResearch/hermes-agent/releases/tag/v0.23.0)
+- [Hermes Kanban documentation at v0.23.1](https://github.com/NousResearch/hermes-agent/blob/v0.23.1/website/docs/user-guide/features/kanban.md)
+- [Hermes Kanban worker lanes at v0.23.1](https://github.com/NousResearch/hermes-agent/blob/v0.23.1/website/docs/user-guide/features/kanban-worker-lanes.md)
+- [Hermes fallback providers at v0.23.1](https://github.com/NousResearch/hermes-agent/blob/v0.23.1/website/docs/user-guide/features/fallback-providers.md)
+- [Hermes Agent v0.22.0 release](https://github.com/NousResearch/hermes-agent/releases/tag/v0.22.0)
+- [Hermes Agent documentation](https://hermes-agent.nousresearch.com)
+
+## Try it
+
+If your agents stop when you stop, let a Night pick the work.
+
+[Download for Mac](https://github.com/summerhammer/yellowhammer/releases/latest/download/Yellowhammer.dmg) — Requires macOS 26
+
+[View on GitHub](https://github.com/summerhammer/yellowhammer)
